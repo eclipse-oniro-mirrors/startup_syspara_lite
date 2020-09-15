@@ -29,7 +29,7 @@ static boolean IsValidChar(const char ch)
 
 static boolean IsValidValue(const char* value, unsigned int len)
 {
-    if ((value == NULL) || !strlen(value) || (strlen(value) >= len)) {
+    if ((value == NULL) || (*value == '\0') || (strlen(value) >= len)) {
         return FALSE;
     }
     return TRUE;
