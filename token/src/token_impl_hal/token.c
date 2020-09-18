@@ -24,8 +24,8 @@ int ReadToken(char *token, unsigned int len)
         HILOG_ERROR(HILOG_MODULE_HIVIEW, "token is nullptr\n");
         return EC_FAILURE;
     }
-    int ret = HalReadToken(token, len);
-    return ret;
+
+    return HalReadToken(token, len);
 }
 
 int WriteToken(const char *token, unsigned int len)
@@ -34,8 +34,8 @@ int WriteToken(const char *token, unsigned int len)
         HILOG_ERROR(HILOG_MODULE_HIVIEW, "token is nullptr\n");
         return EC_FAILURE;
     }
-    int ret = HalWriteToken(token, len);
-    return ret;
+
+    return HalWriteToken(token, len);
 }
 
 int GetAcKey(char *acKey, unsigned int len)
