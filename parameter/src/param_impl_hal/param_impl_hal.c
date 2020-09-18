@@ -65,12 +65,13 @@ int GetSysParam(const char* key, char* value, unsigned int len)
     if (fd < 0) {
         return EC_FAILURE;
     }
-    if (UtilsFileRead(fd, value, valueLen) < 0) {
-        UtilsFileClose(fd);
-        return EC_FAILURE;
-    }
+    
+    int ret = UtilsFileRead(fd, value, valueLen);
     UtilsFileClose(fd);
     fd = -1;
+    if (ret < 0) {
+        return EC_FAILURE;
+    }
     value[valueLen] = '\0';
     return valueLen;
 }
@@ -84,12 +85,11 @@ int SetSysParam(const char* key, const char* value)
     if (fd < 0) {
         return EC_FAILURE;
     }
-    if (UtilsFileWrite(fd, value, strlen(value)) < 0) {
-        UtilsFileClose(fd);
-        return EC_FAILURE;
-    }
+
+    int ret = UtilsFileWrite(fd, value, strlen(value));
     UtilsFileClose(fd);
-    return EC_SUCCESS;
+    fd = -1;
+    return (ret < 0) ? EC_FAILURE : EC_SUCCESS;
 }
 
 boolean CheckPermission(void)
