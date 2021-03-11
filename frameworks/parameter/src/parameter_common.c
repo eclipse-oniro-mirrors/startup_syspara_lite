@@ -21,10 +21,11 @@
 
 #define FILE_RO "ro."
 #define VERSION_ID_LEN 256
+#define PROPERTY_MAX_LENGTH 2048
 
-static char g_roBuildOs[] = {"OpenHarmony"};
-static char g_roBuildVerShow[] = {"OpenHarmony 1.0"};
-static char g_roSdkApiLevel[] = {"3"};
+static char g_roBuildOs[] = {"OHOS"};
+static char g_roBuildVerShow[] = {"OHOS 2.0"};
+static char g_roSdkApiLevel[] = {"5"};
 static char g_roFirstApiLevel[] = {"1"};
 
 static boolean IsValidValue(const char* value, unsigned int len)
@@ -138,6 +139,9 @@ char* GetAbiList(void)
 
 static char* GetSysProperty(const char* propertyInfo, const size_t propertySize)
 {
+    if ((propertySize == 0) || (propertySize > PROPERTY_MAX_LENGTH)) {
+        return NULL;
+    }
     char* prop = (char*)malloc(propertySize);
     if (prop == NULL) {
         return NULL;
@@ -182,38 +186,43 @@ char* GetVersionId(void)
         return NULL;
     }
     if (memset_s(value, VERSION_ID_LEN, 0, VERSION_ID_LEN) != 0) {
-        goto MALLOC_ERROR;
+        free(value);
+        value = NULL;
+        return NULL;
     }
-
     char* productType = GetProductType();
     char* manufacture = GetManufacture();
     char* brand = GetBrand();
     char* productSerial = GetProductSeries();
     char* productModel = GetProductModel();
     char* softwareModel = GetSoftwareModel();
-    int ret = -1;
     if (productType == NULL || manufacture == NULL || brand == NULL ||
         productSerial == NULL || productModel == NULL || softwareModel == NULL) {
-            goto GET_PARA_ERROR;
+        free(productType);
+        free(manufacture);
+        free(brand);
+        free(productSerial);
+        free(productModel);
+        free(softwareModel);
+        free(value);
+        value = NULL;
+        return NULL;
     }
-    ret = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%s/%s/%s",
+    int len = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%s/%s/%s",
         productType, manufacture, brand, productSerial, g_roBuildOs, productModel,
         softwareModel, g_roSdkApiLevel, INCREMENTAL_VERSION, BUILD_TYPE);
-
-GET_PARA_ERROR:
     free(productType);
     free(manufacture);
     free(brand);
     free(productSerial);
     free(productModel);
     free(softwareModel);
-    if (ret >= 0) {
-        return value;
+    if (len < 0) {
+        free(value);
+        value = NULL;
+        return NULL;
     }
-MALLOC_ERROR:
-    free(value);
-    value = NULL;
-    return NULL;
+    return value;
 }
 
 char* GetBuildType(void)

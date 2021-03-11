@@ -19,7 +19,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "hal_token.h"
-#include "init_perms.h"
 #include "log.h"
 #include "ohos_errno.h"
 
@@ -30,7 +29,7 @@ static int UidVerify(void)
     uid_t uid;
 
     uid = getuid();
-    if (uid != DEFAULT_UID_KIT_FRAMEWORK) {
+    if (uid >= KIT_FRAMEWORK_UID_MAX) {
         HILOG_ERROR(HILOG_MODULE_HIVIEW, "uid verify failed, get uid:%d", uid);
         return EC_FAILURE;
     }
@@ -92,7 +91,7 @@ int GetAcKey(char *acKey, unsigned int len)
     return HalGetAcKey(acKey, len);
 }
 
-int GetProdId(char productId[], size_t len)
+int GetProdId(char *productId, unsigned int len)
 {
     if (productId == NULL) {
         HILOG_ERROR(HILOG_MODULE_HIVIEW, "productId is nullptr");
@@ -100,4 +99,18 @@ int GetProdId(char productId[], size_t len)
     }
 
     return HalGetProdId(productId, len);
+}
+
+int GetProdKey(char *productKey, unsigned int len)
+{
+    if (productKey == NULL) {
+        HILOG_ERROR(HILOG_MODULE_HIVIEW, "productKey is nullptr");
+        return EC_FAILURE;
+    }
+
+    if (UidVerify()) {
+        return EC_FAILURE;
+    }
+
+    return HalGetProdKey(productKey, len);
 }

@@ -48,7 +48,7 @@ int GetAcKey(char *acKey, unsigned int len)
     return HalGetAcKey(acKey, len);
 }
 
-int GetProdId(char productId[], size_t len)
+int GetProdId(char *productId, unsigned int len)
 {
     if (productId == NULL) {
         HILOG_ERROR(HILOG_MODULE_HIVIEW, "productId is nullptr");
@@ -56,4 +56,14 @@ int GetProdId(char productId[], size_t len)
     }
 
     return HalGetProdId(productId, len);
+}
+
+int GetProdKey(char *productKey, unsigned int len)
+{
+    if (productKey == NULL) {
+        HILOG_ERROR(HILOG_MODULE_HIVIEW, "productKey is nullptr");
+        return EC_FAILURE;
+    }
+
+    return HalGetProdKey(productKey, len);
 }

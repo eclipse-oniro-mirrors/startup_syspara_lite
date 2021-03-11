@@ -19,17 +19,16 @@ if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
   shared_library("token_shared") {
     cflags = [ "-Wall" ]
     include_dirs = [
-      "//base/startup/interfaces/kits/syspara_lite",
-      "//base/startup/services/init_lite/include",
+      "//base/startup/syspara_lite/interfaces/kits",
       "//utils/native/lite/include",
-      "//base/startup/hals/syspara_lite",
+      "//base/startup/syspara_lite/hals",
     ]
 
     sources = [ "src/token_impl_posix/token.c" ]
 
     public_deps = [
-      "//base/hiviewdfx/frameworks/hilog_lite/featured:hilog_shared",
-      "//vendor/huawei/camera/hals/utils/token:haltoken_shared",
+      "$ohos_product_adapter_dir/utils/token:haltoken_shared",
+      "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_shared",
     ]
   }
 }
@@ -39,13 +38,13 @@ if (ohos_kernel_type == "liteos_m") {
     sources = [ "src/token_impl_hal/token.c" ]
 
     include_dirs = [
-      "//base/startup/interfaces/kits/syspara_lite",
+      "//base/startup/syspara_lite/interfaces/kits",
       "//utils/native/lite/include",
-      "//base/hiviewdfx/interfaces/kits/hilog_lite",
-      "//base/startup/hals/syspara_lite",
+      "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
+      "//base/startup/syspara_lite/hals",
     ]
 
-    deps = [ "//vendor/huawei/wifi-iot/hals/utils/token:hal_token_static" ]
+    deps = [ "$ohos_product_adapter_dir/utils/token:hal_token_static" ]
   }
 }
 
@@ -65,7 +64,7 @@ ndk_lib("token_notes") {
   }
   deps = []
   if (ohos_kernel_type != "liteos_m") {
-    deps += [ "//base/startup/frameworks/syspara_lite/token:token_shared" ]
+    deps += [ "//base/startup/syspara_lite/frameworks/token:token_shared" ]
   }
-  head_files = [ "//base/startup/interfaces/kits/syspara_lite" ]
+  head_files = [ "//base/startup/syspara_lite/interfaces/kits" ]
 }
