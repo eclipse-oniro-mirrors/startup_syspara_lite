@@ -43,7 +43,7 @@ free(value3);
 
 ## Repositories Involved<a name="section641143415335"></a>
 
-Startup subsystem
+[Startup subsystem](https://gitee.com/openharmony/docs/blob/master/en/readme/startup.md)
 
 **[startup\_syspara\_lite](https://gitee.com/openharmony/startup_syspara_lite/blob/master/README.md)**
 
