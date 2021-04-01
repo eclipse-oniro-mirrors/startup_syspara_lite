@@ -24,7 +24,7 @@
 #define PROPERTY_MAX_LENGTH 2048
 
 static char g_roBuildOs[] = {"OpenHarmony"};
-static char g_roBuildVerShow[] = {"OpenHarmony 1.0.1"};
+static char g_roBuildVerShow[] = {"OpenHarmony_release 1.1.0"};
 static char g_roSdkApiLevel[] = {"3"};
 static char g_roFirstApiLevel[] = {"1"};
 
