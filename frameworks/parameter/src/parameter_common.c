@@ -20,8 +20,8 @@
 #include "param_adaptor.h"
 
 #define FILE_RO "ro."
+#define OS_FULL_NAME_LEN 128
 #define VERSION_ID_LEN 256
-#define PROPERTY_MAX_LENGTH 2048
 
 static const char OHOS_OS_NAME[] = {"OpenHarmony"};
 static const int  OHOS_SDK_API_VERSION = 3;
@@ -144,40 +144,33 @@ const char* GetAbiList(void)
     return HalGetAbiList();
 }
 
-const char* GetOSFullName(void)
+static const char* BuildOSFullName(void)
 {
-    static const char* osFullName = NULL;
-    static const char release[] = "Release";
-
-    if (osFullName != NULL) {
-        return osFullName;
-    }
-    char* value = (char*)malloc(VERSION_ID_LEN);
-    if (value == NULL) {
-        return EMPTY_STR;
-    }
-    if (memset_s(value, VERSION_ID_LEN, 0, VERSION_ID_LEN) != 0) {
-        free(value);
-        value = NULL;
-        return EMPTY_STR;
-    }
+    const char release[] = "Release";
+    char value[OS_FULL_NAME_LEN];
     const char* releaseType = GetOsReleaseType();
     int length;
     if (strncmp(releaseType, release, sizeof(release) - 1) == 0) {
-        length = sprintf_s(value, VERSION_ID_LEN, "%s-%d.%d.%d.%d",
+        length = sprintf_s(value, OS_FULL_NAME_LEN, "%s-%d.%d.%d.%d",
             OHOS_OS_NAME, MAJOR_VERSION, SENIOR_VERSION, FEATURE_VERSION, BUILD_VERSION);
     } else {
-        length = sprintf_s(value, VERSION_ID_LEN, "%s-%d.%d.%d.%d(%s)",
+        length = sprintf_s(value, OS_FULL_NAME_LEN, "%s-%d.%d.%d.%d(%s)",
             OHOS_OS_NAME, MAJOR_VERSION, SENIOR_VERSION, FEATURE_VERSION, BUILD_VERSION, releaseType);
     }
     if (length < 0) {
-        free(value);
-        value = NULL;
         return EMPTY_STR;
     }
-    osFullName = strdup(value);
-    free(value);
-    value = NULL;
+    const char* osFullName = strdup(value);
+    return osFullName;
+}
+
+const char* GetOSFullName(void)
+{
+    static const char* osFullName = NULL;
+    if (osFullName != NULL) {
+        return osFullName;
+    }
+    osFullName = BuildOSFullName();
     if (osFullName == NULL) {
         return EMPTY_STR;
     }
@@ -204,42 +197,27 @@ const char* GetIncrementalVersion(void)
     return HalGetIncrementalVersion();
 }
 
+static const char* BuildVersionId(void)
+{
+    char value[VERSION_ID_LEN];
+    int len = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%d/%s/%s",
+        GetDeviceType(), GetManufacture(), GetBrand(), GetProductSeries(),
+        GetOSFullName(), GetProductModel(), GetSoftwareModel(),
+        OHOS_SDK_API_VERSION, GetIncrementalVersion(), GetBuildType());
+    if (len < 0) {
+        return EMPTY_STR;
+    }
+    const char* versionId = strdup(value);
+    return versionId;
+}
+
 const char* GetVersionId(void)
 {
     static const char* versionId = NULL;
     if (versionId != NULL) {
         return versionId;
     }
-    char* value = (char*)malloc(VERSION_ID_LEN);
-    if (value == NULL) {
-        return EMPTY_STR;
-    }
-    if (memset_s(value, VERSION_ID_LEN, 0, VERSION_ID_LEN) != 0) {
-        free(value);
-        value = NULL;
-        return EMPTY_STR;
-    }
-    const char* productType = GetDeviceType();
-    const char* manufacture = GetManufacture();
-    const char* brand = GetBrand();
-    const char* productSerial = GetProductSeries();
-    const char* osFullName = GetOSFullName();
-    const char* productModel = GetProductModel();
-    const char* softwareModel = GetSoftwareModel();
-    const char* incrementalVersion = GetIncrementalVersion();
-    const char* buildType = GetBuildType();
-    
-    int len = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%d/%s/%s",
-        productType, manufacture, brand, productSerial, osFullName, productModel,
-        softwareModel, OHOS_SDK_API_VERSION, incrementalVersion, buildType);
-    if (len < 0) {
-        free(value);
-        value = NULL;
-        return EMPTY_STR;
-    }
-    versionId = strdup(value);
-    free(value);
-    value = NULL;
+    versionId = BuildVersionId();
     if (versionId == NULL) {
         return EMPTY_STR;
     }
@@ -266,54 +244,12 @@ const char* GetBuildTime(void)
     return HalGetBuildTime();
 }
 
-static const char* GetProperty(const char* propertyInfo, const size_t propertySize, const char** propertyHolder)
-{
-    if (*propertyHolder != NULL) {
-        return *propertyHolder;
-    }
-    if ((propertySize == 0) || (propertySize > PROPERTY_MAX_LENGTH)) {
-        return EMPTY_STR;
-    }
-    char* prop = (char*)malloc(propertySize);
-    if (prop == NULL) {
-        return EMPTY_STR;
-    }
-    if (strcpy_s(prop, propertySize, propertyInfo) != 0) {
-        free(prop);
-        prop = NULL;
-        return EMPTY_STR;
-    }
-    *propertyHolder = prop;
-    return *propertyHolder;
-}
-
 const char* GetBuildRootHash(void)
 {
-    static const char* buildRootHash = NULL;
-    return GetProperty(BUILD_ROOTHASH, strlen(BUILD_ROOTHASH) + 1, &buildRootHash);
+    return BUILD_ROOTHASH;
 }
 
 const char* GetOsReleaseType(void)
 {
     return OHOS_RELEASE_TYPE;
-}
-
-static int GetMajorVersion(void)
-{
-    return MAJOR_VERSION;
-}
-
-static int GetSeniorVersion(void)
-{
-    return SENIOR_VERSION;
-}
-
-static int GetFeatureVersion(void)
-{
-    return FEATURE_VERSION;
-}
-
-static int GetBuildVersion(void)
-{
-    return BUILD_VERSION;
 }

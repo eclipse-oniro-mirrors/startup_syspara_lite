@@ -164,7 +164,7 @@ HWTEST_F(ParameterTest, parameterTest0010, TestSize.Level0)
     EXPECT_EQ(ret, strlen(valueGet2));
 
     char key3[] = "rw.product.manufacturer";
-    char value3[] = "HUAWEI";
+    char value3[] = "TEST MANUFACTURER";
     ret = SetParameter(key3, value3);
     EXPECT_EQ(ret, 0);
     char valueGet3[32] = {0};
@@ -172,7 +172,7 @@ HWTEST_F(ParameterTest, parameterTest0010, TestSize.Level0)
     EXPECT_EQ(ret, strlen(valueGet3));
 
     char key4[] = "rw.product.marketname";
-    char value4[] = "Mate 30";
+    char value4[] = "TEST MARKETNAME";
     ret = SetParameter(key4, value4);
     EXPECT_EQ(ret, 0);
     char valueGet4[32] = {0};

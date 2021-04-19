@@ -366,7 +366,7 @@ const char* GetBuildRootHash(void);
  * The OS release category can be Release, Beta, Canary.
  * The specific release type may be Release, Beta1, or others alike.\n
  *
- * @return Returns the M version number.
+ * @return Returns the OS Release Type.
  * @since 1.0
  * @version 1.0
  */
