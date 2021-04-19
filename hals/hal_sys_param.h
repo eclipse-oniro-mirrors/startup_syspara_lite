@@ -22,19 +22,25 @@ extern "C" {
 #endif
 #endif /* __cplusplus */
 
-char* HalGetProductType(void);
-char* HalGetManufacture(void);
-char* HalGetBrand(void);
-char* HalGetMarketName(void);
-char* HalGetProductSeries(void);
-char* HalGetProductModel(void);
-char* HalGetSoftwareModel(void);
-char* HalGetHardwareModel(void);
-char* HalGetHardwareProfile(void);
-char* HalGetSerial(void);
-char* HalGetBootloaderVersion(void);
-char* HalGetSecurityPatchTag(void);
-char* HalGetAbiList(void);
+const char* HalGetDeviceType(void);
+const char* HalGetManufacture(void);
+const char* HalGetBrand(void);
+const char* HalGetMarketName(void);
+const char* HalGetProductSeries(void);
+const char* HalGetProductModel(void);
+const char* HalGetSoftwareModel(void);
+const char* HalGetHardwareModel(void);
+const char* HalGetHardwareProfile(void);
+const char* HalGetSerial(void);
+const char* HalGetBootloaderVersion(void);
+const char* HalGetAbiList(void);
+const char* HalGetDisplayVersion(void);
+const char* HalGetIncrementalVersion(void);
+const char* HalGetBuildType(void);
+const char* HalGetBuildUser(void);
+const char* HalGetBuildHost(void);
+const char* HalGetBuildTime(void);
+int HalGetFirstApiVersion(void);
 
 #ifdef __cplusplus
 #if __cplusplus

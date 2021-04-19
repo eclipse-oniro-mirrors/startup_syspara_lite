@@ -39,82 +39,36 @@ public:
 
 HWTEST_F(ParameterTest, parameterTest001, TestSize.Level0)
 {
-    char* value1 = GetProductType();
-    printf("Product type =%s\n", value1);
-    free(value1);
-    char* value2 = GetManufacture();
-    printf("Manufacture =%s\n", value2);
-    free(value2);
-    char* value3 = GetBrand();
-    printf("GetBrand =%s\n", value3);
-    free(value3);
-    char* value4 = GetMarketName();
-    printf("MarketName =%s\n", value4);
-    free(value4);
-    char* value5 = GetProductSeries();
-    printf("ProductSeries =%s\n", value5);
-    free(value5);
-    char* value6 = GetProductModel();
-    printf("ProductModel =%s\n", value6);
-    free(value6);
-    char* value7 = GetSoftwareModel();
-    printf("SoftwareModel =%s\n", value7);
-    free(value7);
-    char* value8 = GetHardwareModel();
-    printf("HardwareModel =%s\n", value8);
-    free(value8);
-    char* value9 = GetHardwareProfile();
-    printf("Software profile =%s\n", value9);
-    free(value9);
-    char* value10 = GetSerial();
-    printf("Serial =%s\n", value10);
-    free(value10);
-    char* value11 = GetOsName();
-    printf("OS name =%s\n", value11);
-    free(value11);
-    char* value12 = GetDisplayVersion();
-    printf("Display version =%s\n", value12);
-    free(value12);
-    char* value13 = GetBootloaderVersion();
-    printf("bootloader version =%s\n", value13);
-    free(value13);
-    char* value14 = GetSecurityPatchTag();
-    printf("secure patch level =%s\n", value14);
-    free(value14);
+    printf("Device type =%s\n", GetDeviceType());
+    printf("Manufacture =%s\n", GetManufacture());
+    printf("GetBrand =%s\n", GetBrand());
+    printf("MarketName =%s\n", GetMarketName());
+    printf("ProductSeries =%s\n", GetProductSeries());
+    printf("ProductModel =%s\n", GetProductModel());
+    printf("SoftwareModel =%s\n", GetSoftwareModel());
+    printf("HardwareModel =%s\n", GetHardwareModel());
+    printf("Software profile =%s\n", GetHardwareProfile());
+    printf("Serial =%s\n", GetSerial());
+    printf("OS full name =%s\n", GetOSFullName());
+    printf("OS Release type =%s\n", GetOsReleaseType());
+    printf("Display version =%s\n", GetDisplayVersion());
+    printf("bootloader version =%s\n", GetBootloaderVersion());
+    printf("secure patch level =%s\n", GetSecurityPatchTag());
 }
 
 HWTEST_F(ParameterTest, parameterTest001_1, TestSize.Level0)
 {
-    char* value14 = GetSecurityPatchTag();
-    printf("secure patch level =%s\n", value14);
-    free(value14);
-    char* value15 = GetAbiList();
-    printf("abi list =%s\n", value15);
-    free(value15);
-    char* value16 = GetFirstApiLevel();
-    printf("first api level =%s\n", value16);
-    free(value16);
-    char* value17 = GetIncrementalVersion();
-    printf("Incremental version = %s\n", value17);
-    free(value17);
-    char* value187 = GetVersionId();
-    printf("formal id =%s\n", value187);
-    free(value187);
-    char* value18 = GetBuildType();
-    printf("build tyep =%s\n", value18);
-    free(value18);
-    char* value19 = GetBuildUser();
-    printf("build user =%s\n", value19);
-    free(value19);
-    char* value20 = GetBuildHost();
-    printf("Build host = %s\n", value20);
-    free(value20);
-    char* value21 = GetBuildTime();
-    printf("build time =%s\n", value21);
-    free(value21);
-    char* value22 = GetBuildRootHash();
-    printf("build root later..., %s\n", value22);
-    free(value22);
+    printf("secure patch level =%s\n", GetSecurityPatchTag());
+    printf("abi list =%s\n", GetAbiList());
+    printf("first api version =%d\n", GetFirstApiVersion());
+    printf("SDK api version =%d\n", GetSdkApiVersion());
+    printf("Incremental version = %s\n", GetIncrementalVersion());
+    printf("formal id =%s\n", GetVersionId());
+    printf("build tyep =%s\n", GetBuildType());
+    printf("build user =%s\n", GetBuildUser());
+    printf("Build host = %s\n", GetBuildHost());
+    printf("build time =%s\n", GetBuildTime());
+    printf("build root later..., %s\n", GetBuildRootHash());
 }
 
 HWTEST_F(ParameterTest, parameterTest002, TestSize.Level0)
