@@ -20,13 +20,20 @@
 #include "param_adaptor.h"
 
 #define FILE_RO "ro."
+#define OS_FULL_NAME_LEN 128
 #define VERSION_ID_LEN 256
-#define PROPERTY_MAX_LENGTH 2048
 
-static char g_roBuildOs[] = {"OpenHarmony"};
-static char g_roBuildVerShow[] = {"OpenHarmony 1.0.1"};
-static char g_roSdkApiLevel[] = {"3"};
-static char g_roFirstApiLevel[] = {"1"};
+static const char OHOS_OS_NAME[] = {"OpenHarmony"};
+static const int  OHOS_SDK_API_VERSION = 3;
+static const char OHOS_SECURITY_PATCH_TAG[] = {"2020-09-01"};
+static const char OHOS_RELEASE_TYPE[] = {"Beta"};
+
+static const int MAJOR_VERSION = 1;
+static const int SENIOR_VERSION = 0;
+static const int FEATURE_VERSION = 1;
+static const int BUILD_VERSION = 0;
+
+static const char EMPTY_STR[] = {""};
 
 static boolean IsValidValue(const char* value, unsigned int len)
 {
@@ -72,180 +79,177 @@ int SetParameter(const char* key, const char* value)
     return SetSysParam(key, value);
 }
 
-char* GetProductType(void)
+const char* GetDeviceType(void)
 {
-    return HalGetProductType();
+    return HalGetDeviceType();
 }
 
-char* GetManufacture(void)
+const char* GetManufacture(void)
 {
     return HalGetManufacture();
 }
 
-char* GetBrand(void)
+const char* GetBrand(void)
 {
     return HalGetBrand();
 }
 
-char* GetMarketName(void)
+const char* GetMarketName(void)
 {
     return HalGetMarketName();
 }
 
-char* GetProductSeries(void)
+const char* GetProductSeries(void)
 {
     return HalGetProductSeries();
 }
 
-char* GetProductModel(void)
+const char* GetProductModel(void)
 {
     return HalGetProductModel();
 }
 
-char* GetSoftwareModel(void)
+const char* GetSoftwareModel(void)
 {
     return HalGetSoftwareModel();
 }
 
-char* GetHardwareModel(void)
+const char* GetHardwareModel(void)
 {
     return HalGetHardwareModel();
 }
 
-char* GetHardwareProfile(void)
+const char* GetHardwareProfile(void)
 {
     return HalGetHardwareProfile();
 }
 
-char* GetSerial(void)
+const char* GetSerial(void)
 {
     return HalGetSerial();
 }
 
-char* GetBootloaderVersion(void)
+const char* GetBootloaderVersion(void)
 {
     return HalGetBootloaderVersion();
 }
 
-char* GetSecurityPatchTag(void)
+const char* GetSecurityPatchTag(void)
 {
-    return HalGetSecurityPatchTag();
+    return OHOS_SECURITY_PATCH_TAG;
 }
 
-char* GetAbiList(void)
+const char* GetAbiList(void)
 {
     return HalGetAbiList();
 }
 
-static char* GetSysProperty(const char* propertyInfo, const size_t propertySize)
+static const char* BuildOSFullName(void)
 {
-    if ((propertySize == 0) || (propertySize > PROPERTY_MAX_LENGTH)) {
-        return NULL;
+    const char release[] = "Release";
+    char value[OS_FULL_NAME_LEN];
+    const char* releaseType = GetOsReleaseType();
+    int length;
+    if (strncmp(releaseType, release, sizeof(release) - 1) == 0) {
+        length = sprintf_s(value, OS_FULL_NAME_LEN, "%s-%d.%d.%d.%d",
+            OHOS_OS_NAME, MAJOR_VERSION, SENIOR_VERSION, FEATURE_VERSION, BUILD_VERSION);
+    } else {
+        length = sprintf_s(value, OS_FULL_NAME_LEN, "%s-%d.%d.%d.%d(%s)",
+            OHOS_OS_NAME, MAJOR_VERSION, SENIOR_VERSION, FEATURE_VERSION, BUILD_VERSION, releaseType);
     }
-    char* prop = (char*)malloc(propertySize);
-    if (prop == NULL) {
-        return NULL;
+    if (length < 0) {
+        return EMPTY_STR;
     }
-    if (strcpy_s(prop, propertySize, propertyInfo) != 0) {
-        free(prop);
-        prop = NULL;
-        return NULL;
-    }
-    return prop;
+    const char* osFullName = strdup(value);
+    return osFullName;
 }
 
-char* GetOsName(void)
+const char* GetOSFullName(void)
 {
-    return GetSysProperty(g_roBuildOs, strlen(g_roBuildOs) + 1);
-}
-
-char* GetDisplayVersion(void)
-{
-    return GetSysProperty(g_roBuildVerShow, strlen(g_roBuildVerShow) + 1);
-}
-
-char* GetSdkApiLevel(void)
-{
-    return GetSysProperty(g_roSdkApiLevel, strlen(g_roSdkApiLevel) + 1);
-}
-
-char* GetFirstApiLevel(void)
-{
-    return GetSysProperty(g_roFirstApiLevel, strlen(g_roFirstApiLevel) + 1);
-}
-
-char* GetIncrementalVersion(void)
-{
-    return GetSysProperty(INCREMENTAL_VERSION, strlen(INCREMENTAL_VERSION) + 1);
-}
-
-char* GetVersionId(void)
-{
-    char* value = (char*)malloc(VERSION_ID_LEN);
-    if (value == NULL) {
-        return NULL;
+    static const char* osFullName = NULL;
+    if (osFullName != NULL) {
+        return osFullName;
     }
-    if (memset_s(value, VERSION_ID_LEN, 0, VERSION_ID_LEN) != 0) {
-        free(value);
-        value = NULL;
-        return NULL;
+    osFullName = BuildOSFullName();
+    if (osFullName == NULL) {
+        return EMPTY_STR;
     }
-    char* productType = GetProductType();
-    char* manufacture = GetManufacture();
-    char* brand = GetBrand();
-    char* productSerial = GetProductSeries();
-    char* productModel = GetProductModel();
-    char* softwareModel = GetSoftwareModel();
-    if (productType == NULL || manufacture == NULL || brand == NULL ||
-        productSerial == NULL || productModel == NULL || softwareModel == NULL) {
-        free(productType);
-        free(manufacture);
-        free(brand);
-        free(productSerial);
-        free(productModel);
-        free(softwareModel);
-        free(value);
-        value = NULL;
-        return NULL;
-    }
-    int len = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%s/%s/%s",
-        productType, manufacture, brand, productSerial, g_roBuildOs, productModel,
-        softwareModel, g_roSdkApiLevel, INCREMENTAL_VERSION, BUILD_TYPE);
-    free(productType);
-    free(manufacture);
-    free(brand);
-    free(productSerial);
-    free(productModel);
-    free(softwareModel);
+    return osFullName;
+}
+
+const char* GetDisplayVersion(void)
+{
+    return HalGetDisplayVersion();
+}
+
+int GetSdkApiVersion(void)
+{
+    return OHOS_SDK_API_VERSION;
+}
+
+int GetFirstApiVersion(void)
+{
+    return HalGetFirstApiVersion();
+}
+
+const char* GetIncrementalVersion(void)
+{
+    return HalGetIncrementalVersion();
+}
+
+static const char* BuildVersionId(void)
+{
+    char value[VERSION_ID_LEN];
+    int len = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%d/%s/%s",
+        GetDeviceType(), GetManufacture(), GetBrand(), GetProductSeries(),
+        GetOSFullName(), GetProductModel(), GetSoftwareModel(),
+        OHOS_SDK_API_VERSION, GetIncrementalVersion(), GetBuildType());
     if (len < 0) {
-        free(value);
-        value = NULL;
-        return NULL;
+        return EMPTY_STR;
     }
-    return value;
+    const char* versionId = strdup(value);
+    return versionId;
 }
 
-char* GetBuildType(void)
+const char* GetVersionId(void)
 {
-    return GetSysProperty(BUILD_TYPE, strlen(BUILD_TYPE) + 1);
+    static const char* versionId = NULL;
+    if (versionId != NULL) {
+        return versionId;
+    }
+    versionId = BuildVersionId();
+    if (versionId == NULL) {
+        return EMPTY_STR;
+    }
+    return versionId;
 }
 
-char* GetBuildUser(void)
+const char* GetBuildType(void)
 {
-    return GetSysProperty(BUILD_USER, strlen(BUILD_USER) + 1);
+    return HalGetBuildType();
 }
 
-char* GetBuildHost(void)
+const char* GetBuildUser(void)
 {
-    return GetSysProperty(BUILD_HOST, strlen(BUILD_HOST) + 1);
+    return HalGetBuildUser();
 }
 
-char* GetBuildTime(void)
+const char* GetBuildHost(void)
 {
-    return GetSysProperty(BUILD_TIME, strlen(BUILD_TIME) + 1);
+    return HalGetBuildHost();
 }
 
-char* GetBuildRootHash(void)
+const char* GetBuildTime(void)
 {
-    return GetSysProperty(BUILD_ROOTHASH, strlen(BUILD_ROOTHASH) + 1);
+    return HalGetBuildTime();
+}
+
+const char* GetBuildRootHash(void)
+{
+    return BUILD_ROOTHASH;
+}
+
+const char* GetOsReleaseType(void)
+{
+    return OHOS_RELEASE_TYPE;
 }
