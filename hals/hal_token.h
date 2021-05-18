@@ -22,14 +22,14 @@
 #if __cplusplus
 extern "C" {
 #endif
-#endif
+#endif /* __cplusplus */
 
 #define KIT_FRAMEWORK_UID_MAX 1000
 
 /**
  * @brief Read token value from device.
  *
- * @param token the result token value, if read sucessfully.
+ * @param token the result token value, if read successfully.
  * @param len length of the token.
  * @returns 0 if success and get the update area token,
  *          1 if success and get the pre-made token,
@@ -78,6 +78,6 @@ int HalGetProdKey(char *productKey, unsigned int len);
 #if __cplusplus
 }
 #endif
-#endif
+#endif /* __cplusplus */
 
-#endif
+#endif // HAL_TOKEN_H
