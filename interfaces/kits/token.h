@@ -22,7 +22,7 @@
 #if __cplusplus
 extern "C" {
 #endif
-#endif
+#endif /* __cplusplus */
 
 /**
  * @brief Read token value form device.
@@ -70,6 +70,6 @@ int GetProdKey(char *productKey, unsigned int len);
 #if __cplusplus
 }
 #endif
-#endif
+#endif /* __cplusplus */
 
-#endif
+#endif // TOKEN_H
