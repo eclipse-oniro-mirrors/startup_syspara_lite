@@ -16,10 +16,12 @@
 #include "parameter_hal.h"
 
 #include <cstring>
+#include <fstream>
 #include <securec.h>
 
 #include "parameters.h"
 #include "sysparam_errno.h"
+#include "string_ex.h"
 
 static const char *g_emptyStr = "";
 
@@ -29,7 +31,8 @@ static const char OHOS_PRODUCT_SERIES[] = {"****"};
 static const char OHOS_SOFTWARE_MODEL[] = {"****"};
 static const char OHOS_HARDWARE_MODEL[] = {"****"};
 static const char OHOS_HARDWARE_PROFILE[] = {"****"};
-static const char OHOS_SERIAL[] = {"1234567890"};
+static const char DEF_OHOS_SERIAL[] = {"1234567890"};
+static const char SN_FILE[] = {"/sys/class/net/eth0/address"};
 static const char OHOS_ABI_LIST[] = {"****"};
 static const char OHOS_BOOTLOADER_VERSION[] = {"bootloader"};
 static const int OHOS_FIRST_API_LEVEL = 1;
@@ -161,7 +164,25 @@ const char *HalGetHardwareProfile()
 
 const char *HalGetSerial()
 {
-    return OHOS_SERIAL;
+    static const char* ohos_serial = nullptr;
+    if (ohos_serial != nullptr) {
+        return ohos_serial;
+    }
+    std::ifstream infile;
+    infile.open(SN_FILE);
+    std::string value;
+    infile >> value;
+    if (value.empty()) {
+        ohos_serial = DEF_OHOS_SERIAL;
+    } else {
+        std::string sn = ReplaceStr(value, ":", "");
+        const char* res = strdup(sn.c_str());
+        if (res == nullptr) {
+            return DEF_OHOS_SERIAL;
+        }
+        ohos_serial = res;
+    }
+    return ohos_serial;
 }
 
 const char *HalGetAbiList()
