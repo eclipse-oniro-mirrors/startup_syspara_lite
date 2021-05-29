@@ -175,7 +175,7 @@ const char *HalGetSerial()
     if (value.empty()) {
         ohos_serial = DEF_OHOS_SERIAL;
     } else {
-        std::string sn = ReplaceStr(value, ":", "");
+        std::string sn = OHOS::ReplaceStr(value, ":", "");
         const char* res = strdup(sn.c_str());
         if (res == nullptr) {
             return DEF_OHOS_SERIAL;
