@@ -25,11 +25,11 @@
 #define OS_FULL_NAME_LEN 128
 #define VERSION_ID_MAX_LEN 256
 
-static const char OHOS_OS_NAME[] = {"OHOS"};
-static const int OHOS_SDK_API_LEVEL = 5;
+static const char OHOS_OS_NAME[] = {"OpenHarmony"};
+static const int OHOS_SDK_API_LEVEL = 6;
 static const char OHOS_BUILD_ROOT_HASH[] = {"****"};
 static const char OHOS_SECURITY_PATCH_TAG[] = {"2020-09-01"};
-static const char OHOS_RELEASE_TYPE[] = {"Beta"};
+static const char OHOS_RELEASE_TYPE[] = {"Canary1"};
 
 static const char EMPTY_STR[] = {""};
 
