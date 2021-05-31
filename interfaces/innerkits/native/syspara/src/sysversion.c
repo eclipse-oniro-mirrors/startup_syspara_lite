@@ -17,12 +17,12 @@
 /* *
  * Major(M) version number.
  */
-static int g_majorVersion = 1;
+static int g_majorVersion = 2;
 
 /* *
  * Senior(S) version number.
  */
-static int g_seniorVersion = 0;
+static int g_seniorVersion = 2;
 
 /* *
  * Feature(F) version number.
