@@ -18,6 +18,8 @@
 #include <securec.h>
 #include <string.h>
 
+#include <openssl/sha.h>
+
 #include "parameter_hal.h"
 #include "sysparam_errno.h"
 #include "sysversion.h"
@@ -30,6 +32,9 @@ static const int OHOS_SDK_API_LEVEL = 6;
 static const char OHOS_BUILD_ROOT_HASH[] = {"****"};
 static const char OHOS_SECURITY_PATCH_TAG[] = {"2020-09-01"};
 static const char OHOS_RELEASE_TYPE[] = {"Canary1"};
+static const int DEV_BUF_LENGTH = 3;
+static const int DEV_BUF_MAX_LENGTH = 1024;
+static const int DEV_UUID_LENGTH = 65;
 
 static const char EMPTY_STR[] = {""};
 
@@ -223,4 +228,60 @@ const char *GetBuildRootHash()
 const char *GetOsReleaseType()
 {
     return OHOS_RELEASE_TYPE;
+}
+
+int GetSha256Value(const char *input, char *udid, int udidSize)
+{
+   char buf[DEV_BUF_LENGTH] = {0};
+   unsigned char hash[SHA256_DIGEST_LENGTH] = {0};
+   SHA256_CTX sha256;
+   if ((SHA256_Init(&sha256) == 0) ||
+       (SHA256_Update(&sha256, input, strlen(input)) == 0) ||
+       (SHA256_Final(hash, &sha256) == 0)) {
+	return EC_FAILURE;
+   }
+
+   for (size_t i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+       char value = hash[i];
+       memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
+       sprintf_s(buf, sizeof(buf), "%02X", value);
+       if (strcat_s(udid, udidSize, buf) != 0) {
+          return EC_FAILURE;
+       }
+   }
+   return EC_SUCCESS;
+}
+
+int GetDevUdid(char *udid, int size)
+{ 
+   if (size < DEV_UUID_LENGTH) {
+      return EC_FAILURE;
+   }
+
+   const char *manufacture = GetManufacture();
+   const char *model = GetHardwareModel();
+   const char *sn = GetSerial();
+   if (manufacture == NULL || model == NULL || sn == NULL) {
+       return EC_FAILURE;
+   }
+   int tmpSize = strlen(manufacture) + strlen(model) + strlen(sn) + 1;
+   if (tmpSize <= 0 || tmpSize > DEV_BUF_MAX_LENGTH) {
+       return EC_FAILURE;
+   }
+   char *tmp = malloc(tmpSize);
+   if (tmp == NULL) {
+       return EC_FAILURE;
+   }
+
+   memset_s(tmp, tmpSize, 0, tmpSize);
+   if ((strcat_s(tmp, strlen(tmp), manufacture) != 0) ||
+       (strcat_s(tmp, strlen(tmp), model) != 0) ||
+       (strcat_s(tmp, strlen(tmp), sn) != 0)) {
+       free(tmp);
+       return EC_FAILURE;
+   }
+
+   int ret = GetSha256Value(tmp, udid, size);
+   free(tmp);
+   return ret;
 }
