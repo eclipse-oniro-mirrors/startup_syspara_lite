@@ -21,6 +21,7 @@ config("syspara_config") {
     "//utils/native/base/include",
     "//base/startup/syspara_lite/hals/parameter/include",
     "include",
+    "//third_party/openssl/include/",
   ]
 }
 
@@ -43,6 +44,7 @@ ohos_shared_library("syspara") {
   deps = [
     "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
     "//utils/native/base:utils",
+    "//third_party/openssl:libcrypto_static",
   ]
   subsystem_name = "startup"
   part_name = "startup_l2"

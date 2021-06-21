@@ -85,6 +85,7 @@ const char *GetBuildUser();
 const char *GetBuildHost();
 const char *GetBuildTime();
 int GetFirstApiVersion();
+int GetDevUdid(char *udid, int size);
 
 #ifdef __cplusplus
 #if __cplusplus
