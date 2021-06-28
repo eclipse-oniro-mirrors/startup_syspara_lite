@@ -18,12 +18,14 @@
 
 #include <cerrno>
 #include <unordered_map>
+#include <vector>
 
 #if defined(__BIONIC__)
 #include <sys/system_properties.h>
 #endif
 
 #include "parameters_abstractor.h"
+#include "property.h"
 
 namespace OHOS {
 namespace system {
@@ -59,11 +61,20 @@ class NullAbstractor : public ParametersAbstractor {
 public:
     std::string GetParameter(const std::string& key, const std::string& def) override
     {
+        unsigned int len = 0;
+        int ret = SystemGetParameter(key.c_str(), NULL, &len);
+        if (ret == 0 && len > 0) {
+            std::vector<char> value(len + 1);
+            ret = SystemGetParameter(key.c_str(), value.data(), &len);
+            if (ret == 0) {
+                return std::string(value.data());
+            }
+        }
         return def;
     }
     bool SetParameter(const std::string& key, const std::string& value) override
     {
-        return false;
+        return SystemSetParameter(key.c_str(), value.c_str()) == 0;
     }
 } g_abstractor;
 #endif
