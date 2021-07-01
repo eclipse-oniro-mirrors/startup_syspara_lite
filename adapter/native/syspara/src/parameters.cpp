@@ -25,7 +25,7 @@
 #endif
 
 #include "parameters_abstractor.h"
-#include "property.h"
+#include "sys_param.h"
 
 namespace OHOS {
 namespace system {

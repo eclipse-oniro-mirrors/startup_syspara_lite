@@ -35,7 +35,7 @@ config("syspara_public_config") {
 ohos_shared_library("syspara") {
   include_dirs = [
     "include",
-    "//base/startup/init_lite/services/include/property",
+    "//base/startup/init_lite/services/include/param",
     "//base/startup/syspara_lite/adapter/native/syspara/include",
   ]
   sources = [
@@ -48,7 +48,7 @@ ohos_shared_library("syspara") {
   public_configs = [ ":syspara_public_config" ]
   deps = [
     "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
-    "//base/startup/init_lite/services/property:propertyclient",
+    "//base/startup/init_lite/services/param:paramclient",
     "//utils/native/base:utils",
     "//third_party/openssl:libcrypto_static",
   ]
