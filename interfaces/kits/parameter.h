@@ -372,6 +372,18 @@ const char* GetBuildRootHash(void);
  */
 const char* GetOsReleaseType(void);
 
+/**
+ * @brief Obtains the device udid.
+ *
+ * The OS release category can be Release, Beta, Canary.
+ * The specific release type may be Release, Beta1, or others alike.\n
+ *
+ * @return Return 0 if a result is found; return fail label otherwise.
+ * @since 1.0
+ * @version 1.0
+ */
+int GetDevUdid(char *udid, int size);
+
 #ifdef __cplusplus
 #if __cplusplus
 }

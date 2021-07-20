@@ -18,10 +18,15 @@
 #include "hal_sys_param.h"
 #include "ohos_errno.h"
 #include "param_adaptor.h"
+#include "mbedtls/sha256.h"
 
 #define FILE_RO "ro."
 #define OS_FULL_NAME_LEN 128
 #define VERSION_ID_LEN 256
+#define HASH_LENGTH 32
+#define DEV_BUF_LENGTH 3
+#define DEV_BUF_MAX_LENGTH 1024
+#define DEV_UUID_LENGTH 65
 
 static const char OHOS_OS_NAME[] = {"OpenHarmony"};
 static const int  OHOS_SDK_API_VERSION = 6;
@@ -252,4 +257,63 @@ const char* GetBuildRootHash(void)
 const char* GetOsReleaseType(void)
 {
     return OHOS_RELEASE_TYPE;
+}
+
+static int GetSha256Value(const char *input, char *udid, int udidSize)
+{
+   if (input == NULL) {
+       return EC_FAILURE;
+   }
+   char buf[DEV_BUF_LENGTH] = {0};
+   unsigned char hash[HASH_LENGTH] = {0};
+    
+   mbedtls_sha256_context context;
+   mbedtls_sha256_init(&context);
+   mbedtls_sha256_starts_ret(&context, 0);
+   mbedtls_sha256_update_ret(&context, input, strlen(input));
+   mbedtls_sha256_finish_ret(&context, hash);
+
+   for (size_t i = 0; i < HASH_LENGTH; i++) {
+       char value = hash[i];
+       memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
+       sprintf_s(buf, sizeof(buf), "%02X", value);
+       if (strcat_s(udid, udidSize, buf) != 0) {
+          return EC_FAILURE;
+       }
+   }
+   return EC_SUCCESS;
+}
+
+int GetDevUdid(char *udid, int size)
+{ 
+   if (size < DEV_UUID_LENGTH) {
+      return EC_FAILURE;
+   }
+
+   const char *manufacture = GetManufacture();
+   const char *model = GetHardwareModel();
+   const char *sn = GetSerial();
+   if (manufacture == NULL || model == NULL || sn == NULL) {
+       return EC_FAILURE;
+   }
+   int tmpSize = strlen(manufacture) + strlen(model) + strlen(sn) + 1;
+   if (tmpSize <= 0 || tmpSize > DEV_BUF_MAX_LENGTH) {
+       return EC_FAILURE;
+   }
+   char *tmp = malloc(tmpSize);
+   if (tmp == NULL) {
+       return EC_FAILURE;
+   }
+
+   memset_s(tmp, tmpSize, 0, tmpSize);
+   if ((strcat_s(tmp, strlen(tmp), manufacture) != 0) ||
+       (strcat_s(tmp, strlen(tmp), model) != 0) ||
+       (strcat_s(tmp, strlen(tmp), sn) != 0)) {
+       free(tmp);
+       return EC_FAILURE;
+   }
+
+   int ret = GetSha256Value(tmp, udid, size);
+   free(tmp);
+   return ret;
 }
