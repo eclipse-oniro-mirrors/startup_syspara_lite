@@ -24,10 +24,7 @@ if (ohos_kernel_type == "liteos_m") {
       "param_impl_hal/param_impl_hal.c",
       "parameter_common.c",
     ]
-    deps = [
-      "$ohos_product_adapter_dir/utils/sys_param:hal_sysparam",
-      "//third_party/mbedtls:mbedtls",
-    ]
+    deps = [ "$ohos_product_adapter_dir/utils/sys_param:hal_sysparam" ]
     defines = [
       "INCREMENTAL_VERSION=\"${ohos_version}\"",
       "BUILD_TYPE=\"${ohos_build_type}\"",
