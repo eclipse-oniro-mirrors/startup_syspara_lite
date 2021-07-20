@@ -61,7 +61,7 @@ int GetParameter(const char* key, const char* def, char* value, unsigned int len
         return EC_INVALID;
     }
     if ((ret < 0) && IsValidValue(def, len)) {
-        if (strcpy_s(value, len, def) != 0) {
+        if (strncpy_s(value, len, def, len - 1) != 0) {
             return EC_FAILURE;
         }
         ret = strlen(def);
