@@ -18,8 +18,9 @@
 #include "hal_sys_param.h"
 #include "ohos_errno.h"
 #include "param_adaptor.h"
+#ifdef USE_MBEDTLS
 #include "mbedtls/sha256.h"
-
+#endif
 #define FILE_RO "ro."
 #define OS_FULL_NAME_LEN 128
 #define VERSION_ID_LEN 256
@@ -258,7 +259,7 @@ const char* GetOsReleaseType(void)
 {
     return OHOS_RELEASE_TYPE;
 }
-
+#ifdef USE_MBEDTLS
 static int GetSha256Value(const char *input, char *udid, int udidSize)
 {
    if (input == NULL) {
@@ -317,3 +318,10 @@ int GetDevUdid(char *udid, int size)
    free(tmp);
    return ret;
 }
+#else 
+int GetDevUdid(char *udid, int size)
+{
+    return 0;
+}
+#endif
+

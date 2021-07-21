@@ -32,6 +32,7 @@ if (ohos_kernel_type == "liteos_m") {
       "BUILD_TIME=\"${ohos_build_time}\"",
       "BUILD_HOST=\"${ohos_build_host}\"",
       "BUILD_ROOTHASH=\"${ohos_build_roothash}\"",
+      "USE_MBEDTLS",
     ]
   }
 } else {
@@ -61,6 +62,7 @@ if (ohos_kernel_type == "liteos_m") {
       "BUILD_TIME=\"${ohos_build_time}\"",
       "BUILD_HOST=\"${ohos_build_host}\"",
       "BUILD_ROOTHASH=\"${ohos_build_roothash}\"",
+      "USE_MBEDTLS",
     ]
   }
 }
