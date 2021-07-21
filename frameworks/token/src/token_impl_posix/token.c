@@ -45,8 +45,8 @@ int ReadToken(char *token, unsigned int len)
         HILOG_ERROR(HILOG_MODULE_HIVIEW, "token is nullptr");
         return EC_FAILURE;
     }
-
-    if (UidVerify()) {
+    ret = UidVerify();
+    if (ret != EC_SUCCESS) {
         return EC_FAILURE;
     }
 
@@ -65,8 +65,8 @@ int WriteToken(const char *token, unsigned int len)
         HILOG_ERROR(HILOG_MODULE_HIVIEW, "token is nullptr");
         return EC_FAILURE;
     }
-
-    if (UidVerify()) {
+    ret = UidVerify();
+    if (ret != EC_SUCCESS) {
         return EC_FAILURE;
     }
 
@@ -83,8 +83,8 @@ int GetAcKey(char *acKey, unsigned int len)
         HILOG_ERROR(HILOG_MODULE_HIVIEW, "acKey is nullptr");
         return EC_FAILURE;
     }
-
-    if (UidVerify()) {
+    int ret = UidVerify();
+    if (ret != EC_SUCCESS) {
         return EC_FAILURE;
     }
 
@@ -108,7 +108,8 @@ int GetProdKey(char *productKey, unsigned int len)
         return EC_FAILURE;
     }
 
-    if (UidVerify()) {
+    int ret = UidVerify();
+    if (ret != EC_SUCCESS) {
         return EC_FAILURE;
     }
 

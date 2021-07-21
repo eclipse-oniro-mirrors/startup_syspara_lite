@@ -86,7 +86,7 @@ int GetSysParam(const char* key, char* value, unsigned int len)
         return EC_FAILURE;
     }
 
-    int ret = read(fd, value, info.st_size);
+    int ret = read(fd, value, (size_t)info.st_size);
     close(fd);
     fd = -1;
     if (ret < 0) {
