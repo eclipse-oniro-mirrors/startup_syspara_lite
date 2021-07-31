@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2021 Huawei Device Co., Ltd.
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (c) 2021 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,43 +19,12 @@
 #include <unordered_map>
 #include <vector>
 
-#if defined(__BIONIC__)
-#include <sys/system_properties.h>
-#endif
-
 #include "parameters_abstractor.h"
 #include "sys_param.h"
 
 namespace OHOS {
 namespace system {
 namespace {
-#if defined(__BIONIC__)
-class BionicAbstractor : public ParametersAbstractor {
-public:
-    std::string GetParameter(const std::string& key, const std::string& def) override
-    {
-        std::string value;
-
-        const prop_info* pi = __system_property_find(key.c_str());
-        if (pi == nullptr) {
-            return def;
-        }
-        __system_property_read_callback(pi,
-                                        [](void* cookie, const char*, const char* value, unsigned) {
-                                            auto parameter = reinterpret_cast<std::string*>(cookie);
-                                            *parameter = value;
-                                        },
-                                        &value);
-
-        return value.empty() ? def : value;
-    }
-
-    bool SetParameter(const std::string& key, const std::string& value) override
-    {
-        return (__system_property_set(key.c_str(), value.c_str()) == 0);
-    }
-} g_abstractor;
-#else
 class NullAbstractor : public ParametersAbstractor {
 public:
     std::string GetParameter(const std::string& key, const std::string& def) override
@@ -77,7 +45,7 @@ public:
         return SystemSetParameter(key.c_str(), value.c_str()) == 0;
     }
 } g_abstractor;
-#endif
+
 ParametersAbstractor& g_abstractorRef = g_abstractor;
 
 constexpr unsigned int DECIMAL = 10;
