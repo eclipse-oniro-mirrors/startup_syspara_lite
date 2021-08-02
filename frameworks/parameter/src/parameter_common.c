@@ -307,9 +307,9 @@ int GetDevUdid(char *udid, int size)
    }
 
    memset_s(tmp, tmpSize, 0, tmpSize);
-   if ((strcat_s(tmp, strlen(tmp), manufacture) != 0) ||
-       (strcat_s(tmp, strlen(tmp), model) != 0) ||
-       (strcat_s(tmp, strlen(tmp), sn) != 0)) {
+   if ((strcat_s(tmp, tmpSize, manufacture) != 0) ||
+       (strcat_s(tmp, tmpSize, model) != 0) ||
+       (strcat_s(tmp, tmpSize, sn) != 0)) {
        free(tmp);
        return EC_FAILURE;
    }
