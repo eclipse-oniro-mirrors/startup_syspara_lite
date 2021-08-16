@@ -21,8 +21,8 @@
  *
  * This module can obtain device information such as device type and manufacturer.\n
  *
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 
 /**
@@ -31,8 +31,8 @@
  * @brief Declares functions for obtaining system parameters.
  *
  * You can use the provided functions to obtain device information such as device type and manufacturer.\n
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 
 #ifndef PARAMETER_API_H
@@ -59,8 +59,8 @@ extern "C" {
  * @param len Indicates the length of the data in the buffer.
  * @return Returns the number of bytes of the system parameter if the operation is successful;
  * returns <b>-9</b> if a parameter is incorrect; returns <b>-1</b> in other scenarios.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 int GetParameter(const char* key, const char* def, char* value, unsigned int len);
 
@@ -76,8 +76,8 @@ int GetParameter(const char* key, const char* def, char* value, unsigned int len
  * Its length cannot exceed 128 bytes (including the end-of-text character in the string).
  * @return Returns <b>0</b> if the operation is successful;
  * returns <b>-9</b> if a parameter is incorrect; returns <b>-1</b> in other scenarios.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 int SetParameter(const char* key, const char* value);
 
@@ -88,8 +88,8 @@ int SetParameter(const char* key, const char* value);
  *
  * @return Returns the device type if a result is found, for example, returns <b>wifiiot</b>
  * if the application is running on a Wi-Fi connected IoT device; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0 */
+ * @since 6.0
+ * @version 6.0 */
 const char* GetDeviceType(void);
 
 /**
@@ -98,8 +98,8 @@ const char* GetDeviceType(void);
  * The device manufacturer can have a maximum length of 32 characters.\n
  *
  * @return Returns the device manufacturer if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetManufacture(void);
 
@@ -109,8 +109,8 @@ const char* GetManufacture(void);
  * The device brand can have a maximum length of 32 characters.\n
  *
  * @return Returns the device brand if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetBrand(void);
 
@@ -120,8 +120,8 @@ const char* GetBrand(void);
  * The device marketing name can have a maximum length of 32 characters.\n
  *
  * @return Returns the device marketing name if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetMarketName(void);
 
@@ -131,8 +131,8 @@ const char* GetMarketName(void);
  * The device series name can have a maximum length of 32 characters.\n
  *
  * @return Returns the device series name if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetProductSeries(void);
 
@@ -142,8 +142,8 @@ const char* GetProductSeries(void);
  * The device authentication model can have a maximum length of 32 characters.\n
  *
  * @return Returns the device authentication model if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetProductModel(void);
 
@@ -153,8 +153,8 @@ const char* GetProductModel(void);
  * The device software model can have a maximum length of 32 characters.\n
  *
  * @return Returns the device software model if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0 */
+ * @since 6.0
+ * @version 6.0 */
 const char* GetSoftwareModel(void);
 
 /**
@@ -163,8 +163,8 @@ const char* GetSoftwareModel(void);
  * The device hardware model can have a maximum length of 32 characters.\n
  *
  * @return Returns the device hardware model if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetHardwareModel(void);
 
@@ -189,8 +189,8 @@ const char* GetHardwareModel(void);
  * Bluetooth | bluetooth
  * Wi-Fi | WIFI
  * USB | usbhost
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetHardwareProfile(void);
 
@@ -200,8 +200,8 @@ const char* GetHardwareProfile(void);
  * The device SN can have a maximum length of 64 characters.\n
  *
  * @return Returns the device SN if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetSerial(void);
 
@@ -211,8 +211,8 @@ const char* GetSerial(void);
  * The device OS name can have a maximum length of 32 characters.\n
  *
  * @return Returns the device OS name if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetOSFullName(void);
 
@@ -222,8 +222,8 @@ const char* GetOSFullName(void);
  * The software version visible to users can have a maximum length of 64 characters.\n
  *
  * @return Returns the software version visible to users if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetDisplayVersion(void);
 
@@ -233,8 +233,8 @@ const char* GetDisplayVersion(void);
  * The bootloader version can have a maximum length of 64 characters.\n
  *
  * @return Returns the bootloader version if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetBootloaderVersion(void);
 
@@ -242,8 +242,8 @@ const char* GetBootloaderVersion(void);
  * @brief Obtains the security patch tag.
  *
  * @return Returns the security patch tag if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetSecurityPatchTag(void);
 
@@ -254,8 +254,8 @@ const char* GetSecurityPatchTag(void);
  * This function is available only for an OS with an ecosystem accommodating native applications.\n
  *
  * @return Returns the ABI list if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetAbiList(void);
 
@@ -265,8 +265,8 @@ const char* GetAbiList(void);
  * In general, the SDK API version is an integer. This function is only available for an OS with an ecosystem.\n
  *
  * @return Returns the SDK API version if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 int GetSdkApiVersion(void);
 
@@ -276,8 +276,8 @@ int GetSdkApiVersion(void);
  * In general, the first SDK API version is an integer. This function is only available for an OS with an ecosystem.\n
  *
  * @return Returns the first SDK API version if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 int GetFirstApiVersion(void);
 
@@ -287,8 +287,8 @@ int GetFirstApiVersion(void);
  * The incremental version can be used as the unique software version when the device model is the same.\n
  *
  * @return Returns the incremental version if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetIncrementalVersion(void);
 
@@ -298,8 +298,8 @@ const char* GetIncrementalVersion(void);
  * The version ID can have a maximum length of 127 characters. It is the unique identifier of a device.\n
  *
  * @return Returns the version ID if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetVersionId(void);
 
@@ -311,8 +311,8 @@ const char* GetVersionId(void);
  * Multiple build types can be separated by semicolons (;).\n
  *
  * @return Returns the build type if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetBuildType(void);
 
@@ -322,8 +322,8 @@ const char* GetBuildType(void);
  * The build account user name can have a maximum length of 32 characters.\n
  *
  * @return Returns the build account user name if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetBuildUser(void);
 
@@ -333,8 +333,8 @@ const char* GetBuildUser(void);
  * The build host name can have a maximum length of 32 characters.\n
  *
  * @return Returns the build host name if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetBuildHost(void);
 
@@ -344,8 +344,8 @@ const char* GetBuildHost(void);
  * The version build time is represented by the number of milliseconds elapsed since 1970-01-01 00:00:00 GMT.\n
  *
  * @return Returns the version build time if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetBuildTime(void);
 
@@ -355,8 +355,8 @@ const char* GetBuildTime(void);
  * The buildroot hash value is represented by the root hash value in the software version hash tree.\n
  *
  * @return Returns the buildroot hash value if a result is found; returns <b>NULL</b> otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetBuildRootHash(void);
 
@@ -367,8 +367,8 @@ const char* GetBuildRootHash(void);
  * The specific release type may be Release, Beta1, or others alike.\n
  *
  * @return Returns the OS Release Type.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 const char* GetOsReleaseType(void);
 
@@ -379,8 +379,8 @@ const char* GetOsReleaseType(void);
  * The specific release type may be Release, Beta1, or others alike.\n
  *
  * @return Return 0 if a result is found; return fail label otherwise.
- * @since 1.0
- * @version 1.0
+ * @since 6.0
+ * @version 6.0
  */
 int GetDevUdid(char *udid, int size);
 
