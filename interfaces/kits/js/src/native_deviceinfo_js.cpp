@@ -21,7 +21,7 @@
 #include "parameter.h"
 #include "sysversion.h"
 
-const int UDID_LEN = 20;
+static const int UDID_LEN = 20;
 
 static napi_value GetDeviceType(napi_env env, napi_callback_info info)
 {
