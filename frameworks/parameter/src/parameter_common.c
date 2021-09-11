@@ -14,6 +14,9 @@
  */
 
 #include "parameter.h"
+#include <fcntl.h>
+#include <stdio.h>
+#include <sys/types.h>
 #include <securec.h>
 #include "hal_sys_param.h"
 #include "ohos_errno.h"
@@ -28,6 +31,9 @@
 #define DEV_BUF_LENGTH 3
 #define DEV_BUF_MAX_LENGTH 1024
 #define DEV_UUID_LENGTH 65
+#define OHOS_DISPLAY_VERSION_LEN 128
+#define OHOS_PATCH_VERSION_LEN 64
+#define OHOS_PATCH_VERSION_FILE "/patch/pversion"
 
 static const char OHOS_OS_NAME[] = {"OpenHarmony"};
 static const int  OHOS_SDK_API_VERSION = 6;
@@ -183,9 +189,57 @@ const char* GetOSFullName(void)
     return osFullName;
 }
 
+static const char* BuildDisplayVersion(void)
+{
+    int len;
+    char patchValue[OHOS_PATCH_VERSION_LEN] = {0};
+    char displayValue[OHOS_DISPLAY_VERSION_LEN] = {0};
+    int fd = open(OHOS_PATCH_VERSION_FILE, O_RDONLY);
+    if (fd < 0) {
+        return NULL;
+    }
+    len = read(fd, patchValue, OHOS_PATCH_VERSION_LEN);
+    if (len < 0) {
+        close(fd);
+        return NULL;
+    }
+    close(fd);
+    if (patchValue[len - 1] == '\n') {
+        patchValue[len - 1] = '\0';
+    }
+
+    const char *versionValue = HalGetDisplayVersion();
+    int versionLen = strlen(versionValue);
+    if (versionValue[versionLen - 1] != ')') {
+        len = sprintf_s(displayValue, OHOS_DISPLAY_VERSION_LEN, "%s(%s)", versionValue,
+            patchValue + strlen("version="));
+    } else {
+        char tempValue[versionLen];
+        memset_s(tempValue, versionLen, 0, versionLen);
+        if (strncpy_s(tempValue, versionLen, versionValue, versionLen - 1) != 0) {
+            return NULL;
+        }
+        tempValue[versionLen - 1] = '\0';
+        len = sprintf_s(displayValue, OHOS_DISPLAY_VERSION_LEN, "%s%s)", tempValue,
+            patchValue + strlen("version="));
+    }
+    if (len < 0) {
+        return NULL;
+    }
+    return strdup(displayValue);
+}
+
 const char* GetDisplayVersion(void)
 {
-    return HalGetDisplayVersion();
+    static const char *displayVersion = NULL;
+    if (displayVersion != NULL) {
+        return displayVersion;
+    }
+    displayVersion = BuildDisplayVersion();
+    if (displayVersion == NULL) {
+        return HalGetDisplayVersion();
+    }
+    return displayVersion;
 }
 
 int GetSdkApiVersion(void)
