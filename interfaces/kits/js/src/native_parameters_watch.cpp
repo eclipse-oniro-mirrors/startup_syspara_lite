@@ -13,17 +13,12 @@
  * limitations under the License.
  */
 
-#include <vector>
 #include <functional>
+#include <vector>
 #include "native_parameters_js.h"
-
 static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupParametersJs" };
 using namespace OHOS::HiviewDFX;
 using namespace OHOS::system;
-static const int PARAM_TIMEOUT = 2;
-static const int MAX_LENGTH = 128;
-static const int ARGC_NUMBER = 2;
-static const int ARGC_THREE_NUMBER = 3;
 
 static napi_ref g_paramWatchRef;
 
@@ -69,7 +64,7 @@ static void WaitCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
         },
         [](napi_env env, napi_status status, void *data) {
             StorageAsyncContext *asyncContext = (StorageAsyncContext *)data;
-            napi_value result[ARGC_NUMBER] = { 0 };
+            napi_value result[native_param::ARGC_NUMBER] = { 0 };
             napi_value message = nullptr;
             napi_create_object(env, &result[0]);
             napi_create_int32(env, asyncContext->status, &message);
@@ -88,7 +83,7 @@ static void WaitCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
                 napi_get_reference_value(env, asyncContext->callbackRef, &callbackRef);
                 napi_value undefined;
                 napi_get_undefined(env, &undefined);
-                napi_call_function(env, undefined, callbackRef, ARGC_NUMBER, result, &callResult);
+                napi_call_function(env, undefined, callbackRef, native_param::ARGC_NUMBER, result, &callResult);
                 napi_delete_reference(env, asyncContext->callbackRef);
             }
             napi_delete_async_work(env, asyncContext->work);
@@ -100,35 +95,36 @@ static void WaitCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 
 napi_value ParamWait(napi_env env, napi_callback_info info)
 {
-    size_t argc = ARGC_THREE_NUMBER + 1;
-    napi_value argv[ARGC_THREE_NUMBER + 1];
+    size_t argc = native_param::ARGC_THREE_NUMBER + 1;
+    napi_value argv[native_param::ARGC_THREE_NUMBER + 1];
     napi_value thisVar = nullptr;
     napi_status status = napi_get_cb_info(env, info, &argc, argv, &thisVar, nullptr);
     PARAM_JS_CHECK(status == napi_ok, return GetNapiValue(env, status), "Failed to get cb info");
-    PARAM_JS_CHECK(argc >= ARGC_THREE_NUMBER, return GetNapiValue(env, status), "Failed to get argc");
+    PARAM_JS_CHECK(argc >= native_param::ARGC_THREE_NUMBER, return GetNapiValue(env, status), "Failed to get argc");
 
     auto *asyncContext = new StorageAsyncContext();
     PARAM_JS_CHECK(asyncContext != nullptr, return GetNapiValue(env, status), "Failed to create context");
     asyncContext->env = env;
 
     // get param key
-    asyncContext->keyLen = BUF_LENGTH - 1;
-    asyncContext->valueLen = BUF_LENGTH - 1;
+    asyncContext->keyLen = native_param::BUF_LENGTH - 1;
+    asyncContext->valueLen = native_param::BUF_LENGTH - 1;
     int ret = GetParamValue(env, argv[0], napi_string, asyncContext->key, &asyncContext->keyLen);
     PARAM_JS_CHECK(ret == 0, delete asyncContext;
         return GetNapiValue(env, ret), "Invalid param for wait");
     ret = GetParamValue(env, argv[1], napi_string, asyncContext->value, &asyncContext->valueLen);
     PARAM_JS_CHECK(ret == 0, delete asyncContext;
         return GetNapiValue(env, ret), "Invalid param for wait");
-    ret = GetParamValue(env, argv[PARAM_TIMEOUT], napi_number, (char *)&asyncContext->timeout, nullptr);
+    ret = GetParamValue(env, argv[native_param::PARAM_TIMEOUT_INDEX],
+        napi_number, (char *)&asyncContext->timeout, nullptr);
     PARAM_JS_CHECK(ret == 0, delete asyncContext;
         return GetNapiValue(env, ret), "Invalid param for wait");
-    if (argc > ARGC_THREE_NUMBER) {
+    if (argc > native_param::ARGC_THREE_NUMBER) {
         napi_valuetype valueType = napi_null;
-        napi_typeof(env, argv[ARGC_THREE_NUMBER], &valueType);
+        napi_typeof(env, argv[native_param::ARGC_THREE_NUMBER], &valueType);
         PARAM_JS_CHECK(valueType == napi_function, delete asyncContext;
             return GetNapiValue(env, ret), "Invalid param for wait callbackRef");
-        napi_create_reference(env, argv[ARGC_THREE_NUMBER], 1, &asyncContext->callbackRef);
+        napi_create_reference(env, argv[native_param::ARGC_THREE_NUMBER], 1, &asyncContext->callbackRef);
     }
     HiLog::Debug(LABEL, "JSApp Wait key: %{public}s, value: %{public}s callbackRef %p.",
         asyncContext->key, asyncContext->value, asyncContext->callbackRef);
@@ -235,12 +231,12 @@ static napi_value ParamWatchConstructor(napi_env env, napi_callback_info info)
     ParamWatcher *watcher = new ParamWatcher();
     PARAM_JS_CHECK(watcher != nullptr, return NapiGetNull(env), "Failed to create param watcher");
     napi_status status = napi_create_reference(env, thisVar, 1, &watcher->thisVarRef);
-    PARAM_JS_CHECK(status == 0, delete watcher; return NapiGetNull(env), "Failed to create reference %d", status);
+    PARAM_JS_CHECK(status == 0, delete watcher;
+        return NapiGetNull(env), "Failed to create reference %d", status);
     HiLog::Debug(LABEL, "JSApp watcher this = %{public}p ", watcher);
 
-    napi_wrap(env,
-        thisVar,
-        watcher,
+    napi_wrap(
+        env, thisVar, watcher,
         [](napi_env env, void *data, void *hint) {
             ParamWatcher *watcher = (ParamWatcher *)data;
             HiLog::Debug(LABEL, "JSApp watcher this = %{public}p, destruct", watcher);
@@ -251,8 +247,7 @@ static napi_value ParamWatchConstructor(napi_env env, napi_callback_info info)
                 watcher = nullptr;
             }
         },
-        nullptr,
-        nullptr);
+        nullptr, nullptr);
     return thisVar;
 }
 
@@ -275,7 +270,7 @@ napi_value GetWatcher(napi_env env, napi_callback_info info)
         napi_unwrap(env, obj, (void **)&watcher);
     }
     if (watcher != nullptr) {
-        watcher->keyLen = MAX_LENGTH;
+        watcher->keyLen = native_param::MAX_LENGTH;
         int ret = GetParamValue(env, argv[0], napi_string, watcher->keyPrefix, &watcher->keyLen);
         PARAM_JS_CHECK(ret == 0, return NapiGetNull(env), "Failed to get key prefix");
         HiLog::Debug(LABEL, "JSApp watcher keyPrefix = %{public}s %{public}p.", watcher->keyPrefix, watcher);
@@ -288,7 +283,7 @@ static ParamWatcher *GetWatcherInfo(napi_env env, napi_callback_info info, napi_
     size_t argc = 2;
     napi_value argv[2];
     napi_value thisVar = nullptr;
-    void* data = nullptr;
+    void *data = nullptr;
     napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
 
     size_t typeLen = 32;
@@ -317,7 +312,7 @@ static void ProcessParamChange(const char *key, const char *value, void *context
     PARAM_JS_CHECK(watcher != nullptr, return, "Invalid param");
     napi_handle_scope scope = nullptr;
     napi_open_handle_scope(watcher->env, &scope);
-    napi_value result[2] = {0};
+    napi_value result[native_param::ARGC_NUMBER] = { 0 };
     napi_create_string_utf8(watcher->env, key, strlen(key), &result[0]);
     napi_create_string_utf8(watcher->env, value, strlen(value), &result[1]);
     napi_value thisVar = nullptr;
@@ -331,7 +326,8 @@ static void ProcessParamChange(const char *key, const char *value, void *context
             napi_value callbackFunc = nullptr;
             napi_get_reference_value(watcher->env, callbackRef, &callbackFunc);
             napi_value callbackResult = nullptr;
-            napi_call_function(watcher->env, thisVar, callbackFunc, ARGC_NUMBER, result, &callbackResult);
+            napi_call_function(watcher->env, thisVar, callbackFunc,
+                native_param::ARGC_NUMBER, result, &callbackResult);
         }
         ret = GetNextRefence(watcher, next);
     }
@@ -360,11 +356,11 @@ static napi_value SwithWatchOn(napi_env env, napi_callback_info info)
     napi_ref callbackRef;
     napi_create_reference(env, callback, 1, &callbackRef);
     {
-        static uint32_t g_watcherId = 0;
+        static uint32_t watcherId = 0;
         std::lock_guard<std::mutex> lock(watcher->mutex);
-        g_watcherId++;
-        HiLog::Debug(LABEL, "JSApp watcher add key %{public}s %{public}u all.", watcher->keyPrefix, g_watcherId);
-        watcher->callbackReferences[g_watcherId] = callbackRef;
+        watcherId++;
+        HiLog::Debug(LABEL, "JSApp watcher add key %{public}s %{public}u all.", watcher->keyPrefix, watcherId);
+        watcher->callbackReferences[watcherId] = callbackRef;
     }
     watcher->env = env;
     return GetNapiValue(env, 0);

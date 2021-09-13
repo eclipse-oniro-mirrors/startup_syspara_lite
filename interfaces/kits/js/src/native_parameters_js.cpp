@@ -16,10 +16,6 @@
 
 static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupParametersJs" };
 using namespace OHOS::HiviewDFX;
-static const int MAX_LENGTH = 128;
-static const int ARGC_NUMBER = 2;
-static const int ARGC_THREE_NUMBER = 3;
-
 static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 {
     napi_value resource = nullptr;
@@ -30,13 +26,13 @@ static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
             StorageAsyncContext *asyncContext = (StorageAsyncContext *)data;
             asyncContext->status = SetParameter(asyncContext->key, asyncContext->value);
             HiLog::Debug(LABEL,
-                "JSApp set::asyncContext-> status = %{public}d, asyncContext->key = %{public}s, asyncContext-> value = "
+                "JSApp set::asyncContext-> status = %{public}d, asyncContext->key = %{public}s, asyncContext->value = "
                 "%{public}s.",
                 asyncContext->status, asyncContext->key, asyncContext->value);
         },
         [](napi_env env, napi_status status, void *data) {
             StorageAsyncContext *asyncContext = (StorageAsyncContext *)data;
-            napi_value result[ARGC_NUMBER] = { 0 };
+            napi_value result[native_param::ARGC_NUMBER] = { 0 };
             if (asyncContext->status == 0) {
                 napi_get_undefined(env, &result[0]);
                 napi_get_undefined(env, &result[1]);
@@ -58,7 +54,7 @@ static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
                 napi_value callback = nullptr;
                 napi_value callResult = nullptr;
                 napi_get_reference_value(env, asyncContext->callbackRef, &callback);
-                napi_call_function(env, nullptr, callback, ARGC_NUMBER, result, &callResult);
+                napi_call_function(env, nullptr, callback, native_param::ARGC_NUMBER, result, &callResult);
                 napi_delete_reference(env, asyncContext->callbackRef);
             }
             napi_delete_async_work(env, asyncContext->work);
@@ -70,12 +66,12 @@ static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 
 static napi_value Set(napi_env env, napi_callback_info info)
 {
-    size_t argc = ARGC_THREE_NUMBER;
-    napi_value argv[ARGC_THREE_NUMBER] = { nullptr };
+    size_t argc = native_param::ARGC_THREE_NUMBER;
+    napi_value argv[native_param::ARGC_THREE_NUMBER] = { nullptr };
     napi_value thisVar = nullptr;
     void *data = nullptr;
     napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
-    NAPI_ASSERT(env, argc >= ARGC_NUMBER, "requires 2 parameter");
+    NAPI_ASSERT(env, argc >= native_param::ARGC_NUMBER, "requires 2 parameter");
     auto *asyncContext = new StorageAsyncContext();
     asyncContext->env = env;
     for (size_t i = 0; i < argc; i++) {
@@ -83,10 +79,12 @@ static napi_value Set(napi_env env, napi_callback_info info)
         napi_typeof(env, argv[i], &valueType);
 
         if (i == 0 && valueType == napi_string) {
-            napi_get_value_string_utf8(env, argv[i], asyncContext->key, BUF_LENGTH - 1, &asyncContext->keyLen);
+            napi_get_value_string_utf8(env, argv[i], asyncContext->key,
+                native_param::BUF_LENGTH - 1, &asyncContext->keyLen);
         } else if (i == 1 && valueType == napi_string) {
-            napi_get_value_string_utf8(env, argv[i], asyncContext->value, BUF_LENGTH - 1, &asyncContext->valueLen);
-        } else if (i == ARGC_NUMBER && valueType == napi_function) {
+            napi_get_value_string_utf8(env, argv[i], asyncContext->value,
+                native_param::BUF_LENGTH - 1, &asyncContext->valueLen);
+        } else if (i == native_param::ARGC_NUMBER && valueType == napi_function) {
             napi_create_reference(env, argv[i], 1, &asyncContext->callbackRef);
         } else {
             delete asyncContext;
@@ -107,27 +105,27 @@ static napi_value Set(napi_env env, napi_callback_info info)
 
 static napi_value SetSync(napi_env env, napi_callback_info info)
 {
-    size_t argc = ARGC_NUMBER;
-    napi_value args[ARGC_NUMBER] = { nullptr };
+    size_t argc = native_param::ARGC_NUMBER;
+    napi_value args[native_param::ARGC_NUMBER] = { nullptr };
     NAPI_CALL(env, napi_get_cb_info(env, info, &argc, args, nullptr, nullptr));
-    NAPI_ASSERT(env, argc == ARGC_NUMBER, "Wrong number of arguments");
+    NAPI_ASSERT(env, argc == native_param::ARGC_NUMBER, "Wrong number of arguments");
     napi_valuetype valuetype0 = napi_null;
     NAPI_CALL(env, napi_typeof(env, args[0], &valuetype0));
     napi_valuetype valuetype1 = napi_null;
     NAPI_CALL(env, napi_typeof(env, args[1], &valuetype1));
     NAPI_ASSERT(env, valuetype0 == napi_string && valuetype1 == napi_string, "Wrong argument type. string expected.");
 
-    char keyBuf[BUF_LENGTH] = { 0 };
+    char keyBuf[native_param::BUF_LENGTH] = { 0 };
     size_t keySize = 0;
-    NAPI_CALL(env, napi_get_value_string_utf8(env, args[0], keyBuf, BUF_LENGTH - 1, &keySize));
-    if (keySize >= MAX_LENGTH) {
+    NAPI_CALL(env, napi_get_value_string_utf8(env, args[0], keyBuf, native_param::BUF_LENGTH - 1, &keySize));
+    if (keySize >= native_param::MAX_LENGTH) {
         return nullptr;
     }
 
-    char valueBuf[BUF_LENGTH] = { 0 };
+    char valueBuf[native_param::BUF_LENGTH] = { 0 };
     size_t valueSize = 0;
-    NAPI_CALL(env, napi_get_value_string_utf8(env, args[1], valueBuf, BUF_LENGTH - 1, &valueSize));
-    if (valueSize >= MAX_LENGTH) {
+    NAPI_CALL(env, napi_get_value_string_utf8(env, args[1], valueBuf, native_param::BUF_LENGTH - 1, &valueSize));
+    if (valueSize >= native_param::MAX_LENGTH) {
         return nullptr;
     }
 
@@ -149,34 +147,34 @@ static napi_value SetSync(napi_env env, napi_callback_info info)
 
 static napi_value GetSync(napi_env env, napi_callback_info info)
 {
-    size_t argc = ARGC_NUMBER;
-    napi_value args[ARGC_NUMBER] = { nullptr };
+    size_t argc = native_param::ARGC_NUMBER;
+    napi_value args[native_param::ARGC_NUMBER] = { nullptr };
     NAPI_CALL(env, napi_get_cb_info(env, info, &argc, args, nullptr, nullptr));
-    NAPI_ASSERT(env, argc == 1 || argc == ARGC_NUMBER, "Wrong number of arguments");
+    NAPI_ASSERT(env, argc == 1 || argc == native_param::ARGC_NUMBER, "Wrong number of arguments");
     napi_valuetype valuetype0 = napi_null;
     NAPI_CALL(env, napi_typeof(env, args[0], &valuetype0));
     NAPI_ASSERT(env, valuetype0 == napi_string, "Wrong argument type. Numbers expected.");
-    if (argc == ARGC_NUMBER) {
+    if (argc == native_param::ARGC_NUMBER) {
         napi_valuetype valuetype1 = napi_null;
         NAPI_CALL(env, napi_typeof(env, args[1], &valuetype1));
         NAPI_ASSERT(env, valuetype1 == napi_string, "Wrong argument type. string expected.");
     }
 
-    char keyBuf[BUF_LENGTH] = { 0 };
+    char keyBuf[native_param::BUF_LENGTH] = { 0 };
     size_t keySize = 0;
-    NAPI_CALL(env, napi_get_value_string_utf8(env, args[0], keyBuf, BUF_LENGTH - 1, &keySize));
-    if (keySize >= MAX_LENGTH) {
+    NAPI_CALL(env, napi_get_value_string_utf8(env, args[0], keyBuf, native_param::BUF_LENGTH - 1, &keySize));
+    if (keySize >= native_param::MAX_LENGTH) {
         return nullptr;
     }
 
     std::string keyStr = keyBuf;
     std::string valueStr = "";
     std::string getValue = "";
-    if (argc == ARGC_NUMBER) {
-        char valueBuf[BUF_LENGTH] = { 0 };
+    if (argc == native_param::ARGC_NUMBER) {
+        char valueBuf[native_param::BUF_LENGTH] = { 0 };
         size_t valueSize = 0;
-        NAPI_CALL(env, napi_get_value_string_utf8(env, args[1], valueBuf, BUF_LENGTH - 1, &valueSize));
-        if (valueSize >= MAX_LENGTH) {
+        NAPI_CALL(env, napi_get_value_string_utf8(env, args[1], valueBuf, native_param::BUF_LENGTH - 1, &valueSize));
+        if (valueSize >= native_param::MAX_LENGTH) {
             return nullptr;
         }
         valueStr = valueBuf;
@@ -209,7 +207,7 @@ static void GetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
         },
         [](napi_env env, napi_status status, void *data) {
             StorageAsyncContext *asyncContext = (StorageAsyncContext *)data;
-            napi_value result[ARGC_NUMBER] = { 0 };
+            napi_value result[native_param::ARGC_NUMBER] = { 0 };
             if (asyncContext->status == 0) {
                 napi_get_undefined(env, &result[0]);
                 napi_create_string_utf8(env, asyncContext->getValue.c_str(), strlen(asyncContext->getValue.c_str()),
@@ -232,7 +230,7 @@ static void GetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
                 napi_value callback = nullptr;
                 napi_value callResult = nullptr;
                 napi_get_reference_value(env, asyncContext->callbackRef, &callback);
-                napi_call_function(env, nullptr, callback, ARGC_NUMBER, result, &callResult);
+                napi_call_function(env, nullptr, callback, native_param::ARGC_NUMBER, result, &callResult);
                 napi_delete_reference(env, asyncContext->callbackRef);
             }
             napi_delete_async_work(env, asyncContext->work);
@@ -244,8 +242,8 @@ static void GetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 
 static napi_value Get(napi_env env, napi_callback_info info)
 {
-    size_t argc = ARGC_THREE_NUMBER;
-    napi_value argv[ARGC_THREE_NUMBER] = { nullptr };
+    size_t argc = native_param::ARGC_THREE_NUMBER;
+    napi_value argv[native_param::ARGC_THREE_NUMBER] = { nullptr };
     napi_value thisVar = nullptr;
     void *data = nullptr;
     napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
@@ -257,13 +255,15 @@ static napi_value Get(napi_env env, napi_callback_info info)
         napi_typeof(env, argv[i], &valueType);
 
         if (i == 0 && valueType == napi_string) {
-            napi_get_value_string_utf8(env, argv[i], asyncContext->key, BUF_LENGTH - 1, &asyncContext->keyLen);
+            napi_get_value_string_utf8(env, argv[i], asyncContext->key,
+                native_param::BUF_LENGTH - 1, &asyncContext->keyLen);
         } else if (i == 1 && valueType == napi_string) {
-            napi_get_value_string_utf8(env, argv[i], asyncContext->value, BUF_LENGTH - 1, &asyncContext->valueLen);
+            napi_get_value_string_utf8(env, argv[i], asyncContext->value,
+                native_param::BUF_LENGTH - 1, &asyncContext->valueLen);
         } else if (i == 1 && valueType == napi_function) {
             napi_create_reference(env, argv[i], 1, &asyncContext->callbackRef);
             break;
-        } else if (i == ARGC_NUMBER && valueType == napi_function) {
+        } else if (i == native_param::ARGC_NUMBER && valueType == napi_function) {
             napi_create_reference(env, argv[i], 1, &asyncContext->callbackRef);
         } else {
             delete asyncContext;
