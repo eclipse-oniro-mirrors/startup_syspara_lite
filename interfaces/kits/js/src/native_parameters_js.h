@@ -32,41 +32,11 @@
 #include "param_wrapper.h"
 #include "parameter.h"
 
-#define BUF_LENGTH 256
 #define PARAM_JS_CHECK(retCode, exper, ...) \
     if (!(retCode)) {                       \
         HiLog::Error(LABEL, __VA_ARGS__);   \
         exper;                              \
     }
-
-using StorageAsyncContext = struct {
-    napi_env env = nullptr;
-    napi_async_work work = nullptr;
-
-    char key[BUF_LENGTH] = { 0 };
-    size_t keyLen = 0;
-    char value[BUF_LENGTH] = { 0 };
-    size_t valueLen = 0;
-    int32_t timeout;
-    napi_deferred deferred = nullptr;
-    napi_ref callbackRef = nullptr;
-
-    int status = -1;
-    std::string getValue;
-};
-
-using ParamWatcher = struct {
-    napi_env env = nullptr;
-    napi_ref thisVarRef = nullptr;
-    char keyPrefix[BUF_LENGTH] = { 0 };
-    size_t keyLen = 0;
-    bool notifySwitch = false;
-    bool startWatch = false;
-    void ProcessParamChange(const char *key, const char *value);
-
-    std::mutex mutex {};
-    std::map<uint32_t, napi_ref> callbackReferences {};
-};
 
 EXTERN_C_START
 napi_value GetWatcher(napi_env env, napi_callback_info info);

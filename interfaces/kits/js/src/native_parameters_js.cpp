@@ -19,6 +19,23 @@ using namespace OHOS::HiviewDFX;
 static constexpr int MAX_LENGTH = 128;
 static constexpr int ARGC_NUMBER = 2;
 static constexpr int ARGC_THREE_NUMBER = 3;
+static constexpr int BUF_LENGTH = 256;
+
+using StorageAsyncContext = struct {
+    napi_env env = nullptr;
+    napi_async_work work = nullptr;
+
+    char key[BUF_LENGTH] = { 0 };
+    size_t keyLen = 0;
+    char value[BUF_LENGTH] = { 0 };
+    size_t valueLen = 0;
+    int32_t timeout;
+    napi_deferred deferred = nullptr;
+    napi_ref callbackRef = nullptr;
+
+    int status = -1;
+    std::string getValue;
+};
 
 static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 {

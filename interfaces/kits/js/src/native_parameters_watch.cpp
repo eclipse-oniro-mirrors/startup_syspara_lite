@@ -20,8 +20,38 @@ static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupPara
 using namespace OHOS::HiviewDFX;
 using namespace OHOS::system;
 static constexpr int ARGC_NUMBER = 2;
+static constexpr int BUF_LENGTH = 256;
 
 static napi_ref g_paramWatchRef;
+
+using ParamAsyncContext = struct {
+    napi_env env = nullptr;
+    napi_async_work work = nullptr;
+
+    char key[BUF_LENGTH] = { 0 };
+    size_t keyLen = 0;
+    char value[BUF_LENGTH] = { 0 };
+    size_t valueLen = 0;
+    int32_t timeout;
+    napi_deferred deferred = nullptr;
+    napi_ref callbackRef = nullptr;
+
+    int status = -1;
+    std::string getValue;
+};
+
+using ParamWatcher = struct {
+    napi_env env = nullptr;
+    napi_ref thisVarRef = nullptr;
+    char keyPrefix[BUF_LENGTH] = { 0 };
+    size_t keyLen = 0;
+    bool notifySwitch = false;
+    bool startWatch = false;
+    void ProcessParamChange(const char *key, const char *value);
+
+    std::mutex mutex {};
+    std::map<uint32_t, napi_ref> callbackReferences {};
+};
 
 static napi_value NapiGetNull(napi_env env)
 {
@@ -51,20 +81,20 @@ static int GetParamValue(napi_env env, napi_value arg, napi_valuetype valueType,
     return status;
 }
 
-static void WaitCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
+static void WaitCallbackWork(napi_env env, ParamAsyncContext *asyncContext)
 {
     napi_value resource = nullptr;
     napi_create_string_utf8(env, "JSStartupGet", NAPI_AUTO_LENGTH, &resource);
     napi_create_async_work(
         env, nullptr, resource,
         [](napi_env env, void *data) {
-            StorageAsyncContext *asyncContext = (StorageAsyncContext *)data;
+            ParamAsyncContext *asyncContext = (ParamAsyncContext *)data;
             asyncContext->status = WaitParameter(asyncContext->key, asyncContext->value, asyncContext->timeout);
             HiLog::Debug(LABEL, "JSApp Wait status: %{public}d, key: %{public}s",
                 asyncContext->status, asyncContext->key);
         },
         [](napi_env env, napi_status status, void *data) {
-            StorageAsyncContext *asyncContext = (StorageAsyncContext *)data;
+            ParamAsyncContext *asyncContext = (ParamAsyncContext *)data;
             napi_value result[ARGC_NUMBER] = { 0 };
             napi_value message = nullptr;
             napi_create_object(env, &result[0]);
@@ -105,7 +135,7 @@ napi_value ParamWait(napi_env env, napi_callback_info info)
     PARAM_JS_CHECK(status == napi_ok, return GetNapiValue(env, status), "Failed to get cb info");
     PARAM_JS_CHECK(argc >= ARGC_THREE_NUMBER, return GetNapiValue(env, status), "Failed to get argc");
 
-    auto *asyncContext = new StorageAsyncContext();
+    auto *asyncContext = new ParamAsyncContext();
     PARAM_JS_CHECK(asyncContext != nullptr, return GetNapiValue(env, status), "Failed to create context");
     asyncContext->env = env;
 
