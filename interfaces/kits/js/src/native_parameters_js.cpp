@@ -16,6 +16,9 @@
 
 static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupParametersJs" };
 using namespace OHOS::HiviewDFX;
+static const int MAX_LENGTH = 128;
+static const int ARGC_NUMBER = 2;
+static const int ARGC_THREE_NUMBER = 3;
 
 static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 {

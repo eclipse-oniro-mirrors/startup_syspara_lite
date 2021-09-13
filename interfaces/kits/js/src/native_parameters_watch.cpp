@@ -17,10 +17,14 @@
 #include <functional>
 #include "native_parameters_js.h"
 
-static const int PARAM_TIMEOUT = 2;
 static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupParametersJs" };
 using namespace OHOS::HiviewDFX;
 using namespace OHOS::system;
+static const int PARAM_TIMEOUT = 2;
+static const int MAX_LENGTH = 128;
+static const int ARGC_NUMBER = 2;
+static const int ARGC_THREE_NUMBER = 3;
+
 static napi_ref g_paramWatchRef;
 
 static napi_value NapiGetNull(napi_env env)

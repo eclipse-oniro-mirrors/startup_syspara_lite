@@ -15,14 +15,14 @@
 #ifndef NATIVE_PARAMETERS_JS_H
 #define NATIVE_PARAMETERS_JS_H
 
+#include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
-#include <mutex>
-#include <map>
-#include <fcntl.h>
-#include <sstream>
-#include <cstdarg>
 #include <cstring>
+#include <fcntl.h>
+#include <map>
+#include <mutex>
+#include <sstream>
 #include <string>
 #include <unistd.h>
 
@@ -33,10 +33,7 @@
 #include "parameter.h"
 
 namespace {
-const static int MAX_LENGTH = 128;
-const static int BUF_LENGTH = 256;
-const static int ARGC_NUMBER = 2;
-const static int ARGC_THREE_NUMBER = 3;
+static const int BUF_LENGTH = 256;
 
 #define PARAM_JS_CHECK(retCode, exper, ...) \
     if (!(retCode)) {                       \
@@ -70,8 +67,8 @@ using ParamWatcher = struct {
     void ProcessParamChange(const char *key, const char *value);
 
     std::mutex mutex {};
-    std::map<uint32_t, napi_ref> callbackReferences{};
-} ;
+    std::map<uint32_t, napi_ref> callbackReferences {};
+};
 } // namespace
 
 EXTERN_C_START

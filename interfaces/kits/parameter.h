@@ -62,7 +62,7 @@ extern "C" {
  * @since 6.0
  * @version 6.0
  */
-int GetParameter(const char* key, const char* def, char* value, unsigned int len);
+int GetParameter(const char *key, const char *def, char *value, unsigned int len);
 
 /**
  * @brief Sets or updates a system parameter.
@@ -79,7 +79,7 @@ int GetParameter(const char* key, const char* def, char* value, unsigned int len
  * @since 6.0
  * @version 6.0
  */
-int SetParameter(const char* key, const char* value);
+int SetParameter(const char *key, const char *value);
 
 /**
  * @brief Wait for a system parameter with specified value.
@@ -128,7 +128,7 @@ int WatchParameter(const char *keyprefix, ParameterChgPtr callback, void *contex
  * if the application is running on a Wi-Fi connected IoT device; returns <b>NULL</b> otherwise.
  * @since 6.0
  * @version 6.0 */
-const char* GetDeviceType(void);
+const char *GetDeviceType(void);
 
 /**
  * @brief Obtains the device manufacturer.
@@ -139,7 +139,7 @@ const char* GetDeviceType(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetManufacture(void);
+const char *GetManufacture(void);
 
 /**
  * @brief Obtains the device brand.
@@ -150,7 +150,7 @@ const char* GetManufacture(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetBrand(void);
+const char *GetBrand(void);
 
 /**
  * @brief Obtains the device marketing name.
@@ -161,7 +161,7 @@ const char* GetBrand(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetMarketName(void);
+const char *GetMarketName(void);
 
 /**
  * @brief Obtains the device series name.
@@ -172,7 +172,7 @@ const char* GetMarketName(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetProductSeries(void);
+const char *GetProductSeries(void);
 
 /**
  * @brief Obtains the device authentication model.
@@ -183,7 +183,7 @@ const char* GetProductSeries(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetProductModel(void);
+const char *GetProductModel(void);
 
 /**
  * @brief Obtains the device software model.
@@ -193,7 +193,7 @@ const char* GetProductModel(void);
  * @return Returns the device software model if a result is found; returns <b>NULL</b> otherwise.
  * @since 6.0
  * @version 6.0 */
-const char* GetSoftwareModel(void);
+const char *GetSoftwareModel(void);
 
 /**
  * @brief Obtains the device hardware model.
@@ -204,7 +204,7 @@ const char* GetSoftwareModel(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetHardwareModel(void);
+const char *GetHardwareModel(void);
 
 /**
  * @brief Obtains the device hardware profile.
@@ -230,7 +230,7 @@ const char* GetHardwareModel(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetHardwareProfile(void);
+const char *GetHardwareProfile(void);
 
 /**
  * @brief Obtains the device serial number (SN).
@@ -241,7 +241,7 @@ const char* GetHardwareProfile(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetSerial(void);
+const char *GetSerial(void);
 
 /**
  * @brief Obtains the operating system (OS) name.
@@ -252,7 +252,7 @@ const char* GetSerial(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetOSFullName(void);
+const char *GetOSFullName(void);
 
 /**
  * @brief Obtains the software version visible to users.
@@ -263,7 +263,7 @@ const char* GetOSFullName(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetDisplayVersion(void);
+const char *GetDisplayVersion(void);
 
 /**
  * @brief Obtains the bootloader version of this device.
@@ -274,7 +274,7 @@ const char* GetDisplayVersion(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetBootloaderVersion(void);
+const char *GetBootloaderVersion(void);
 
 /**
  * @brief Obtains the security patch tag.
@@ -283,7 +283,7 @@ const char* GetBootloaderVersion(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetSecurityPatchTag(void);
+const char *GetSecurityPatchTag(void);
 
 /**
  * @brief Obtains the list of application binary interfaces (ABIs) supported on this device.
@@ -295,7 +295,7 @@ const char* GetSecurityPatchTag(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetAbiList(void);
+const char *GetAbiList(void);
 
 /**
  * @brief Obtains the SDK API version that matches the current system software.
@@ -328,7 +328,7 @@ int GetFirstApiVersion(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetIncrementalVersion(void);
+const char *GetIncrementalVersion(void);
 
 /**
  * @brief Obtains the version ID.
@@ -339,7 +339,7 @@ const char* GetIncrementalVersion(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetVersionId(void);
+const char *GetVersionId(void);
 
 /**
  * @brief Obtains the build type.
@@ -352,7 +352,7 @@ const char* GetVersionId(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetBuildType(void);
+const char *GetBuildType(void);
 
 /**
  * @brief Obtains the build account user name.
@@ -363,7 +363,7 @@ const char* GetBuildType(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetBuildUser(void);
+const char *GetBuildUser(void);
 
 /**
  * @brief Obtains the build host name.
@@ -374,7 +374,7 @@ const char* GetBuildUser(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetBuildHost(void);
+const char *GetBuildHost(void);
 
 /**
  * @brief Obtains the version build time.
@@ -385,7 +385,7 @@ const char* GetBuildHost(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetBuildTime(void);
+const char *GetBuildTime(void);
 
 /**
  * @brief Obtains the buildroot hash value of this version.
@@ -396,7 +396,7 @@ const char* GetBuildTime(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetBuildRootHash(void);
+const char *GetBuildRootHash(void);
 
 /**
  * @brief Obtains the OS release type.
@@ -408,7 +408,7 @@ const char* GetBuildRootHash(void);
  * @since 6.0
  * @version 6.0
  */
-const char* GetOsReleaseType(void);
+const char *GetOsReleaseType(void);
 
 /**
  * @brief Obtains the device udid.
@@ -428,6 +428,5 @@ int GetDevUdid(char *udid, int size);
 #endif
 #endif /* __cplusplus */
 
-#endif  // PARAMETER_API_H
+#endif // PARAMETER_API_H
 /** @} */
-
