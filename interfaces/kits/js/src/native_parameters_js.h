@@ -33,11 +33,11 @@
 #include "parameter.h"
 
 namespace native_param {
-static const int BUF_LENGTH = 256;
-static const int MAX_LENGTH = 128;
-static const int ARGC_NUMBER = 2;
-static const int ARGC_THREE_NUMBER = 3;
-static const int PARAM_TIMEOUT_INDEX = 2;
+constexpr int BUF_LENGTH = 256;
+constexpr int MAX_LENGTH = 128;
+constexpr int ARGC_NUMBER = 2;
+constexpr int ARGC_THREE_NUMBER = 3;
+constexpr int PARAM_TIMEOUT_INDEX = 2;
 };
 
 namespace {
