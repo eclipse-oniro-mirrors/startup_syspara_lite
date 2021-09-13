@@ -32,15 +32,7 @@
 #include "param_wrapper.h"
 #include "parameter.h"
 
-namespace native_param {
-constexpr int BUF_LENGTH = 256;
-constexpr int MAX_LENGTH = 128;
-constexpr int ARGC_NUMBER = 2;
-constexpr int ARGC_THREE_NUMBER = 3;
-constexpr int PARAM_TIMEOUT_INDEX = 2;
-};
-
-namespace {
+#define BUF_LENGTH 256
 #define PARAM_JS_CHECK(retCode, exper, ...) \
     if (!(retCode)) {                       \
         HiLog::Error(LABEL, __VA_ARGS__);   \
@@ -51,9 +43,9 @@ using StorageAsyncContext = struct {
     napi_env env = nullptr;
     napi_async_work work = nullptr;
 
-    char key[native_param::BUF_LENGTH] = { 0 };
+    char key[BUF_LENGTH] = { 0 };
     size_t keyLen = 0;
-    char value[native_param::BUF_LENGTH] = { 0 };
+    char value[BUF_LENGTH] = { 0 };
     size_t valueLen = 0;
     int32_t timeout;
     napi_deferred deferred = nullptr;
@@ -66,7 +58,7 @@ using StorageAsyncContext = struct {
 using ParamWatcher = struct {
     napi_env env = nullptr;
     napi_ref thisVarRef = nullptr;
-    char keyPrefix[native_param::BUF_LENGTH] = { 0 };
+    char keyPrefix[BUF_LENGTH] = { 0 };
     size_t keyLen = 0;
     bool notifySwitch = false;
     bool startWatch = false;
@@ -75,7 +67,6 @@ using ParamWatcher = struct {
     std::mutex mutex {};
     std::map<uint32_t, napi_ref> callbackReferences {};
 };
-} // namespace
 
 EXTERN_C_START
 napi_value GetWatcher(napi_env env, napi_callback_info info);

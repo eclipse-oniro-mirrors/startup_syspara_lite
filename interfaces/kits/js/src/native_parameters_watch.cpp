@@ -19,6 +19,7 @@
 static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupParametersJs" };
 using namespace OHOS::HiviewDFX;
 using namespace OHOS::system;
+static constexpr int ARGC_NUMBER = 2;
 
 static napi_ref g_paramWatchRef;
 
@@ -36,14 +37,14 @@ static napi_value GetNapiValue(napi_env env, int val)
     return result;
 }
 
-static int GetParamValue(napi_env env, napi_value arg, napi_valuetype valueType, char *buffer, size_t *buffLen)
+static int GetParamValue(napi_env env, napi_value arg, napi_valuetype valueType, char *buffer, size_t &buffLen)
 {
     napi_valuetype type = napi_null;
     napi_typeof(env, arg, &type);
     PARAM_JS_CHECK(type == valueType, return -1, "Invalid type %d %d", type, valueType);
     napi_status status = napi_ok;
     if (valueType == napi_string) {
-        status = napi_get_value_string_utf8(env, arg, buffer, *buffLen, buffLen);
+        status = napi_get_value_string_utf8(env, arg, buffer, buffLen, &buffLen);
     } else if (valueType == napi_number) {
         status = napi_get_value_int32(env, arg, (int *)buffer);
     }
@@ -64,7 +65,7 @@ static void WaitCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
         },
         [](napi_env env, napi_status status, void *data) {
             StorageAsyncContext *asyncContext = (StorageAsyncContext *)data;
-            napi_value result[native_param::ARGC_NUMBER] = { 0 };
+            napi_value result[ARGC_NUMBER] = { 0 };
             napi_value message = nullptr;
             napi_create_object(env, &result[0]);
             napi_create_int32(env, asyncContext->status, &message);
@@ -83,7 +84,7 @@ static void WaitCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
                 napi_get_reference_value(env, asyncContext->callbackRef, &callbackRef);
                 napi_value undefined;
                 napi_get_undefined(env, &undefined);
-                napi_call_function(env, undefined, callbackRef, native_param::ARGC_NUMBER, result, &callResult);
+                napi_call_function(env, undefined, callbackRef, ARGC_NUMBER, result, &callResult);
                 napi_delete_reference(env, asyncContext->callbackRef);
             }
             napi_delete_async_work(env, asyncContext->work);
@@ -95,36 +96,38 @@ static void WaitCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 
 napi_value ParamWait(napi_env env, napi_callback_info info)
 {
-    size_t argc = native_param::ARGC_THREE_NUMBER + 1;
-    napi_value argv[native_param::ARGC_THREE_NUMBER + 1];
+    constexpr int PARAM_TIMEOUT_INDEX = 2;
+    constexpr int ARGC_THREE_NUMBER = 3;
+    size_t argc = ARGC_THREE_NUMBER + 1;
+    napi_value argv[ARGC_THREE_NUMBER + 1];
     napi_value thisVar = nullptr;
     napi_status status = napi_get_cb_info(env, info, &argc, argv, &thisVar, nullptr);
     PARAM_JS_CHECK(status == napi_ok, return GetNapiValue(env, status), "Failed to get cb info");
-    PARAM_JS_CHECK(argc >= native_param::ARGC_THREE_NUMBER, return GetNapiValue(env, status), "Failed to get argc");
+    PARAM_JS_CHECK(argc >= ARGC_THREE_NUMBER, return GetNapiValue(env, status), "Failed to get argc");
 
     auto *asyncContext = new StorageAsyncContext();
     PARAM_JS_CHECK(asyncContext != nullptr, return GetNapiValue(env, status), "Failed to create context");
     asyncContext->env = env;
 
     // get param key
-    asyncContext->keyLen = native_param::BUF_LENGTH - 1;
-    asyncContext->valueLen = native_param::BUF_LENGTH - 1;
-    int ret = GetParamValue(env, argv[0], napi_string, asyncContext->key, &asyncContext->keyLen);
+    asyncContext->keyLen = BUF_LENGTH - 1;
+    asyncContext->valueLen = BUF_LENGTH - 1;
+    size_t len = sizeof(asyncContext->timeout);
+    int ret = GetParamValue(env, argv[0], napi_string, asyncContext->key, asyncContext->keyLen);
     PARAM_JS_CHECK(ret == 0, delete asyncContext;
         return GetNapiValue(env, ret), "Invalid param for wait");
-    ret = GetParamValue(env, argv[1], napi_string, asyncContext->value, &asyncContext->valueLen);
+    ret = GetParamValue(env, argv[1], napi_string, asyncContext->value, asyncContext->valueLen);
     PARAM_JS_CHECK(ret == 0, delete asyncContext;
         return GetNapiValue(env, ret), "Invalid param for wait");
-    ret = GetParamValue(env, argv[native_param::PARAM_TIMEOUT_INDEX],
-        napi_number, (char *)&asyncContext->timeout, nullptr);
+    ret = GetParamValue(env, argv[PARAM_TIMEOUT_INDEX], napi_number, (char *)&asyncContext->timeout, len);
     PARAM_JS_CHECK(ret == 0, delete asyncContext;
         return GetNapiValue(env, ret), "Invalid param for wait");
-    if (argc > native_param::ARGC_THREE_NUMBER) {
+    if (argc > ARGC_THREE_NUMBER) {
         napi_valuetype valueType = napi_null;
-        napi_typeof(env, argv[native_param::ARGC_THREE_NUMBER], &valueType);
+        napi_typeof(env, argv[ARGC_THREE_NUMBER], &valueType);
         PARAM_JS_CHECK(valueType == napi_function, delete asyncContext;
             return GetNapiValue(env, ret), "Invalid param for wait callbackRef");
-        napi_create_reference(env, argv[native_param::ARGC_THREE_NUMBER], 1, &asyncContext->callbackRef);
+        napi_create_reference(env, argv[ARGC_THREE_NUMBER], 1, &asyncContext->callbackRef);
     }
     HiLog::Debug(LABEL, "JSApp Wait key: %{public}s, value: %{public}s callbackRef %p.",
         asyncContext->key, asyncContext->value, asyncContext->callbackRef);
@@ -253,6 +256,7 @@ static napi_value ParamWatchConstructor(napi_env env, napi_callback_info info)
 
 napi_value GetWatcher(napi_env env, napi_callback_info info)
 {
+    constexpr int MAX_LENGTH = 128;
     size_t argc = 1;
     napi_value argv[1];
     napi_value thisVar = nullptr;
@@ -270,8 +274,8 @@ napi_value GetWatcher(napi_env env, napi_callback_info info)
         napi_unwrap(env, obj, (void **)&watcher);
     }
     if (watcher != nullptr) {
-        watcher->keyLen = native_param::MAX_LENGTH;
-        int ret = GetParamValue(env, argv[0], napi_string, watcher->keyPrefix, &watcher->keyLen);
+        watcher->keyLen = MAX_LENGTH;
+        int ret = GetParamValue(env, argv[0], napi_string, watcher->keyPrefix, watcher->keyLen);
         PARAM_JS_CHECK(ret == 0, return NapiGetNull(env), "Failed to get key prefix");
         HiLog::Debug(LABEL, "JSApp watcher keyPrefix = %{public}s %{public}p.", watcher->keyPrefix, watcher);
     }
@@ -288,7 +292,7 @@ static ParamWatcher *GetWatcherInfo(napi_env env, napi_callback_info info, napi_
 
     size_t typeLen = 32;
     std::vector<char> eventType(typeLen);
-    int ret = GetParamValue(env, argv[0], napi_string, eventType.data(), &typeLen);
+    int ret = GetParamValue(env, argv[0], napi_string, eventType.data(), typeLen);
     PARAM_JS_CHECK(ret == 0, return nullptr, "Failed to get event type");
     if (strncmp(eventType.data(), "valueChange", typeLen) != 0) {
         return nullptr;
@@ -312,7 +316,7 @@ static void ProcessParamChange(const char *key, const char *value, void *context
     PARAM_JS_CHECK(watcher != nullptr, return, "Invalid param");
     napi_handle_scope scope = nullptr;
     napi_open_handle_scope(watcher->env, &scope);
-    napi_value result[native_param::ARGC_NUMBER] = { 0 };
+    napi_value result[ARGC_NUMBER] = { 0 };
     napi_create_string_utf8(watcher->env, key, strlen(key), &result[0]);
     napi_create_string_utf8(watcher->env, value, strlen(value), &result[1]);
     napi_value thisVar = nullptr;
@@ -326,8 +330,7 @@ static void ProcessParamChange(const char *key, const char *value, void *context
             napi_value callbackFunc = nullptr;
             napi_get_reference_value(watcher->env, callbackRef, &callbackFunc);
             napi_value callbackResult = nullptr;
-            napi_call_function(watcher->env, thisVar, callbackFunc,
-                native_param::ARGC_NUMBER, result, &callbackResult);
+            napi_call_function(watcher->env, thisVar, callbackFunc, ARGC_NUMBER, result, &callbackResult);
         }
         ret = GetNextRefence(watcher, next);
     }
