@@ -46,7 +46,7 @@ ohos_shared_library("systemparameter") {
 
   sources = [
     "src/native_parameters_js.cpp",
-    "src/native_parameters_watch.cpp"
+    "src/native_parameters_watch.cpp",
   ]
 
   deps = [

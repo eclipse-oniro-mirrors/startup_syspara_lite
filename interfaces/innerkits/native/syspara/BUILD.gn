@@ -47,10 +47,10 @@ ohos_shared_library("syspara") {
   configs = [ ":syspara_config" ]
   public_configs = [ ":syspara_public_config" ]
   deps = [
-    "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
     "//base/startup/init_lite/services/param:param_client",
-    "//utils/native/base:utils",
+    "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
     "//third_party/openssl:libcrypto_static",
+    "//utils/native/base:utils",
   ]
   subsystem_name = "startup"
   part_name = "startup_l2"
@@ -62,15 +62,13 @@ ohos_shared_library("syspara_watchagent") {
     "//base/startup/init_lite/services/include/param",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/include",
   ]
-  sources = [
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/src/param_watchagent.cpp",
-  ]
+  sources = [ "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/src/param_watchagent.cpp" ]
   configs = [ ":syspara_config" ]
   public_configs = [ ":syspara_public_config" ]
   deps = [
     "//base/startup/init_lite/services/param:param_watcheragent",
-    "//utils/native/base:utils",
     "//third_party/openssl:libcrypto_static",
+    "//utils/native/base:utils",
   ]
   subsystem_name = "startup"
   part_name = "startup_l2"
