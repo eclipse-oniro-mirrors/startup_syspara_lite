@@ -32,7 +32,7 @@ ohos_shared_library("sysparam_hal") {
   configs = [ ":syspara_config" ]
   deps = [
     "//utils/native/base:utils",
-    "//base/startup/init_lite/services/param:paramclient"
+    "//base/startup/init_lite/services/param:param_client",
   ]
   subsystem_name = "startup"
   part_name = "startup_l2"

@@ -21,8 +21,6 @@
 #include "parameter.h"
 #include "sysversion.h"
 
-static const int UDID_LEN = 65;
-
 static napi_value GetDeviceType(napi_env env, napi_callback_info info)
 {
     napi_value deviceType = nullptr;
@@ -284,16 +282,6 @@ static napi_value GetBuildRootHash(napi_env env, napi_callback_info info)
     return napiValue;
 }
 
-static napi_value GetDevUdid(napi_env env, napi_callback_info info)
-{
-    napi_value napiValue = nullptr;
-    char localDeviceId[UDID_LEN] = {0};
-    GetDevUdid(localDeviceId, UDID_LEN);
-
-    NAPI_CALL(env, napi_create_string_utf8(env, localDeviceId, strlen(localDeviceId), &napiValue));
-    return napiValue;
-}
-
 EXTERN_C_START
 /*
  * Module init
@@ -333,7 +321,6 @@ static napi_value Init(napi_env env, napi_value exports)
         {"buildHost", nullptr, nullptr, GetBuildHost, nullptr, nullptr, napi_default, nullptr},
         {"buildTime", nullptr, nullptr, GetBuildTime, nullptr, nullptr, napi_default, nullptr},
         {"buildRootHash", nullptr, nullptr, GetBuildRootHash, nullptr, nullptr, napi_default, nullptr},
-        {"udid", nullptr, nullptr, GetDevUdid, nullptr, nullptr, napi_default, nullptr},
     };
     NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc));
 

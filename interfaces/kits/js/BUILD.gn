@@ -35,6 +35,7 @@ ohos_shared_library("deviceinfo") {
 
 ohos_shared_library("systemparameter") {
   include_dirs = [
+    "src",
     "//third_party/node/src",
     "//foundation/ace/napi/native_engine",
     "//foundation/ace/napi/interfaces/kits",
@@ -43,11 +44,15 @@ ohos_shared_library("systemparameter") {
     "//base/startup/syspara_lite/hals/parameter/include",
   ]
 
-  sources = [ "src/native_parameters_js.cpp" ]
+  sources = [
+    "src/native_parameters_js.cpp",
+    "src/native_parameters_watch.cpp"
+  ]
 
   deps = [
     "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
+    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara_watchagent",
     "//foundation/ace/napi:ace_napi",
   ]
 

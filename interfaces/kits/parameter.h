@@ -82,6 +82,44 @@ int GetParameter(const char* key, const char* def, char* value, unsigned int len
 int SetParameter(const char* key, const char* value);
 
 /**
+ * @brief Wait for a system parameter with specified value.
+ *
+ * You can use this function to wait a system parameter that matches <b>key</b> as <b>value</b>.\n
+ *
+ * @param key Indicates the key for the parameter to wait.
+ * The value can contain lowercase letters, digits, underscores (_), and dots (.).
+ * Its length cannot exceed 96 bytes (including the end-of-text character in the string).
+ * @param value Indicates the system parameter value.
+ * Its length cannot exceed 96 bytes (including the end-of-text character in the string).
+ * value can use "*" to do arbitrary match.
+ * @param timeout Indicates the timeout value, in seconds.
+ * <=0 means wait for ever.
+ * >0 means wait for specified seconds
+ * @return Returns <b>0</b> if the operation is successful;
+ * returns <b>-10</b> if timeout; returns <b>-1</b> in other scenarios.
+ * @since 1.1
+ * @version 1.1
+ */
+int WaitParameter(const char *key, const char *value, int timeout);
+
+/**
+ * @brief Watch for system parameter values.
+ *
+ * You can use this function to watch system parameter values.\n
+ *
+ * @param keyprefix Indicates the key prefix for the parameter to be watched.
+ * If keyprefix is not a full name, "A.B." for example, it means to watch for all parameter started with "A.B.".
+ * @param callback Indicates value change callback.
+ * If callback is NULL, it means to cancel the watch.
+ * @return Returns <b>0</b> if the operation is successful;
+ * returns <b>-1</b> in other scenarios.
+ * @since 1.1
+ * @version 1.1
+ */
+typedef void (*ParameterChgPtr)(const char *key, const char *value, void *context);
+int WatchParameter(const char *keyprefix, ParameterChgPtr callback, void *context);
+
+/**
  * @brief Obtains the device type.
  *
  * The device type can have a maximum length of 32 characters.\n

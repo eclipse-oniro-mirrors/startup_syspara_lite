@@ -59,32 +59,70 @@ int GetParameter(const char *key, const char *def, char *value, unsigned int len
  */
 int SetParameter(const char *key, const char *value);
 
-const char *GetSecurityPatchTag();
-const char *GetOSFullName();
-const char *GetVersionId();
-const char *GetBuildRootHash();
-const char *GetOsReleaseType();
-int GetSdkApiVersion();
+/**
+ * @brief Wait for a system parameter with specified value.
+ *
+ * You can use this function to wait a system parameter that matches <b>key</b> as <b>value</b>.\n
+ *
+ * @param key Indicates the key for the parameter to wait.
+ * The value can contain lowercase letters, digits, underscores (_), and dots (.).
+ * Its length cannot exceed 96 bytes (including the end-of-text character in the string).
+ * @param value Indicates the system parameter value.
+ * Its length cannot exceed 96 bytes (including the end-of-text character in the string).
+ * value can use "*" to do arbitrary match.
+ * @param timeout Indicates the timeout value, in seconds.
+ * <=0 means wait for ever.
+ * >0 means wait for specified seconds
+ * @return Returns <b>0</b> if the operation is successful;
+ * returns <b>-10</b> if timeout; returns <b>-1</b> in other scenarios.
+ * @since 1.1
+ * @version 1.1
+ */
+int WaitParameter(const char *key, const char *value, int timeout);
 
-const char *GetDeviceType();
-const char *GetProductModel();
-const char *GetManufacture();
-const char *GetBrand();
-const char *GetMarketName();
-const char *GetProductSeries();
-const char *GetSoftwareModel();
-const char *GetHardwareModel();
-const char *GetHardwareProfile();
-const char *GetSerial();
-const char *GetAbiList();
-const char *GetDisplayVersion();
-const char *GetIncrementalVersion();
-const char *GetBootloaderVersion();
-const char *GetBuildType();
-const char *GetBuildUser();
-const char *GetBuildHost();
-const char *GetBuildTime();
-int GetFirstApiVersion();
+/**
+ * @brief Watch for system parameter values.
+ *
+ * You can use this function to watch system parameter values.\n
+ *
+ * @param keyprefix Indicates the key prefix for the parameter to be watched.
+ * If keyprefix is not a full name, "A.B." for example, it means to watch for all parameter started with "A.B.".
+ * @param callback Indicates value change callback.
+ * If callback is NULL, it means to cancel the watch.
+ * @return Returns <b>0</b> if the operation is successful;
+ * returns <b>-1</b> in other scenarios.
+ * @since 1.1
+ * @version 1.1
+ */
+typedef void (*ParameterChgPtr)(const char *key, const char *value, void *context);
+int WatchParameter(const char *keyprefix, ParameterChgPtr callback, void *context);
+
+const char *GetSecurityPatchTag(void);
+const char *GetOSFullName(void);
+const char *GetVersionId(void);
+const char *GetBuildRootHash(void);
+const char *GetOsReleaseType(void);
+int GetSdkApiVersion(void);
+
+const char *GetDeviceType(void);
+const char *GetProductModel(void);
+const char *GetManufacture(void);
+const char *GetBrand(void);
+const char *GetMarketName(void);
+const char *GetProductSeries(void);
+const char *GetSoftwareModel(void);
+const char *GetHardwareModel(void);
+const char *GetHardwareProfile(void);
+const char *GetSerial(void);
+const char *GetAbiList(void);
+const char *GetDisplayVersion(void);
+const char *GetIncrementalVersion(void);
+const char *GetBootloaderVersion(void);
+const char *GetBuildType(void);
+const char *GetBuildUser(void);
+const char *GetBuildHost(void);
+const char *GetBuildTime(void);
+int GetFirstApiVersion(void);
 int GetDevUdid(char *udid, int size);
 
 #ifdef __cplusplus

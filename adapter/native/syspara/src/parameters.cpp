@@ -44,6 +44,11 @@ public:
     {
         return SystemSetParameter(key.c_str(), value.c_str()) == 0;
     }
+
+    int WaitParameter(const std::string& key, const std::string& value, int timeout) override
+    {
+        return SystemWaitParameter(key.c_str(), value.c_str(), timeout);
+    }
 } g_abstractor;
 
 ParametersAbstractor& g_abstractorRef = g_abstractor;
@@ -170,12 +175,17 @@ bool SetParameter(const std::string& key, const std::string& value)
     return g_abstractorRef.SetParameter(key, value);
 }
 
+int WaitParameter(const std::string& key, const std::string& value, int timeout)
+{
+    return g_abstractorRef.WaitParameter(key, value, timeout);
+}
+
 void SetAbstractor(const ParametersAbstractor& abstractor)
 {
     g_abstractorRef = abstractor;
 }
 
-std::string GetDeviceType()
+std::string GetDeviceType(void)
 {
     std::unordered_map<std::string, std::string> deviceTypeMap = {
         { "watch", "wearable" },

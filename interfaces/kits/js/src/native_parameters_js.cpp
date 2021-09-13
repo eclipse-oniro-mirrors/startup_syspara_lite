@@ -12,49 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include <cstdio>
-#include <cstdlib>
-#include <sstream>
-#include <string>
-
-#include "hilog/log.h"
-#include "napi/native_api.h"
-#include "napi/native_node_api.h"
-#include "param_wrapper.h"
-#include "parameter.h"
+#include "native_parameters_js.h"
 
 static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupParametersJs" };
 using namespace OHOS::HiviewDFX;
-
-namespace {
-const int MAX_LENGTH = 128;
-const int BUF_LENGTH = 256;
-const int ARGC_NUMBER = 2;
-const int ARGC_THREE_NUMBER = 3;
-
-#define GET_PARAMS(env, info, num)      \
-    size_t argc = num;                  \
-    napi_value argv[num] = { nullptr }; \
-    napi_value thisVar = nullptr;       \
-    void *data = nullptr;               \
-    napi_get_cb_info(env, info, &argc, argv, &thisVar, &data)
-
-using StorageAsyncContext = struct {
-    napi_env env = nullptr;
-    napi_async_work work = nullptr;
-
-    char key[BUF_LENGTH] = {0};
-    size_t keyLen = 0;
-    char value[BUF_LENGTH] = {0};
-    size_t valueLen = 0;
-    napi_deferred deferred = nullptr;
-    napi_ref callbackRef = nullptr;
-
-    int status = -1;
-    std::string getValue;
-};
-}
 
 static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 {
@@ -106,7 +67,11 @@ static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 
 static napi_value Set(napi_env env, napi_callback_info info)
 {
-    GET_PARAMS(env, info, ARGC_THREE_NUMBER);
+    size_t argc = ARGC_THREE_NUMBER;
+    napi_value argv[ARGC_THREE_NUMBER] = { nullptr };
+    napi_value thisVar = nullptr;
+    void *data = nullptr;
+    napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
     NAPI_ASSERT(env, argc >= ARGC_NUMBER, "requires 2 parameter");
     auto *asyncContext = new StorageAsyncContext();
     asyncContext->env = env;
@@ -276,7 +241,11 @@ static void GetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 
 static napi_value Get(napi_env env, napi_callback_info info)
 {
-    GET_PARAMS(env, info, ARGC_THREE_NUMBER);
+    size_t argc = ARGC_THREE_NUMBER;
+    napi_value argv[ARGC_THREE_NUMBER] = { nullptr };
+    napi_value thisVar = nullptr;
+    void *data = nullptr;
+    napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
     NAPI_ASSERT(env, argc >= 1, "requires 1 parameter");
     auto *asyncContext = new StorageAsyncContext();
     asyncContext->env = env;
@@ -323,11 +292,12 @@ static napi_value Init(napi_env env, napi_value exports)
         DECLARE_NAPI_FUNCTION("set", Set),
         DECLARE_NAPI_FUNCTION("setSync", SetSync),
         DECLARE_NAPI_FUNCTION("get", Get),
-        DECLARE_NAPI_FUNCTION("getSync", GetSync)
+        DECLARE_NAPI_FUNCTION("getSync", GetSync),
+        DECLARE_NAPI_FUNCTION("wait", ParamWait),
+        DECLARE_NAPI_FUNCTION("getWatcher", GetWatcher)
     };
     NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc));
-
-    return exports;
+    return RegisterWatcher(env, exports);
 }
 EXTERN_C_END
 

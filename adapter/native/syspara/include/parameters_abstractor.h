@@ -24,7 +24,7 @@ class ParametersAbstractor {
 public:
     virtual std::string GetParameter(const std::string& key, const std::string& defValue) = 0;
     virtual bool SetParameter(const std::string& key, const std::string& value) = 0;
-
+    virtual int WaitParameter(const std::string& key, const std::string& value, int timeout) = 0;
     virtual ~ParametersAbstractor() {};
 };
 } // namespace system
