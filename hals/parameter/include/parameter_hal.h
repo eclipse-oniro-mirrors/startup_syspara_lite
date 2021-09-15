@@ -45,6 +45,7 @@ int HalGetParameter(const char *key, const char *def, char *value, unsigned int 
 int HalSetParameter(const char *key, const char *value);
 int HalGetIntParameter(const char *key, int def);
 
+int HalWaitParameter(const char *key, const char *value, int timeout);
 #ifdef __cplusplus
 #if __cplusplus
 }

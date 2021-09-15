@@ -12,49 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include <cstdio>
-#include <cstdlib>
-#include <sstream>
-#include <string>
-
-#include "hilog/log.h"
-#include "napi/native_api.h"
-#include "napi/native_node_api.h"
-#include "param_wrapper.h"
-#include "parameter.h"
+#include "native_parameters_js.h"
 
 static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupParametersJs" };
 using namespace OHOS::HiviewDFX;
-
-namespace {
-const int MAX_LENGTH = 128;
-const int BUF_LENGTH = 256;
-const int ARGC_NUMBER = 2;
-const int ARGC_THREE_NUMBER = 3;
-
-#define GET_PARAMS(env, info, num)      \
-    size_t argc = num;                  \
-    napi_value argv[num] = { nullptr }; \
-    napi_value thisVar = nullptr;       \
-    void *data = nullptr;               \
-    napi_get_cb_info(env, info, &argc, argv, &thisVar, &data)
+static constexpr int MAX_LENGTH = 128;
+static constexpr int ARGC_NUMBER = 2;
+static constexpr int ARGC_THREE_NUMBER = 3;
+static constexpr int BUF_LENGTH = 256;
 
 using StorageAsyncContext = struct {
     napi_env env = nullptr;
     napi_async_work work = nullptr;
 
-    char key[BUF_LENGTH] = {0};
+    char key[BUF_LENGTH] = { 0 };
     size_t keyLen = 0;
-    char value[BUF_LENGTH] = {0};
+    char value[BUF_LENGTH] = { 0 };
     size_t valueLen = 0;
+    int32_t timeout;
     napi_deferred deferred = nullptr;
     napi_ref callbackRef = nullptr;
 
     int status = -1;
     std::string getValue;
 };
-}
 
 static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 {
@@ -66,7 +47,7 @@ static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
             StorageAsyncContext *asyncContext = (StorageAsyncContext *)data;
             asyncContext->status = SetParameter(asyncContext->key, asyncContext->value);
             HiLog::Debug(LABEL,
-                "JSApp set::asyncContext-> status = %{public}d, asyncContext->key = %{public}s, asyncContext-> value = "
+                "JSApp set::asyncContext-> status = %{public}d, asyncContext->key = %{public}s, asyncContext->value = "
                 "%{public}s.",
                 asyncContext->status, asyncContext->key, asyncContext->value);
         },
@@ -106,7 +87,11 @@ static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 
 static napi_value Set(napi_env env, napi_callback_info info)
 {
-    GET_PARAMS(env, info, ARGC_THREE_NUMBER);
+    size_t argc = ARGC_THREE_NUMBER;
+    napi_value argv[ARGC_THREE_NUMBER] = { nullptr };
+    napi_value thisVar = nullptr;
+    void *data = nullptr;
+    napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
     NAPI_ASSERT(env, argc >= ARGC_NUMBER, "requires 2 parameter");
     auto *asyncContext = new StorageAsyncContext();
     asyncContext->env = env;
@@ -115,9 +100,11 @@ static napi_value Set(napi_env env, napi_callback_info info)
         napi_typeof(env, argv[i], &valueType);
 
         if (i == 0 && valueType == napi_string) {
-            napi_get_value_string_utf8(env, argv[i], asyncContext->key, BUF_LENGTH - 1, &asyncContext->keyLen);
+            napi_get_value_string_utf8(env, argv[i], asyncContext->key,
+                BUF_LENGTH - 1, &asyncContext->keyLen);
         } else if (i == 1 && valueType == napi_string) {
-            napi_get_value_string_utf8(env, argv[i], asyncContext->value, BUF_LENGTH - 1, &asyncContext->valueLen);
+            napi_get_value_string_utf8(env, argv[i], asyncContext->value,
+                BUF_LENGTH - 1, &asyncContext->valueLen);
         } else if (i == ARGC_NUMBER && valueType == napi_function) {
             napi_create_reference(env, argv[i], 1, &asyncContext->callbackRef);
         } else {
@@ -276,7 +263,11 @@ static void GetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
 
 static napi_value Get(napi_env env, napi_callback_info info)
 {
-    GET_PARAMS(env, info, ARGC_THREE_NUMBER);
+    size_t argc = ARGC_THREE_NUMBER;
+    napi_value argv[ARGC_THREE_NUMBER] = { nullptr };
+    napi_value thisVar = nullptr;
+    void *data = nullptr;
+    napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
     NAPI_ASSERT(env, argc >= 1, "requires 1 parameter");
     auto *asyncContext = new StorageAsyncContext();
     asyncContext->env = env;
@@ -285,9 +276,11 @@ static napi_value Get(napi_env env, napi_callback_info info)
         napi_typeof(env, argv[i], &valueType);
 
         if (i == 0 && valueType == napi_string) {
-            napi_get_value_string_utf8(env, argv[i], asyncContext->key, BUF_LENGTH - 1, &asyncContext->keyLen);
+            napi_get_value_string_utf8(env, argv[i], asyncContext->key,
+                BUF_LENGTH - 1, &asyncContext->keyLen);
         } else if (i == 1 && valueType == napi_string) {
-            napi_get_value_string_utf8(env, argv[i], asyncContext->value, BUF_LENGTH - 1, &asyncContext->valueLen);
+            napi_get_value_string_utf8(env, argv[i], asyncContext->value,
+                BUF_LENGTH - 1, &asyncContext->valueLen);
         } else if (i == 1 && valueType == napi_function) {
             napi_create_reference(env, argv[i], 1, &asyncContext->callbackRef);
             break;
@@ -323,11 +316,12 @@ static napi_value Init(napi_env env, napi_value exports)
         DECLARE_NAPI_FUNCTION("set", Set),
         DECLARE_NAPI_FUNCTION("setSync", SetSync),
         DECLARE_NAPI_FUNCTION("get", Get),
-        DECLARE_NAPI_FUNCTION("getSync", GetSync)
+        DECLARE_NAPI_FUNCTION("getSync", GetSync),
+        DECLARE_NAPI_FUNCTION("wait", ParamWait),
+        DECLARE_NAPI_FUNCTION("getWatcher", GetWatcher)
     };
     NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc));
-
-    return exports;
+    return RegisterWatcher(env, exports);
 }
 EXTERN_C_END
 

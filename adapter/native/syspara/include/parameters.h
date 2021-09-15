@@ -58,10 +58,12 @@ T GetUintParameter(const std::string& key, T def, T max = std::numeric_limits<T>
  */
 bool SetParameter(const std::string& key, const std::string& value);
 
+int WaitParameter(const std::string& key, const std::string& value, int timeout);
+
 /*
  * Obtains the device type of your product represented by a string.
  */
-std::string GetDeviceType();
+std::string GetDeviceType(void);
 } // namespace system
 } // namespace OHOS
 

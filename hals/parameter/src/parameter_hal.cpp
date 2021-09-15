@@ -229,3 +229,11 @@ const char *HalGetBuildTime()
 {
     return OHOS_BUILD_TIME;
 }
+
+int HalWaitParameter(const char *key, const char *value, int timeout)
+{
+    if ((key == nullptr) || (value == nullptr)) {
+        return EC_INVALID;
+    }
+    return OHOS::system::WaitParameter(key, value, timeout);
+}

@@ -91,6 +91,67 @@ declare namespace systemParameter {
      * @since 6
      */
     function set(key: string, value: string): Promise<void>;
+
+    /**
+     * Wait for a parameter with specified value.
+     *
+     * @param key Key of the system parameter.
+     * @param value System parameter value to be wait.
+     * @param timeout Indicates the timeout value, in seconds.
+     * <=0 means wait for ever.
+     * >0 means wait for specified seconds
+     * @param callback Callback function.
+     * @since 7
+     */
+     function wait(key: string, value: string, timeout: number, callback: AsyncCallback<void>): void;
+
+     /**
+      * Sets a value for the parameter with the specified key.
+      *
+      * @param key Key of the system parameter.
+      * @param value System parameter value to be wait.
+      * @param timeout Indicates the timeout value, in seconds.
+      * <=0 means wait for ever.
+      * >0 means wait for specified seconds
+      * @return Promise, which is used to obtain the result asynchronously.
+      * @since 7
+      */
+     function wait(key: string, value: string, timeout: number): Promise<void>;
+
+     /**
+      * Wait for a parameter with specified value.
+      *
+      * @param keyPrefix Key prefix of the system parameters to be watched.
+      * @param callback Callback function.
+      * @since 7
+      */
+     function getWatcher(keyPrefix: string): Watcher;
+
+     /**
+      * Called when the system parameter value changes. You need to implement this method in a child class.
+      *
+      * @param key Indicates changed system parameter key name.
+      * @param value Indicates changed system parameter value.
+      * @since 7
+      */
+     export interface ParameterChangeCallback {
+         (key: string, value: string): void;
+     }
+
+     export interface Watcher {
+         /**
+          * Subscribe to parameter value changess
+          *
+          * @since 7
+          */
+         on(eventType: 'valueChange', callback: ParameterChangeCallback): void;
+         /**
+          * Unsubscribe to parameter value changess
+          *
+          * @since 7
+          */
+         off(eventType: 'valueChange', callback?: ParameterChangeCallback): void;
+     }
 }
 
 export default systemParameter;

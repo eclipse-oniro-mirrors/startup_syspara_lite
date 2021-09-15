@@ -13,17 +13,18 @@
  * limitations under the License.
  */
 
-#include "parameter.h"
 #include <fcntl.h>
+#include <securec.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <securec.h>
 #include "hal_sys_param.h"
-#include "ohos_errno.h"
-#include "param_adaptor.h"
 #ifdef USE_MBEDTLS
 #include "mbedtls/sha256.h"
 #endif
+#include "ohos_errno.h"
+#include "param_adaptor.h"
+#include "parameter.h"
+
 #define FILE_RO "ro."
 #define OS_FULL_NAME_LEN 128
 #define VERSION_ID_LEN 256
@@ -35,19 +36,19 @@
 #define OHOS_PATCH_VERSION_LEN 64
 #define OHOS_PATCH_VERSION_FILE "/patch/pversion"
 
-static const char OHOS_OS_NAME[] = {"OpenHarmony"};
-static const int  OHOS_SDK_API_VERSION = 6;
+static const char OHOS_OS_NAME[] = { "OpenHarmony" };
+static const int OHOS_SDK_API_VERSION = 6;
 static const char OHOS_SECURITY_PATCH_TAG[] = {"2021-09-01"};
-static const char OHOS_RELEASE_TYPE[] = {"Beta"};
+static const char OHOS_RELEASE_TYPE[] = { "Beta" };
 
 static const int MAJOR_VERSION = 1;
 static const int SENIOR_VERSION = 0;
 static const int FEATURE_VERSION = 1;
 static const int BUILD_VERSION = 0;
 
-static const char EMPTY_STR[] = {""};
+static const char EMPTY_STR[] = { "" };
 
-static boolean IsValidValue(const char* value, unsigned int len)
+static boolean IsValidValue(const char *value, unsigned int len)
 {
     if ((value == NULL) || !strlen(value) || (strlen(value) + 1 > len)) {
         return FALSE;
@@ -55,7 +56,7 @@ static boolean IsValidValue(const char* value, unsigned int len)
     return TRUE;
 }
 
-int GetParameter(const char* key, const char* def, char* value, unsigned int len)
+int GetParameter(const char *key, const char *def, char *value, unsigned int len)
 {
     if ((key == NULL) || (value == NULL)) {
         return EC_INVALID;
@@ -76,7 +77,7 @@ int GetParameter(const char* key, const char* def, char* value, unsigned int len
     return ret;
 }
 
-int SetParameter(const char* key, const char* value)
+int SetParameter(const char *key, const char *value)
 {
     if ((key == NULL) || (value == NULL)) {
         return EC_INVALID;
@@ -91,76 +92,76 @@ int SetParameter(const char* key, const char* value)
     return SetSysParam(key, value);
 }
 
-const char* GetDeviceType(void)
+const char *GetDeviceType(void)
 {
     return HalGetDeviceType();
 }
 
-const char* GetManufacture(void)
+const char *GetManufacture(void)
 {
     return HalGetManufacture();
 }
 
-const char* GetBrand(void)
+const char *GetBrand(void)
 {
     return HalGetBrand();
 }
 
-const char* GetMarketName(void)
+const char *GetMarketName(void)
 {
     return HalGetMarketName();
 }
 
-const char* GetProductSeries(void)
+const char *GetProductSeries(void)
 {
     return HalGetProductSeries();
 }
 
-const char* GetProductModel(void)
+const char *GetProductModel(void)
 {
     return HalGetProductModel();
 }
 
-const char* GetSoftwareModel(void)
+const char *GetSoftwareModel(void)
 {
     return HalGetSoftwareModel();
 }
 
-const char* GetHardwareModel(void)
+const char *GetHardwareModel(void)
 {
     return HalGetHardwareModel();
 }
 
-const char* GetHardwareProfile(void)
+const char *GetHardwareProfile(void)
 {
     return HalGetHardwareProfile();
 }
 
-const char* GetSerial(void)
+const char *GetSerial(void)
 {
     return HalGetSerial();
 }
 
-const char* GetBootloaderVersion(void)
+const char *GetBootloaderVersion(void)
 {
     return HalGetBootloaderVersion();
 }
 
-const char* GetSecurityPatchTag(void)
+const char *GetSecurityPatchTag(void)
 {
     return OHOS_SECURITY_PATCH_TAG;
 }
 
-const char* GetAbiList(void)
+const char *GetAbiList(void)
 {
     return HalGetAbiList();
 }
 
-static const char* BuildOSFullName(void)
+static const char *BuildOSFullName(void)
 {
     const char release[] = "Release";
     char value[OS_FULL_NAME_LEN];
-    const char* releaseType = GetOsReleaseType();
+    const char *releaseType = GetOsReleaseType();
     int length;
     if (strncmp(releaseType, release, sizeof(release) - 1) == 0) {
         length = sprintf_s(value, OS_FULL_NAME_LEN, "%s-%d.%d.%d.%d",
@@ -172,13 +173,13 @@ static const char* BuildOSFullName(void)
     if (length < 0) {
         return EMPTY_STR;
     }
-    const char* osFullName = strdup(value);
+    const char *osFullName = strdup(value);
     return osFullName;
 }
 
-const char* GetOSFullName(void)
+const char *GetOSFullName(void)
 {
-    static const char* osFullName = NULL;
+    static const char *osFullName = NULL;
     if (osFullName != NULL) {
         return osFullName;
     }
@@ -189,7 +190,7 @@ const char* GetOSFullName(void)
     return osFullName;
 }
 
-static const char* BuildDisplayVersion(void)
+static const char *BuildDisplayVersion(void)
 {
     int len;
     char patchValue[OHOS_PATCH_VERSION_LEN] = {0};
@@ -229,7 +230,7 @@ static const char* BuildDisplayVersion(void)
     return strdup(displayValue);
 }
 
-const char* GetDisplayVersion(void)
+const char *GetDisplayVersion(void)
 {
     static const char *displayVersion = NULL;
     if (displayVersion != NULL) {
@@ -252,12 +253,12 @@ int GetFirstApiVersion(void)
     return HalGetFirstApiVersion();
 }
 
-const char* GetIncrementalVersion(void)
+const char *GetIncrementalVersion(void)
 {
     return HalGetIncrementalVersion();
 }
 
-static const char* BuildVersionId(void)
+static const char *BuildVersionId(void)
 {
     char value[VERSION_ID_LEN];
     int len = sprintf_s(value, VERSION_ID_LEN, "%s/%s/%s/%s/%s/%s/%s/%d/%s/%s",
@@ -267,13 +268,13 @@ static const char* BuildVersionId(void)
     if (len < 0) {
         return EMPTY_STR;
     }
-    const char* versionId = strdup(value);
+    const char *versionId = strdup(value);
     return versionId;
 }
 
-const char* GetVersionId(void)
+const char *GetVersionId(void)
 {
-    static const char* versionId = NULL;
+    static const char *versionId = NULL;
     if (versionId != NULL) {
         return versionId;
     }
@@ -284,98 +285,97 @@ const char* GetVersionId(void)
     return versionId;
 }
 
-const char* GetBuildType(void)
+const char *GetBuildType(void)
 {
     return HalGetBuildType();
 }
 
-const char* GetBuildUser(void)
+const char *GetBuildUser(void)
 {
     return HalGetBuildUser();
 }
 
-const char* GetBuildHost(void)
+const char *GetBuildHost(void)
 {
     return HalGetBuildHost();
 }
 
-const char* GetBuildTime(void)
+const char *GetBuildTime(void)
 {
     return HalGetBuildTime();
 }
 
-const char* GetBuildRootHash(void)
+const char *GetBuildRootHash(void)
 {
     return BUILD_ROOTHASH;
 }
 
-const char* GetOsReleaseType(void)
+const char *GetOsReleaseType(void)
 {
     return OHOS_RELEASE_TYPE;
 }
 #ifdef USE_MBEDTLS
 static int GetSha256Value(const char *input, char *udid, int udidSize)
 {
-   if (input == NULL) {
-       return EC_FAILURE;
-   }
-   char buf[DEV_BUF_LENGTH] = {0};
-   unsigned char hash[HASH_LENGTH] = {0};
-    
-   mbedtls_sha256_context context;
-   mbedtls_sha256_init(&context);
-   mbedtls_sha256_starts_ret(&context, 0);
-   mbedtls_sha256_update_ret(&context, input, strlen(input));
-   mbedtls_sha256_finish_ret(&context, hash);
+    if (input == NULL) {
+        return EC_FAILURE;
+    }
+    char buf[DEV_BUF_LENGTH] = { 0 };
+    unsigned char hash[HASH_LENGTH] = { 0 };
 
-   for (size_t i = 0; i < HASH_LENGTH; i++) {
-       char value = hash[i];
-       memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
-       sprintf_s(buf, sizeof(buf), "%02X", value);
-       if (strcat_s(udid, udidSize, buf) != 0) {
-          return EC_FAILURE;
-       }
-   }
-   return EC_SUCCESS;
+    mbedtls_sha256_context context;
+    mbedtls_sha256_init(&context);
+    mbedtls_sha256_starts_ret(&context, 0);
+    mbedtls_sha256_update_ret(&context, input, strlen(input));
+    mbedtls_sha256_finish_ret(&context, hash);
+
+    for (size_t i = 0; i < HASH_LENGTH; i++) {
+        char value = hash[i];
+        memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
+        sprintf_s(buf, sizeof(buf), "%02X", value);
+        if (strcat_s(udid, udidSize, buf) != 0) {
+            return EC_FAILURE;
+        }
+    }
+    return EC_SUCCESS;
 }
 
 int GetDevUdid(char *udid, int size)
-{ 
-   if (size < DEV_UUID_LENGTH) {
-      return EC_FAILURE;
-   }
+{
+    if (size < DEV_UUID_LENGTH) {
+        return EC_FAILURE;
+    }
 
-   const char *manufacture = GetManufacture();
-   const char *model = GetHardwareModel();
-   const char *sn = GetSerial();
-   if (manufacture == NULL || model == NULL || sn == NULL) {
-       return EC_FAILURE;
-   }
-   int tmpSize = strlen(manufacture) + strlen(model) + strlen(sn) + 1;
-   if (tmpSize <= 0 || tmpSize > DEV_BUF_MAX_LENGTH) {
-       return EC_FAILURE;
-   }
-   char *tmp = malloc(tmpSize);
-   if (tmp == NULL) {
-       return EC_FAILURE;
-   }
+    const char *manufacture = GetManufacture();
+    const char *model = GetHardwareModel();
+    const char *sn = GetSerial();
+    if (manufacture == NULL || model == NULL || sn == NULL) {
+        return EC_FAILURE;
+    }
+    int tmpSize = strlen(manufacture) + strlen(model) + strlen(sn) + 1;
+    if (tmpSize <= 0 || tmpSize > DEV_BUF_MAX_LENGTH) {
+        return EC_FAILURE;
+    }
+    char *tmp = malloc(tmpSize);
+    if (tmp == NULL) {
+        return EC_FAILURE;
+    }
 
-   memset_s(tmp, tmpSize, 0, tmpSize);
-   if ((strcat_s(tmp, tmpSize, manufacture) != 0) ||
-       (strcat_s(tmp, tmpSize, model) != 0) ||
-       (strcat_s(tmp, tmpSize, sn) != 0)) {
-       free(tmp);
-       return EC_FAILURE;
-   }
+    memset_s(tmp, tmpSize, 0, tmpSize);
+    if ((strcat_s(tmp, tmpSize, manufacture) != 0) ||
+        (strcat_s(tmp, tmpSize, model) != 0) ||
+        (strcat_s(tmp, tmpSize, sn) != 0)) {
+        free(tmp);
+        return EC_FAILURE;
+    }
 
-   int ret = GetSha256Value(tmp, udid, size);
-   free(tmp);
-   return ret;
+    int ret = GetSha256Value(tmp, udid, size);
+    free(tmp);
+    return ret;
 }
-#else 
+#else
 int GetDevUdid(char *udid, int size)
 {
     return 0;
 }
 #endif
-
