@@ -232,56 +232,56 @@ const char *GetOsReleaseType()
 
 int GetSha256Value(const char *input, char *udid, int udidSize)
 {
-   char buf[DEV_BUF_LENGTH] = {0};
-   unsigned char hash[SHA256_DIGEST_LENGTH] = {0};
-   SHA256_CTX sha256;
-   if ((SHA256_Init(&sha256) == 0) ||
-       (SHA256_Update(&sha256, input, strlen(input)) == 0) ||
-       (SHA256_Final(hash, &sha256) == 0)) {
-	return EC_FAILURE;
-   }
+    char buf[DEV_BUF_LENGTH] = {0};
+    unsigned char hash[SHA256_DIGEST_LENGTH] = {0};
+    SHA256_CTX sha256;
+    if ((SHA256_Init(&sha256) == 0) ||
+        (SHA256_Update(&sha256, input, strlen(input)) == 0) ||
+        (SHA256_Final(hash, &sha256) == 0)) {
+	    return EC_FAILURE;
+    }
 
-   for (size_t i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-       char value = hash[i];
-       memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
-       sprintf_s(buf, sizeof(buf), "%02X", value);
-       if (strcat_s(udid, udidSize, buf) != 0) {
-          return EC_FAILURE;
-       }
-   }
-   return EC_SUCCESS;
+    for (size_t i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        char value = hash[i];
+        memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
+        sprintf_s(buf, sizeof(buf), "%02X", value);
+        if (strcat_s(udid, udidSize, buf) != 0) {
+            return EC_FAILURE;
+        }
+    }
+    return EC_SUCCESS;
 }
 
 int GetDevUdid(char *udid, int size)
 { 
-   if (size < DEV_UUID_LENGTH) {
-      return EC_FAILURE;
-   }
+    if (size < DEV_UUID_LENGTH) {
+        return EC_FAILURE;
+    }
 
-   const char *manufacture = GetManufacture();
-   const char *model = GetHardwareModel();
-   const char *sn = GetSerial();
-   if (manufacture == NULL || model == NULL || sn == NULL) {
-       return EC_FAILURE;
-   }
-   int tmpSize = strlen(manufacture) + strlen(model) + strlen(sn) + 1;
-   if (tmpSize <= 0 || tmpSize > DEV_BUF_MAX_LENGTH) {
-       return EC_FAILURE;
-   }
-   char *tmp = malloc(tmpSize);
-   if (tmp == NULL) {
-       return EC_FAILURE;
-   }
+    const char *manufacture = GetManufacture();
+    const char *model = GetHardwareModel();
+    const char *sn = GetSerial();
+    if (manufacture == NULL || model == NULL || sn == NULL) {
+        return EC_FAILURE;
+    }
+    int tmpSize = strlen(manufacture) + strlen(model) + strlen(sn) + 1;
+    if (tmpSize <= 0 || tmpSize > DEV_BUF_MAX_LENGTH) {
+        return EC_FAILURE;
+    }
+    char *tmp = malloc(tmpSize);
+    if (tmp == NULL) {
+        return EC_FAILURE;
+    }
 
-   memset_s(tmp, tmpSize, 0, tmpSize);
-   if ((strcat_s(tmp, tmpSize, manufacture) != 0) ||
-       (strcat_s(tmp, tmpSize, model) != 0) ||
-       (strcat_s(tmp, tmpSize, sn) != 0)) {
-       free(tmp);
+    memset_s(tmp, tmpSize, 0, tmpSize);
+    if ((strcat_s(tmp, tmpSize, manufacture) != 0) ||
+        (strcat_s(tmp, tmpSize, model) != 0) ||
+        (strcat_s(tmp, tmpSize, sn) != 0)) {
+        free(tmp);
        return EC_FAILURE;
-   }
+    }
 
-   int ret = GetSha256Value(tmp, udid, size);
-   free(tmp);
-   return ret;
+    int ret = GetSha256Value(tmp, udid, size);
+    free(tmp);
+    return ret;
 }
