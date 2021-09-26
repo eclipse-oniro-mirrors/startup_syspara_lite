@@ -238,7 +238,7 @@ int GetSha256Value(const char *input, char *udid, int udidSize)
     if ((SHA256_Init(&sha256) == 0) ||
         (SHA256_Update(&sha256, input, strlen(input)) == 0) ||
         (SHA256_Final(hash, &sha256) == 0)) {
-	    return EC_FAILURE;
+        return EC_FAILURE;
     }
 
     for (size_t i = 0; i < SHA256_DIGEST_LENGTH; i++) {
@@ -278,7 +278,7 @@ int GetDevUdid(char *udid, int size)
         (strcat_s(tmp, tmpSize, model) != 0) ||
         (strcat_s(tmp, tmpSize, sn) != 0)) {
         free(tmp);
-       return EC_FAILURE;
+        return EC_FAILURE;
     }
 
     int ret = GetSha256Value(tmp, udid, size);
