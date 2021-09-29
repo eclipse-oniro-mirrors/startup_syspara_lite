@@ -273,7 +273,7 @@ static napi_value ParamWatchConstructor(napi_env env, napi_callback_info info)
         [](napi_env env, void *data, void *hint) {
             ParamWatcher *watcher = (ParamWatcher *)data;
             HiLog::Debug(LABEL, "JSApp watcher this = %{public}p, destruct", watcher);
-            if (watcher) {
+            if (watcher != NULL) {
                 DelCallback(env, nullptr, watcher);
                 WatchParameter(watcher->keyPrefix, nullptr, nullptr);
                 delete watcher;
