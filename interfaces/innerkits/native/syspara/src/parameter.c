@@ -240,6 +240,9 @@ const char *GetOsReleaseType(void)
 
 int GetSha256Value(const char *input, char *udid, int udidSize)
 {
+    if (input == NULL || udid == NULL) {
+        return EC_FAILURE;
+    }
     char buf[DEV_BUF_LENGTH] = { 0 };
     unsigned char hash[SHA256_DIGEST_LENGTH] = { 0 };
     SHA256_CTX sha256;

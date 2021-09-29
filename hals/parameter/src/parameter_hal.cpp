@@ -102,6 +102,9 @@ int HalSetParameter(const char *key, const char *value)
 
 const char *GetProperty(const std::string &key, const char **paramHolder)
 {
+    if (paramHolder == nullptr) {
+        return nullptr;
+    }
     if (*paramHolder != nullptr) {
         return *paramHolder;
     }

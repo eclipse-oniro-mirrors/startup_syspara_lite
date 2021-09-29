@@ -19,7 +19,7 @@
 
 int WatchParameter(const char *keyprefix, ParameterChgPtr callback, void *context)
 {
-    if (keyprefix == NULL) {
+    if (keyprefix == nullptr) {
         return EC_INVALID;
     }
     return SystemWatchParameter(keyprefix, callback, context);
