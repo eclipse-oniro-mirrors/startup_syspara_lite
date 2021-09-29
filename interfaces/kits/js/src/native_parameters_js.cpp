@@ -29,7 +29,6 @@ using StorageAsyncContext = struct {
     size_t keyLen = 0;
     char value[BUF_LENGTH] = { 0 };
     size_t valueLen = 0;
-    int32_t timeout;
     napi_deferred deferred = nullptr;
     napi_ref callbackRef = nullptr;
 
@@ -37,7 +36,9 @@ using StorageAsyncContext = struct {
     std::string getValue;
 };
 
-static void SetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
+using StorageAsyncContextPtr = StorageAsyncContext *;
+
+static void SetCallbackWork(napi_env env, StorageAsyncContextPtr asyncContext)
 {
     napi_value resource = nullptr;
     napi_create_string_utf8(env, "JSStartupSet", NAPI_AUTO_LENGTH, &resource);
@@ -93,7 +94,7 @@ static napi_value Set(napi_env env, napi_callback_info info)
     void *data = nullptr;
     napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
     NAPI_ASSERT(env, argc >= ARGC_NUMBER, "requires 2 parameter");
-    auto *asyncContext = new StorageAsyncContext();
+    StorageAsyncContextPtr asyncContext = new StorageAsyncContext();
     asyncContext->env = env;
     for (size_t i = 0; i < argc; i++) {
         napi_valuetype valueType = napi_null;
@@ -211,7 +212,7 @@ static napi_value GetSync(napi_env env, napi_callback_info info)
     return napiValue;
 }
 
-static void GetCallbackWork(napi_env env, StorageAsyncContext *asyncContext)
+static void GetCallbackWork(napi_env env, StorageAsyncContextPtr asyncContext)
 {
     napi_value resource = nullptr;
     napi_create_string_utf8(env, "JSStartupGet", NAPI_AUTO_LENGTH, &resource);
@@ -269,7 +270,7 @@ static napi_value Get(napi_env env, napi_callback_info info)
     void *data = nullptr;
     napi_get_cb_info(env, info, &argc, argv, &thisVar, &data);
     NAPI_ASSERT(env, argc >= 1, "requires 1 parameter");
-    auto *asyncContext = new StorageAsyncContext();
+    StorageAsyncContextPtr asyncContext = new StorageAsyncContext();
     asyncContext->env = env;
     for (size_t i = 0; i < argc; i++) {
         napi_valuetype valueType = napi_null;

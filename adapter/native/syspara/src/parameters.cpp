@@ -30,7 +30,7 @@ public:
     std::string GetParameter(const std::string& key, const std::string& def) override
     {
         unsigned int len = 0;
-        int ret = SystemGetParameter(key.c_str(), NULL, &len);
+        int ret = SystemGetParameter(key.c_str(), nullptr, &len);
         if (ret == 0 && len > 0) {
             std::vector<char> value(len + 1);
             ret = SystemGetParameter(key.c_str(), value.data(), &len);
