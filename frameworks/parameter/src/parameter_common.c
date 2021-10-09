@@ -31,7 +31,7 @@
 
 static const char OHOS_OS_NAME[] = {"OpenHarmony"};
 static const int  OHOS_SDK_API_VERSION = 7;
-static const char OHOS_SECURITY_PATCH_TAG[] = {"2021-09-08"};
+static const char OHOS_SECURITY_PATCH_TAG[] = {"2021-10-01"};
 static const char OHOS_RELEASE_TYPE[] = {"LTS"};
 
 static const int MAJOR_VERSION = 3;
