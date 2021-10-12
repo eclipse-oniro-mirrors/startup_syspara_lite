@@ -200,20 +200,18 @@ static const char *BuildDisplayVersion(void)
         return NULL;
     }
     len = read(fd, patchValue, OHOS_PATCH_VERSION_LEN);
-    if (len < 0) {
+    if (len < strlen("version=")) {
         close(fd);
         return NULL;
     }
     close(fd);
-    if (len > 0) {
-        if (patchValue[len - 1] == '\n') {
-            patchValue[len - 1] = '\0';
-        }
+    if (patchValue[len - 1] == '\n') {
+        patchValue[len - 1] = '\0';
     }
     
     const char *versionValue = HalGetDisplayVersion();
     int versionLen = strlen(versionValue);
-    if ((versionLen > 0) && (len > strlen("version="))) {
+    if (versionLen > 0) {
         if (versionValue[versionLen - 1] != ')') {
             len = sprintf_s(displayValue, OHOS_DISPLAY_VERSION_LEN, "%s(%s)", versionValue,
                 patchValue + strlen("version="));
