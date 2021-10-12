@@ -200,7 +200,7 @@ static const char *BuildDisplayVersion(void)
         return NULL;
     }
     len = read(fd, patchValue, OHOS_PATCH_VERSION_LEN);
-    if (len < 0) {
+    if (len < strlen("version=")) {
         close(fd);
         return NULL;
     }
@@ -208,21 +208,23 @@ static const char *BuildDisplayVersion(void)
     if (patchValue[len - 1] == '\n') {
         patchValue[len - 1] = '\0';
     }
-
+    
     const char *versionValue = HalGetDisplayVersion();
     int versionLen = strlen(versionValue);
-    if (versionValue[versionLen - 1] != ')') {
-        len = sprintf_s(displayValue, OHOS_DISPLAY_VERSION_LEN, "%s(%s)", versionValue,
-            patchValue + strlen("version="));
-    } else {
-        char tempValue[versionLen];
-        memset_s(tempValue, versionLen, 0, versionLen);
-        if (strncpy_s(tempValue, versionLen, versionValue, versionLen - 1) != 0) {
-            return NULL;
+    if (versionLen > 0) {
+        if (versionValue[versionLen - 1] != ')') {
+            len = sprintf_s(displayValue, OHOS_DISPLAY_VERSION_LEN, "%s(%s)", versionValue,
+                patchValue + strlen("version="));
+        } else {
+            char tempValue[versionLen];
+            memset_s(tempValue, versionLen, 0, versionLen);
+            if (strncpy_s(tempValue, versionLen, versionValue, versionLen - 1) != 0) {
+                return NULL;
+            }
+            tempValue[versionLen - 1] = '\0';
+            len = sprintf_s(displayValue, OHOS_DISPLAY_VERSION_LEN, "%s%s)", tempValue,
+                patchValue + strlen("version="));
         }
-        tempValue[versionLen - 1] = '\0';
-        len = sprintf_s(displayValue, OHOS_DISPLAY_VERSION_LEN, "%s%s)", tempValue,
-            patchValue + strlen("version="));
     }
     if (len < 0) {
         return NULL;
