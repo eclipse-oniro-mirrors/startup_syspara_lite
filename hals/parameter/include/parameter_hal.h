@@ -46,6 +46,10 @@ int HalSetParameter(const char *key, const char *value);
 int HalGetIntParameter(const char *key, int def);
 
 int HalWaitParameter(const char *key, const char *value, int timeout);
+unsigned int HalFindParameter(const char *name);
+unsigned int HalGetParameterCommitId(unsigned int handle);
+int HalGetParameterName(unsigned int handle, char *name, unsigned int len);
+int HalGetParameterValue(unsigned int handle, char *value, unsigned int len);
 #ifdef __cplusplus
 #if __cplusplus
 }

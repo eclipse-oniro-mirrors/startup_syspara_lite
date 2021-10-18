@@ -49,6 +49,50 @@ public:
     {
         return SystemWaitParameter(key.c_str(), value.c_str(), timeout);
     }
+
+    unsigned int FindParameter(const std::string& key) override
+    {
+        unsigned int handle = 0;
+        int ret = SystemFindParameter(key.c_str(), &handle);
+        if (ret != 0) {
+            return static_cast<unsigned int>(-1);
+        }
+        return handle;
+    }
+
+    unsigned int GetParameterCommitId(unsigned int handle) override
+    {
+        unsigned int commitId = 0;
+        int ret = SystemGetParameterCommitId(handle, &commitId);
+        if (ret != 0) {
+            return static_cast<unsigned int>(-1);
+        }
+        return commitId;
+    }
+
+    std::string GetParameterName(unsigned int handle) override
+    {
+        std::vector<char> value(PARAM_NAME_LEN_MAX);
+        int ret = SystemGetParameterName(handle, value.data(), PARAM_NAME_LEN_MAX);
+        if (ret == 0) {
+            return std::string(value.data());
+        }
+        return std::string();
+    }
+
+    std::string GetParameterValue(unsigned int handle) override
+    {
+        unsigned int len = 0;
+        int ret = SystemGetParameterValue(handle, nullptr, &len);
+        if (ret == 0 && len > 0) {
+            std::vector<char> value(len + 1);
+            ret = SystemGetParameterValue(handle, value.data(), &len);
+            if (ret == 0) {
+                return std::string(value.data());
+            }
+        }
+        return std::string();
+    }
 } g_abstractor;
 
 ParametersAbstractor& g_abstractorRef = g_abstractor;
@@ -180,6 +224,26 @@ int WaitParameter(const std::string& key, const std::string& value, int timeout)
     return g_abstractorRef.WaitParameter(key, value, timeout);
 }
 
+unsigned int FindParameter(const std::string& key)
+{
+    return g_abstractorRef.FindParameter(key);
+}
+
+unsigned int GetParameterCommitId(unsigned int handle)
+{
+    return g_abstractorRef.GetParameterCommitId(handle);
+}
+
+std::string GetParameterName(unsigned int handle)
+{
+    return g_abstractorRef.GetParameterName(handle);
+}
+
+std::string GetParameterValue(unsigned int handle)
+{
+    return g_abstractorRef.GetParameterValue(handle);
+}
+
 void SetAbstractor(const ParametersAbstractor& abstractor)
 {
     g_abstractorRef = abstractor;
@@ -191,7 +255,7 @@ std::string GetDeviceType(void)
         { "watch", "wearable" },
         { "fitnessWatch", "liteWearable" },
     };
-    std::string deviceType = GetParameter("ro.build.characteristics", "");
+    std::string deviceType = GetParameter("const.build.characteristics", "");
     if (deviceTypeMap.count(deviceType) != 0) {
         return deviceTypeMap[deviceType];
     }

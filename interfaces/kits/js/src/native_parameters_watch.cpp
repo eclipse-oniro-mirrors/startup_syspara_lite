@@ -20,7 +20,7 @@ static constexpr OHOS::HiviewDFX::HiLogLabel LABEL = { LOG_CORE, 0, "StartupPara
 using namespace OHOS::HiviewDFX;
 using namespace OHOS::system;
 static constexpr int ARGC_NUMBER = 2;
-static constexpr int BUF_LENGTH = 256;
+static constexpr int BUF_LENGTH = 128;
 
 static napi_ref g_paramWatchRef;
 
@@ -358,6 +358,7 @@ static void ProcessParamChange(const char *key, const char *value, void *context
     bool ret = GetFristRefence(watcher, next);
     while (ret) {
         napi_ref callbackRef = GetWatcherReference(watcher, next);
+        HiLog::Debug(LABEL, "JSApp watcher notify key %{public}s %{public}u all.", watcher->keyPrefix, next);
         if (callbackRef != nullptr) {
             napi_value callbackFunc = nullptr;
             napi_get_reference_value(watcher->env, callbackRef, &callbackFunc);

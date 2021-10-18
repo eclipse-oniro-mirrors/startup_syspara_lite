@@ -125,6 +125,22 @@ const char *GetBuildTime(void);
 int GetFirstApiVersion(void);
 int GetDevUdid(char *udid, int size);
 
+/**
+ * @brief Obtains a system parameter matching the specified <b>key</b>.
+ *
+ * If no system parameter is found, return -1.\n
+ *
+ * @param key Indicates the key for the system parameter to find.
+ * @return Returns the index for parameter;
+ * returns <b>handle</b> if a parameter is incorrect; returns <b>-1</b> in other scenarios.
+ * @since 1
+ * @version 1
+ */
+unsigned int FindParameter(const char *key);
+unsigned int GetParameterCommitId(unsigned int handle);
+int GetParameterName(unsigned int handle, char *key, unsigned int len);
+int GetParameterValue(unsigned int handle, char *value, unsigned int len);
+
 #ifdef __cplusplus
 #if __cplusplus
 }
