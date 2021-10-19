@@ -128,7 +128,8 @@ HWTEST_F(SystemParameterNativeTest, parameterTest008, TestSize.Level0)
 HWTEST_F(SystemParameterNativeTest, parameterTest009, TestSize.Level0)
 {
     char key5[] = "test.rw.product.type";
-    char value5[] = "rw.sys.version.version.version.version flash_offset = *(hi_u32 *)DT_SetGetU32(&g_Element[0], 0)";
+    char value5[] = "rw.sys.version.version.version.version     \
+    flash_offset = *(hi_u32 *)DT_SetGetU32(&g_Element[0], 0)";
     int ret = SetParameter(key5, value5);
     EXPECT_EQ(ret, EC_FAILURE);
     char valueGet[2] = {0};
@@ -170,5 +171,47 @@ HWTEST_F(SystemParameterNativeTest, parameterTest0010, TestSize.Level0)
     char valueGet4[32] = {0};
     ret = GetParameter(key4, "version=10.1.0", valueGet4, 32);
     EXPECT_EQ(ret, static_cast<int>(strlen(valueGet4)));
+}
+
+HWTEST_F(SystemParameterNativeTest, parameterTest0011, TestSize.Level0)
+{
+    char key1[] = "test.rw.sys.version.wait1";
+    char value1[] = "10.1.0";
+    int ret = SetParameter(key1, value1);
+    EXPECT_EQ(ret, 0);
+    ret = WaitParameter(key1, value1, 10);
+    EXPECT_EQ(ret, 0);
+    ret = WaitParameter(key1, "*", 10);
+    EXPECT_EQ(ret, 0);
+    char key2[] = "test.rw.sys.version.wait2";
+    ret = WaitParameter(key2, "*", 1);
+    EXPECT_EQ(ret, 105);
+}
+
+HWTEST_F(SystemParameterNativeTest, parameterTest0012, TestSize.Level0)
+{
+    char key1[] = "test.rw.sys.version.version1";
+    char value1[] = "10.1.0";
+    int ret = SetParameter(key1, value1);
+    EXPECT_EQ(ret, 0);
+
+    // success
+    unsigned int handle = FindParameter(key1);
+    EXPECT_NE(handle, static_cast<unsigned int>(-1));
+    char valueGet1[32] = {0};
+    ret = GetParameterValue(handle, valueGet1, 32);
+    EXPECT_EQ(ret, static_cast<int>(strlen(valueGet1)));
+    char nameGet1[32] = {0};
+    ret = GetParameterName(handle, nameGet1, 32);
+    EXPECT_EQ(ret, static_cast<int>(strlen(nameGet1)));
+
+    // fail
+    char key2[] = "test.rw.sys.version.version2";
+    handle = FindParameter(key2);
+    EXPECT_EQ(handle, static_cast<unsigned int>(-1));
+    ret = GetParameterValue(handle, valueGet1, 32);
+    EXPECT_EQ(ret, -1);
+    ret = GetParameterName(handle, nameGet1, 32);
+    EXPECT_EQ(ret, -1);
 }
 }  // namespace OHOS

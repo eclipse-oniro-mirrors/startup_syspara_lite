@@ -25,6 +25,10 @@ public:
     virtual std::string GetParameter(const std::string& key, const std::string& defValue) = 0;
     virtual bool SetParameter(const std::string& key, const std::string& value) = 0;
     virtual int WaitParameter(const std::string& key, const std::string& value, int timeout) = 0;
+    virtual unsigned int FindParameter(const std::string& key) = 0;
+    virtual unsigned int GetParameterCommitId(unsigned int handle) = 0;
+    virtual std::string GetParameterName(unsigned int handle) = 0;
+    virtual std::string GetParameterValue(unsigned int handle) = 0;
     virtual ~ParametersAbstractor() {};
 };
 } // namespace system

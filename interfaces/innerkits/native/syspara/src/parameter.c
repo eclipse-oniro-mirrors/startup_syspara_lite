@@ -294,3 +294,34 @@ int GetDevUdid(char *udid, int size)
     free(tmp);
     return ret;
 }
+
+unsigned int FindParameter(const char *name)
+{
+    if (name == NULL) {
+        return EC_INVALID;
+    }
+    return HalFindParameter(name);
+}
+
+unsigned int GetParameterCommitId(unsigned int handle)
+{
+    return HalGetParameterCommitId(handle);
+}
+
+int GetParameterName(unsigned int handle, char *name, unsigned int len)
+{
+    if (name == NULL) {
+        return EC_INVALID;
+    }
+    int ret = HalGetParameterName(handle, name, len);
+    return (ret != 0) ? EC_FAILURE : strlen(name);
+}
+
+int GetParameterValue(unsigned int handle, char *value, unsigned int len)
+{
+    if (value == NULL) {
+        return EC_INVALID;
+    }
+    int ret = HalGetParameterValue(handle, value, len);
+    return (ret != 0) ? EC_FAILURE : strlen(value);
+}

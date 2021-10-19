@@ -60,6 +60,14 @@ bool SetParameter(const std::string& key, const std::string& value);
 
 int WaitParameter(const std::string& key, const std::string& value, int timeout);
 
+unsigned int FindParameter(const std::string& key);
+
+unsigned int GetParameterCommitId(unsigned int handle);
+
+std::string GetParameterName(unsigned int handle);
+
+std::string GetParameterValue(unsigned int handle);
+
 /*
  * Obtains the device type of your product represented by a string.
  */

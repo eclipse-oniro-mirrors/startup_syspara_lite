@@ -120,13 +120,13 @@ const char *GetProperty(const std::string &key, const char **paramHolder)
 const char *HalGetDeviceType()
 {
     static const char *productType = nullptr;
-    return GetProperty("ro.build.characteristics", &productType);
+    return GetProperty("const.build.characteristics", &productType);
 }
 
 const char *HalGetProductModel()
 {
     static const char *productModel = nullptr;
-    return GetProperty("ro.product.model", &productModel);
+    return GetProperty("const.product.model", &productModel);
 }
 
 const char *HalGetManufacture()
@@ -142,7 +142,7 @@ const char *HalGetBrand()
 const char *HalGetMarketName()
 {
     static const char *marketName = nullptr;
-    return GetProperty("ro.product.name", &marketName);
+    return GetProperty("const.product.name", &marketName);
 }
 
 const char *HalGetProductSeries()
@@ -239,4 +239,41 @@ int HalWaitParameter(const char *key, const char *value, int timeout)
         return EC_INVALID;
     }
     return OHOS::system::WaitParameter(key, value, timeout);
+}
+
+unsigned int HalFindParameter(const char *key)
+{
+    if (key == nullptr) {
+        return EC_INVALID;
+    }
+    return OHOS::system::FindParameter(key);
+}
+
+unsigned int HalGetParameterCommitId(unsigned int handle)
+{
+    return OHOS::system::GetParameterCommitId(handle);
+}
+
+int HalGetParameterName(unsigned int handle, char *name, unsigned int len)
+{
+    if (name == nullptr) {
+        return EC_INVALID;
+    }
+    std::string data = OHOS::system::GetParameterName(handle);
+    if (data.empty()) {
+        return EC_INVALID;
+    }
+    return strcpy_s(name, len, data.c_str());
+}
+
+int HalGetParameterValue(unsigned int handle, char *value, unsigned int len)
+{
+    if (value == nullptr) {
+        return EC_INVALID;
+    }
+    std::string data = OHOS::system::GetParameterValue(handle);
+    if (data.empty()) {
+        return EC_INVALID;
+    }
+    return strcpy_s(value, len, data.c_str());
 }
