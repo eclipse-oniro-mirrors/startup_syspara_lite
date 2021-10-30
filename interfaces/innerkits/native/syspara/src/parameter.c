@@ -17,7 +17,6 @@
 
 #include <securec.h>
 #include <string.h>
-
 #include <openssl/sha.h>
 
 #include "parameter_hal.h"
