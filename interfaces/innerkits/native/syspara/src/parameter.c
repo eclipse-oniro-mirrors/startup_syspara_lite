@@ -29,7 +29,7 @@
 
 static const char OHOS_OS_NAME[] = { "OpenHarmony" };
 static const int OHOS_SDK_API_LEVEL = 6;
-static const char OHOS_BUILD_ROOT_HASH[] = { "****" };
+static const char OHOS_BUILD_ROOT_HASH[] = { "default" };
 static const char OHOS_SECURITY_PATCH_TAG[] = { "2020-09-01" };
 static const char OHOS_RELEASE_TYPE[] = { "Canary1" };
 static const int DEV_BUF_LENGTH = 3;
