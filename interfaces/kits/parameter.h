@@ -417,8 +417,8 @@ const char *GetOsReleaseType(void);
  * The specific release type may be Release, Beta1, or others alike.\n
  *
  * @return Return 0 if a result is found; return fail label otherwise.
- * @since 6.0
- * @version 6.0
+ * @since 7.0
+ * @version 7.0
  */
 int GetDevUdid(char *udid, int size);
 

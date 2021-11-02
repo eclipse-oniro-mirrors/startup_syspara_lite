@@ -233,6 +233,13 @@ declare namespace deviceInfo {
      * @since 6
      */
     const buildRootHash: string;
+    /**
+     * Obtains the device udid.
+     *
+     * @since 7
+     */
+    const udid: string;
+
 }
 
 export default deviceInfo;
