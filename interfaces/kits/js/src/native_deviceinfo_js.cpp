@@ -333,7 +333,7 @@ static napi_value Init(napi_env env, napi_value exports)
         {"buildHost", nullptr, nullptr, GetBuildHost, nullptr, nullptr, napi_default, nullptr},
         {"buildTime", nullptr, nullptr, GetBuildTime, nullptr, nullptr, napi_default, nullptr},
         {"buildRootHash", nullptr, nullptr, GetBuildRootHash, nullptr, nullptr, napi_default, nullptr},
-	{"udid", nullptr, nullptr, GetDevUdid, nullptr, nullptr, napi_default, nullptr},
+        {"udid", nullptr, nullptr, GetDevUdid, nullptr, nullptr, napi_default, nullptr},
     };
     NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(napi_property_descriptor), desc));
 
