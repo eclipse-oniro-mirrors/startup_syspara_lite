@@ -25,23 +25,23 @@
 
 static const char *g_emptyStr = "";
 
-static const char OHOS_MANUFACTURE[] = {"****"};
-static const char OHOS_BRAND[] = {"****"};
-static const char OHOS_PRODUCT_SERIES[] = {"****"};
-static const char OHOS_SOFTWARE_MODEL[] = {"****"};
-static const char OHOS_HARDWARE_MODEL[] = {"****"};
-static const char OHOS_HARDWARE_PROFILE[] = {"****"};
+static const char OHOS_MANUFACTURE[] = {"default"};
+static const char OHOS_BRAND[] = {"default"};
+static const char OHOS_PRODUCT_SERIES[] = {"default"};
+static const char OHOS_SOFTWARE_MODEL[] = {"default"};
+static const char OHOS_HARDWARE_MODEL[] = {"default"};
+static const char OHOS_HARDWARE_PROFILE[] = {"default"};
 static const char DEF_OHOS_SERIAL[] = {"1234567890"};
 static const char SN_FILE[] = {"/sys/block/mmcblk0/device/cid"};
-static const char OHOS_ABI_LIST[] = {"****"};
+static const char OHOS_ABI_LIST[] = {"default"};
 static const char OHOS_BOOTLOADER_VERSION[] = {"bootloader"};
 static const int OHOS_FIRST_API_LEVEL = 1;
 static const char OHOS_DISPLAY_VERSION[] = {"OpenHarmony 2.0 Canary"};
-static const char OHOS_INCREMENTAL_VERSION[] = {"****"};
-static const char OHOS_BUILD_TYPE[] = {"****"};
-static const char OHOS_BUILD_USER[] = {"****"};
-static const char OHOS_BUILD_HOST[] = {"****"};
-static const char OHOS_BUILD_TIME[] = {"****"};
+static const char OHOS_INCREMENTAL_VERSION[] = {"default"};
+static const char OHOS_BUILD_TYPE[] = {"default"};
+static const char OHOS_BUILD_USER[] = {"default"};
+static const char OHOS_BUILD_HOST[] = {"default"};
+static const char OHOS_BUILD_TIME[] = {"default"};
 
 static bool IsValidValue(const char *value, unsigned int len)
 {
