@@ -72,7 +72,7 @@ int GetParameter(const char *key, const char *def, char *value, unsigned int len
         if (strncpy_s(value, len, def, len - 1) != 0) {
             return EC_FAILURE;
         }
-        ret = strlen(def);
+        ret = (int)strlen(def);
     }
     return ret;
 }
@@ -208,9 +208,8 @@ static const char *BuildDisplayVersion(void)
     if (patchValue[len - 1] == '\n') {
         patchValue[len - 1] = '\0';
     }
-    
     const char *versionValue = HalGetDisplayVersion();
-    int versionLen = strlen(versionValue);
+    const int versionLen = strlen(versionValue);
     if (versionLen > 0) {
         if (versionValue[versionLen - 1] != ')') {
             len = sprintf_s(displayValue, OHOS_DISPLAY_VERSION_LEN, "%s(%s)", versionValue,
