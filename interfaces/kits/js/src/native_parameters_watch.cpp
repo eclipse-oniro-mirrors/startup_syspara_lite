@@ -405,8 +405,6 @@ static void ProcessParamChange(const char *key, const char *value, void *context
 {
     ParamWatcherPtr watcher = static_cast<ParamWatcherPtr>(context);
     PARAM_JS_CHECK(watcher != nullptr && watcher->env != nullptr, return, "Invalid param");
-    HiLog::Debug(LABEL, "JSApp watcher ProcessParamChange %{public}s %{public}d %{public}p",
-        key, watcher->callbackReferences.size(), watcher->env);
     PARAM_JS_CHECK(watcher->callbackReferences.size() > 0, return, "No callback for watcher");
 
     napi_handle_scope scope = nullptr;
@@ -465,12 +463,7 @@ static napi_value SwithWatchOff(napi_env env, napi_callback_info info)
     napi_value callback = nullptr;
     ParamWatcherPtr watcher = GetWatcherInfo(env, info, &callback);
     PARAM_JS_CHECK(watcher != nullptr, return GetNapiValue(env, -1), "Failed to get watcher");
-    HiLog::Debug(LABEL, "JSApp watcher off %{public}s %{public}p %{public}d",
-        watcher->keyPrefix, callback, watcher->callbackReferences.size());
-
     DelCallback(env, callback, watcher);
-    HiLog::Debug(LABEL, "JSApp watcher off %{public}s %{public}d end",
-        watcher->keyPrefix, watcher->callbackReferences.size());
     {
         std::lock_guard<std::mutex> lock(watcher->mutex);
         if (watcher->callbackReferences.size() == 0) {
