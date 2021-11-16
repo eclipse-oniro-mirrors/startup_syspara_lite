@@ -52,6 +52,12 @@ using ParamWatcher = struct {
     std::map<uint32_t, napi_ref> callbackReferences {};
 };
 
+using ParamWatcherWork = struct {
+    napi_async_work work = nullptr;
+    ParamWatcher *watcher = nullptr;
+    bool startWatch = false;
+};
+
 using ParamAsyncContextPtr = ParamAsyncContext *;
 using ParamWatcherPtr = ParamWatcher *;
 
@@ -427,6 +433,40 @@ static void ProcessParamChange(const char *key, const char *value, void *context
     HiLog::Debug(LABEL, "JSApp watcher ProcessParamChange %{public}s finish", key);
 }
 
+static void WatchCallbackWork(napi_env env, ParamWatcherPtr watcher)
+{
+    HiLog::Debug(LABEL, "JSApp WatchCallbackWork key: %{public}s", watcher->keyPrefix);
+    ParamWatcherWork *worker = new ParamWatcherWork();
+    PARAM_JS_CHECK(worker != nullptr, return, "Failed to create worker ");
+    worker->watcher = watcher;
+    worker->work = nullptr;
+    worker->startWatch = watcher->startWatch;
+
+    napi_value resource = nullptr;
+    napi_create_string_utf8(env, "JSStartupWatch", NAPI_AUTO_LENGTH, &resource);
+    napi_create_async_work(env, nullptr, resource,
+        [](napi_env env, void *data) {
+            ParamWatcherWork *worker = (ParamWatcherWork *)data;
+            PARAM_JS_CHECK(worker != nullptr && worker->watcher != nullptr, return, "Invalid worker ");
+            int status = WatchParameter(worker->watcher->keyPrefix,
+                worker->startWatch ? ProcessParamChange : nullptr, worker->watcher);
+            if (status != 0) {
+                status = napi_throw_error(env, std::to_string(status).c_str(), "Watch error");
+            }
+            HiLog::Debug(LABEL, "JSApp WatchCallbackWork  status: %{public}d, key: %{public}s",
+                status, worker->watcher->keyPrefix);
+        },
+        [](napi_env env, napi_status status, void *data) {
+            ParamWatcherWork *worker = (ParamWatcherWork *)data;
+            HiLog::Debug(LABEL, "JSApp WatchCallbackWork delete work %{public}d, key: %{public}s",
+                status, worker->watcher->keyPrefix);
+            napi_delete_async_work(env, worker->work);
+            delete worker;
+        },
+        (void *)worker, &worker->work);
+    napi_queue_async_work(env, worker->work);
+}
+
 static napi_value SwithWatchOn(napi_env env, napi_callback_info info)
 {
     napi_value callback = nullptr;
@@ -452,8 +492,7 @@ static napi_value SwithWatchOn(napi_env env, napi_callback_info info)
     }
 
     HiLog::Debug(LABEL, "JSApp watcher add %{public}s %{public}p", watcher->keyPrefix, watcher);
-    int ret = WatchParameter(watcher->keyPrefix, ProcessParamChange, watcher);
-    PARAM_JS_CHECK(ret == 0, return GetNapiValue(env, ret), "Failed to start watcher ret %{public}d", ret);
+    WatchCallbackWork(env, watcher);
     HiLog::Debug(LABEL, "JSApp watcher on %{public}s finish", watcher->keyPrefix);
     return GetNapiValue(env, 0);
 }
@@ -468,8 +507,7 @@ static napi_value SwithWatchOff(napi_env env, napi_callback_info info)
         std::lock_guard<std::mutex> lock(watcher->mutex);
         if (watcher->callbackReferences.size() == 0) {
             watcher->startWatch = false;
-            int ret = WatchParameter(watcher->keyPrefix, nullptr, watcher);
-            PARAM_JS_CHECK(ret == 0, return GetNapiValue(env, ret), "Failed to stop watcher ret %{public}d", ret);
+            WatchCallbackWork(env, watcher);
         }
     }
     return GetNapiValue(env, 0);
