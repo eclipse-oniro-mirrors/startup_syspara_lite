@@ -345,6 +345,8 @@ napi_value GetWatcher(napi_env env, napi_callback_info info)
         int ret = GetParamValue(env, argv[0], napi_string, watcher->keyPrefix, watcher->keyLen);
         PARAM_JS_CHECK(ret == 0, return NapiGetNull(env), "Failed to get key prefix");
         HiLog::Debug(LABEL, "JSApp watcher keyPrefix = %{public}s %{public}p.", watcher->keyPrefix, watcher);
+        ret = WatchParameter(watcher->keyPrefix, nullptr, watcher);
+        PARAM_JS_CHECK(ret == 0, return NapiGetNull(env), "Failed to get watcher ret %{public}d", ret);
     }
     return obj;
 }
@@ -411,6 +413,8 @@ static void ProcessParamChange(const char *key, const char *value, void *context
 {
     ParamWatcherPtr watcher = static_cast<ParamWatcherPtr>(context);
     PARAM_JS_CHECK(watcher != nullptr && watcher->env != nullptr, return, "Invalid param");
+    HiLog::Debug(LABEL, "JSApp watcher ProcessParamChange %{public}s %{public}d %{public}p",
+        key, watcher->callbackReferences.size(), watcher->env);
     PARAM_JS_CHECK(watcher->callbackReferences.size() > 0, return, "No callback for watcher");
 
     napi_handle_scope scope = nullptr;
@@ -450,16 +454,13 @@ static void WatchCallbackWork(napi_env env, ParamWatcherPtr watcher)
             PARAM_JS_CHECK(worker != nullptr && worker->watcher != nullptr, return, "Invalid worker ");
             int status = WatchParameter(worker->watcher->keyPrefix,
                 worker->startWatch ? ProcessParamChange : nullptr, worker->watcher);
-            if (status != 0) {
-                status = napi_throw_error(env, std::to_string(status).c_str(), "Watch error");
-            }
-            HiLog::Debug(LABEL, "JSApp WatchCallbackWork  status: %{public}d, key: %{public}s",
-                status, worker->watcher->keyPrefix);
+            HiLog::Debug(LABEL, "JSApp WatchCallbackWork %{public}s status: %{public}d, key: %{public}s",
+                worker->startWatch ? "on" : "off", status, worker->watcher->keyPrefix);
         },
         [](napi_env env, napi_status status, void *data) {
             ParamWatcherWork *worker = (ParamWatcherWork *)data;
-            HiLog::Debug(LABEL, "JSApp WatchCallbackWork delete work %{public}d, key: %{public}s",
-                status, worker->watcher->keyPrefix);
+            HiLog::Debug(LABEL, "JSApp WatchCallbackWork delete %{public}s key: %{public}s",
+                worker->startWatch ? "on" : "off", worker->watcher->keyPrefix);
             napi_delete_async_work(env, worker->work);
             delete worker;
         },
@@ -502,6 +503,7 @@ static napi_value SwithWatchOff(napi_env env, napi_callback_info info)
     napi_value callback = nullptr;
     ParamWatcherPtr watcher = GetWatcherInfo(env, info, &callback);
     PARAM_JS_CHECK(watcher != nullptr, return GetNapiValue(env, -1), "Failed to get watcher");
+    HiLog::Debug(LABEL, "JSApp watcher off %{public}s %{public}p", watcher->keyPrefix, callback);
     DelCallback(env, callback, watcher);
     {
         std::lock_guard<std::mutex> lock(watcher->mutex);
