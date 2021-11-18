@@ -413,8 +413,6 @@ static void ProcessParamChange(const char *key, const char *value, void *context
 {
     ParamWatcherPtr watcher = static_cast<ParamWatcherPtr>(context);
     PARAM_JS_CHECK(watcher != nullptr && watcher->env != nullptr, return, "Invalid param");
-    HiLog::Debug(LABEL, "JSApp watcher ProcessParamChange %{public}s %{public}d %{public}p",
-        key, watcher->callbackReferences.size(), watcher->env);
     PARAM_JS_CHECK(watcher->callbackReferences.size() > 0, return, "No callback for watcher");
 
     napi_handle_scope scope = nullptr;
