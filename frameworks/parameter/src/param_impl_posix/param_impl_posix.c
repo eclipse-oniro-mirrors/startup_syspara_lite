@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-#include "param_adaptor.h"
 #include <ctype.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -22,10 +21,16 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "ohos_errno.h"
+#include "param_adaptor.h"
 
+#ifndef __LITEOS_M__
 #define DATA_PATH          "/storage/data/system/param/"
-#define MAX_KEY_PATH       128
 #define SYS_UID_INDEX      1000
+#else
+#define DATA_PATH          ""
+#endif
+
+#define MAX_KEY_PATH       128
 
 static boolean IsValidChar(const char ch)
 {
@@ -124,7 +129,7 @@ int SetSysParam(const char* key, const char* value)
 
 boolean CheckPermission(void)
 {
-#if (!defined(_WIN32) && !defined(_WIN64))
+#if (!defined(_WIN32) && !defined(_WIN64) && !defined(__LITEOS_M__))
     uid_t uid = getuid();
     if (uid <= SYS_UID_INDEX) {
         return TRUE;
