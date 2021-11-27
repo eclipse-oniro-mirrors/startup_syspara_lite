@@ -21,13 +21,20 @@ if (ohos_kernel_type == "liteos_m") {
       "//base/startup/syspara_lite/hals",
       "//third_party/mbedtls/include",
     ]
-    sources = [
-      "param_impl_hal/param_impl_hal.c",
-      "parameter_common.c",
-    ]
+    sources = [ "parameter_common.c" ]
+    if (enable_ohos_startup_syspara_lite_use_posix_file_api) {
+      sources += [ "param_impl_posix/param_impl_posix.c" ]
+    } else {
+      sources += [ "param_impl_hal/param_impl_hal.c" ]
+    }
+
     deps = [ "$ohos_product_adapter_dir/utils/sys_param:hal_sysparam" ]
     if (enable_ohos_startup_syspara_lite_use_thirdparty_mbedtls) {
       deps += [ "//third_party/mbedtls:mbedtls" ]
+    }
+
+    if (enable_ohos_startup_syspara_lite_use_posix_file_api) {
+      deps += [ "//third_party/bounds_checking_function:libsec_static" ]
     }
     defines = [
       "INCREMENTAL_VERSION=\"${ohos_version}\"",
