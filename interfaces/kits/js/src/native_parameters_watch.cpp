@@ -110,8 +110,8 @@ static void WaitCallbackWork(napi_env env, ParamAsyncContextPtr asyncContext)
             napi_set_named_property(env, result[0], "code", message);
             napi_get_undefined(env, &result[1]); // only one param
 
-            HiLog::Debug(LABEL, "JSApp Wait status: %{public}d, key: %{public}s  %{public}p",
-                asyncContext->status, asyncContext->key, asyncContext->deferred);
+            HiLog::Debug(LABEL, "JSApp Wait status: %{public}d, key: %{public}s ",
+                asyncContext->status, asyncContext->key);
             if (asyncContext->deferred) {
                 if (asyncContext->status == 0) {
                     napi_resolve_deferred(env, asyncContext->deferred, result[1]);
@@ -221,13 +221,13 @@ static void AddWatcherCallback(ParamWatcherPtr watcher, napi_ref callbackRef)
     std::lock_guard<std::mutex> lock(watcher->mutex);
     watcherId++;
     watcher->callbackReferences[watcherId] = callbackRef;
-    HiLog::Debug(LABEL, "JSApp watcher add watcher callback %{public}s %{public}u %{public}p.",
-        watcher->keyPrefix, watcherId, callbackRef);
+    HiLog::Debug(LABEL, "JSApp watcher add watcher callback %{public}s %{public}u.",
+        watcher->keyPrefix, watcherId);
 }
 
 static void DelWatcherCallback(ParamWatcherPtr watcher, uint32_t next)
 {
-    HiLog::Debug(LABEL, "JSApp watcher key %{public}s delete callack %{public}d", watcher->keyPrefix, next);
+    HiLog::Debug(LABEL, "JSApp watcher key %{public}s delete callack %{public}u", watcher->keyPrefix, next);
     std::lock_guard<std::mutex> lock(watcher->mutex);
     watcher->callbackReferences.erase(next);
 }
@@ -236,7 +236,7 @@ static void DelCallbackRef(napi_env env, ParamWatcherPtr watcher, napi_ref callb
 {
     std::lock_guard<std::mutex> lock(watcher->mutex);
     if (callbackRef == watcher->currCallbackRef) {
-        HiLog::Debug(LABEL, "JSApp watcher key %{public}s has been callbacked %{public}d.",
+        HiLog::Debug(LABEL, "JSApp watcher key %{public}s has been callbacked %{public}u.",
             watcher->keyPrefix, id);
         watcher->currCallbackRef = nullptr;
     } else {
@@ -302,13 +302,11 @@ static napi_value ParamWatchConstructor(napi_env env, napi_callback_info info)
     napi_status status = napi_create_reference(env, thisVar, 1, &watcher->thisVarRef);
     PARAM_JS_CHECK(status == 0, delete watcher;
         return NapiGetNull(env), "Failed to create reference %d", status);
-    HiLog::Debug(LABEL, "JSApp watcher this = %{public}p ", watcher);
 
     napi_wrap(
         env, thisVar, watcher,
         [](napi_env env, void *data, void *hint) {
             ParamWatcherPtr watcher = static_cast<ParamWatcherPtr>(data);
-            HiLog::Debug(LABEL, "JSApp watcher this = %{public}p, destruct", watcher);
             if (watcher) {
                 DelCallback(env, nullptr, watcher);
                 WatchParameter(watcher->keyPrefix, nullptr, nullptr);
@@ -335,7 +333,6 @@ napi_value GetWatcher(napi_env env, napi_callback_info info)
         napi_value constructor = nullptr;
         int status = napi_get_reference_value(env, g_paramWatchRef, &constructor);
         PARAM_JS_CHECK(status == 0, return NapiGetNull(env), "Failed to get reference");
-        HiLog::Debug(LABEL, "GetWatcher %{public}p g_paramWatchRef %{public}p", env, g_paramWatchRef);
         status = napi_new_instance(env, constructor, 0, nullptr, &obj);
         PARAM_JS_CHECK(status == 0, return NapiGetNull(env), "Failed to create instance for watcher");
         napi_unwrap(env, obj, (void **)&watcher);
@@ -344,7 +341,7 @@ napi_value GetWatcher(napi_env env, napi_callback_info info)
         watcher->keyLen = BUF_LENGTH;
         int ret = GetParamValue(env, argv[0], napi_string, watcher->keyPrefix, watcher->keyLen);
         PARAM_JS_CHECK(ret == 0, return NapiGetNull(env), "Failed to get key prefix");
-        HiLog::Debug(LABEL, "JSApp watcher keyPrefix = %{public}s %{public}p.", watcher->keyPrefix, watcher);
+        HiLog::Debug(LABEL, "JSApp watcher keyPrefix = %{public}s ", watcher->keyPrefix);
         ret = WatchParameter(watcher->keyPrefix, nullptr, watcher);
         PARAM_JS_CHECK(ret == 0, return NapiGetNull(env), "Failed to get watcher ret %{public}d", ret);
     }
@@ -393,16 +390,14 @@ static void NotifyValueChange(ParamWatcherPtr watcher, uint32_t id, napi_value t
         watcher->currCallbackRef = callbackRef;
     }
 
-    HiLog::Debug(LABEL, "JSApp watcher notify key %{public}s %{public}p callbackFunc: %{public}p watcherId %{public}d",
-        watcher->keyPrefix, callbackRef, callbackFunc, id);
     napi_value callbackResult = nullptr;
     napi_call_function(watcher->env, thisVar, callbackFunc, ARGC_NUMBER, result, &callbackResult);
 
     {
         std::lock_guard<std::mutex> lock(watcher->mutex);
         if (watcher->currCallbackRef == nullptr) {
-            HiLog::Debug(LABEL, "JSApp watcher notify key %{public}s callback deleted %{public}p watcherId %{public}d",
-                watcher->keyPrefix, callbackRef, id);
+            HiLog::Debug(LABEL, "JSApp watcher notify key %{public}s callback deleted watcherId %{public}u",
+                watcher->keyPrefix, id);
             napi_delete_reference(watcher->env, callbackRef);
         }
         watcher->currCallbackRef = nullptr;
@@ -476,7 +471,7 @@ static napi_value SwithWatchOn(napi_env env, napi_callback_info info)
         HiLog::Warn(LABEL, "JSApp watcher repeater switch on %{public}s", watcher->keyPrefix);
         return 0;
     }
-    HiLog::Debug(LABEL, "JSApp watcher on %{public}s %{public}p", watcher->keyPrefix, callback);
+    HiLog::Debug(LABEL, "JSApp watcher on %{public}s", watcher->keyPrefix);
     // save callback
     napi_ref callbackRef;
     napi_create_reference(env, callback, 1, &callbackRef);
@@ -490,7 +485,7 @@ static napi_value SwithWatchOn(napi_env env, napi_callback_info info)
         watcher->startWatch = true;
     }
 
-    HiLog::Debug(LABEL, "JSApp watcher add %{public}s %{public}p", watcher->keyPrefix, watcher);
+    HiLog::Debug(LABEL, "JSApp watcher add %{public}s", watcher->keyPrefix);
     WatchCallbackWork(env, watcher);
     HiLog::Debug(LABEL, "JSApp watcher on %{public}s finish", watcher->keyPrefix);
     return GetNapiValue(env, 0);
@@ -501,7 +496,7 @@ static napi_value SwithWatchOff(napi_env env, napi_callback_info info)
     napi_value callback = nullptr;
     ParamWatcherPtr watcher = GetWatcherInfo(env, info, &callback);
     PARAM_JS_CHECK(watcher != nullptr, return GetNapiValue(env, -1), "Failed to get watcher");
-    HiLog::Debug(LABEL, "JSApp watcher off %{public}s %{public}p", watcher->keyPrefix, callback);
+    HiLog::Debug(LABEL, "JSApp watcher off %{public}s", watcher->keyPrefix);
     DelCallback(env, callback, watcher);
     {
         std::lock_guard<std::mutex> lock(watcher->mutex);
@@ -530,7 +525,6 @@ napi_value RegisterWatcher(napi_env env, napi_value exports)
             sizeof(properties) / sizeof(*properties),
             properties,
             &result));
-    HiLog::Debug(LABEL, "RegisterWatcher %{public}p", env);
     napi_set_named_property(env, exports, "paramWatcher", result);
     napi_create_reference(env, result, 1, &g_paramWatchRef);
     return exports;
