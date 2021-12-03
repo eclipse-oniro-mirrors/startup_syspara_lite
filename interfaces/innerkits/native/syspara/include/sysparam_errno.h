@@ -27,6 +27,7 @@ enum OHOSStartUpSysParamErrorCode {
     EC_SUCCESS = 0,  /* OK or No error */
     EC_FAILURE = -1, /* Execution failed */
     EC_INVALID = -9, /* Invalid argument */
+    EC_SYSTEM_ERR = -10, /* system error */
 };
 
 #ifdef __cplusplus
