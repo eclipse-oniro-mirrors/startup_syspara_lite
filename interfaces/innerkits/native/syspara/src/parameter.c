@@ -264,29 +264,29 @@ int GetSha256Value(const char *input, char *udid, int udidSize)
 int GetDevUdid(char *udid, int size)
 {
     if (size < DEV_UUID_LENGTH) {
-        return EC_FAILURE;
+        return EC_INVALID;
     }
 
     const char *manufacture = GetManufacture();
     const char *model = GetHardwareModel();
     const char *sn = GetSerial();
     if (manufacture == NULL || model == NULL || sn == NULL) {
-        return EC_FAILURE;
+        return EC_INVALID;
     }
     int tmpSize = strlen(manufacture) + strlen(model) + strlen(sn) + 1;
     if (tmpSize <= 0 || tmpSize > DEV_BUF_MAX_LENGTH) {
-        return EC_FAILURE;
+        return EC_INVALID;
     }
     char *tmp = malloc(tmpSize);
     if (tmp == NULL) {
-        return EC_FAILURE;
+        return EC_SYSTEM_ERR;
     }
 
     memset_s(tmp, tmpSize, 0, tmpSize);
     if ((strcat_s(tmp, tmpSize, manufacture) != 0) || (strcat_s(tmp, tmpSize, model) != 0) ||
         (strcat_s(tmp, tmpSize, sn) != 0)) {
         free(tmp);
-        return EC_FAILURE;
+        return EC_SYSTEM_ERR;
     }
 
     int ret = GetSha256Value(tmp, udid, size);
