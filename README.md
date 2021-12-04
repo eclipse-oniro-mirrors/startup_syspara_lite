@@ -30,7 +30,7 @@ base/startup/syspara_lite/    # syspara_lite module
 To obtain the system attributes, use the following code:
 
 ```
-char* value1 = GetProductType();
+char* value1 = GetDeviceType();
 printf("Product type =%s\n", value1);
 free(value1);
 char* value2 = GetManufacture();
