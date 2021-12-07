@@ -44,6 +44,7 @@ if (ohos_kernel_type == "liteos_m") {
       "BUILD_HOST=\"${ohos_build_host}\"",
       "BUILD_ROOTHASH=\"${ohos_build_roothash}\"",
       "USE_MBEDTLS",
+      "DATA_PATH=\"${config_ohos_startup_syspara_lite_data_path}\"",
     ]
   }
 } else {
