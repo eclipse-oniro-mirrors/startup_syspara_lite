@@ -27,7 +27,9 @@
 #define DATA_PATH          "/storage/data/system/param/"
 #define SYS_UID_INDEX      1000
 #else
+#ifndef DATA_PATH
 #define DATA_PATH          ""
+#endif
 #endif
 
 #define MAX_KEY_PATH       128
@@ -135,5 +137,9 @@ boolean CheckPermission(void)
         return TRUE;
     }
 #endif
+#if defined(__LITEOS_M__)
+    return TRUE;
+#else
     return FALSE;
+#endif
 }
