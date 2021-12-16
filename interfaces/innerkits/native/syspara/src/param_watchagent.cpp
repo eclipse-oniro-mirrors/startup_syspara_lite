@@ -22,5 +22,10 @@ int WatchParameter(const char *keyprefix, ParameterChgPtr callback, void *contex
     if (keyprefix == nullptr) {
         return EC_INVALID;
     }
+#ifdef NO_PARAM_WATCHER
+    printf("ParameterWatcher is disabled.");
+    return EC_INVALID;
+#else
     return SystemWatchParameter(keyprefix, callback, context);
+#endif
 }
