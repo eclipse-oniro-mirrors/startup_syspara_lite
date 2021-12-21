@@ -15,6 +15,10 @@ import("//build/ohos.gni")
 
 ###############################################################################
 
+declare_args() {
+  paramapi_feature_watcher = true
+}
+
 config("syspara_config") {
   visibility = [ ":*" ]
   include_dirs = [
@@ -65,11 +69,15 @@ ohos_shared_library("syspara_watchagent") {
   sources = [ "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/src/param_watchagent.cpp" ]
   configs = [ ":syspara_config" ]
   public_configs = [ ":syspara_public_config" ]
-  deps = [
-    "//base/startup/init_lite/services/param:param_watcheragent",
-    "//third_party/openssl:libcrypto_static",
-    "//utils/native/base:utils",
-  ]
+  if (paramapi_feature_watcher) {
+    deps = [
+      "//base/startup/init_lite/services/param/watcher:param_watcheragent",
+      "//third_party/openssl:libcrypto_static",
+      "//utils/native/base:utils",
+    ]
+  } else {
+    defines = [ "NO_PARAM_WATCHER" ]
+  }
   subsystem_name = "startup"
   part_name = "startup_l2"
 }
