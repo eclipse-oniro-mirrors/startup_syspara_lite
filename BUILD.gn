@@ -15,18 +15,6 @@ import("//build/ohos.gni")
 
 declare_args() {
   startup_jsapi_enabled = true
-  appspawn_feature_enabled = true
-}
-
-group("appspawn_group") {
-  if (appspawn_feature_enabled) {
-    deps = [
-      "//base/startup/appspawn_standard:appspawn",
-      "//base/startup/appspawn_standard:appspawn.rc",
-      "//base/startup/appspawn_standard:appspawn_server",
-      "//base/startup/appspawn_standard:appspawn_socket_client",
-    ]
-  }
 }
 
 group("syspara_group") {
@@ -38,16 +26,6 @@ group("syspara_group") {
     deps += [
       "//base/startup/syspara_lite/interfaces/kits/js:deviceinfo",
       "//base/startup/syspara_lite/interfaces/kits/js:systemparameter",
-    ]
-  }
-}
-
-group("appspawn_test") {
-  testonly = true
-  if (appspawn_feature_enabled) {
-    deps = [
-      "//base/startup/appspawn_standard/test:moduletest",
-      "//base/startup/appspawn_standard/test:unittest",
     ]
   }
 }
