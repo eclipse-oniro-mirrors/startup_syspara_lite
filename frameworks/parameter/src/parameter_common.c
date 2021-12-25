@@ -17,6 +17,7 @@
 #include <securec.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include "hal_sys_param.h"
 #ifdef USE_MBEDTLS
 #include "mbedtls/sha256.h"
@@ -316,7 +317,7 @@ const char *GetOsReleaseType(void)
     return OHOS_RELEASE_TYPE;
 }
 #ifdef USE_MBEDTLS
-static int GetSha256Value(const char *input, char *udid, int udidSize)
+static int GetSha256Value(const unsigned char *input, char *udid, int udidSize)
 {
     if (input == NULL) {
         return EC_FAILURE;
@@ -370,7 +371,7 @@ int GetDevUdid(char *udid, int size)
         return EC_FAILURE;
     }
 
-    int ret = GetSha256Value(tmp, udid, size);
+    int ret = GetSha256Value((const unsigned char *)tmp, udid, size);
     free(tmp);
     return ret;
 }
