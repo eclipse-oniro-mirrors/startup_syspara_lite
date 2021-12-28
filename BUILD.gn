@@ -13,16 +13,12 @@
 
 import("//build/ohos.gni")
 
-declare_args() {
-  startup_jsapi_enabled = true
-}
-
 group("syspara_group") {
   deps = [
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara_watchagent",
   ]
-  if (startup_jsapi_enabled) {
+  if (support_jsapi) {
     deps += [
       "//base/startup/syspara_lite/interfaces/kits/js:deviceinfo",
       "//base/startup/syspara_lite/interfaces/kits/js:systemparameter",
