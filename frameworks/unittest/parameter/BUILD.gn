@@ -34,7 +34,8 @@ unittest("ParameterTest") {
 }
 
 group("unittest") {
+  deps = []
   if (ohos_build_type == "debug" && ohos_kernel_type == "liteos_a") {
-    deps = [ ":ParameterTest" ]
+    deps += [ ":ParameterTest" ]
   }
 }
