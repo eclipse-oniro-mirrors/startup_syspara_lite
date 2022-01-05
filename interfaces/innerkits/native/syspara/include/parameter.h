@@ -132,7 +132,7 @@ int GetDevUdid(char *udid, int size);
  *
  * @param key Indicates the key for the system parameter to find.
  * @return Returns the index for parameter;
- * returns <b>handle</b> if a parameter is incorrect; returns <b>-1</b> in other scenarios.
+ * returns <b>handle</b> if a parameter is correct; returns <b>-1</b> in other scenarios.
  * @since 1
  * @version 1
  */
