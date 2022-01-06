@@ -20,7 +20,7 @@ unittest("ParameterTest") {
   ldflags = [
     "-lstdc++",
     "-lpthread",
-  
+
     "-lm",
   ]
 
@@ -39,7 +39,6 @@ if (ohos_build_type == "debug" && ohos_kernel_type == "liteos_a") {
     deps = [ ":ParameterTest" ]
   }
 } else {
-   group("unittest") {
-
-   }
+  group("unittest") {
+  }
 }
