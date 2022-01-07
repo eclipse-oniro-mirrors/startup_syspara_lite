@@ -14,24 +14,26 @@
 import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/config/test.gni")
 
-unittest("ParameterTest") {
-  output_extension = "bin"
-  output_dir = "$root_out_dir/test/unittest/utils"
-  ldflags = [
-    "-lstdc++",
-    "-lpthread",
+if (ohos_build_type == "debug" && ohos_kernel_type == "liteos_a") {
+  unittest("ParameterTest") {
+    output_extension = "bin"
+    output_dir = "$root_out_dir/test/unittest/utils"
+    ldflags = [
+      "-lstdc++",
+      "-lpthread",
 
-    "-lm",
-  ]
+      "-lm",
+    ]
 
-  include_dirs = [
-    "//base/startup/syspara_lite/interfaces/kits",
-    "//utils/native/lite/include",
-  ]
+    include_dirs = [
+      "//base/startup/syspara_lite/interfaces/kits",
+      "//utils/native/lite/include",
+    ]
 
-  sources = [ "parameter_test.cpp" ]
+    sources = [ "parameter_test.cpp" ]
 
-  deps = [ "//base/startup/syspara_lite/frameworks/parameter:parameter" ]
+    deps = [ "//base/startup/syspara_lite/frameworks/parameter:parameter" ]
+  }
 }
 
 if (ohos_build_type == "debug" && ohos_kernel_type == "liteos_a") {
