@@ -32,7 +32,7 @@ ohos_shared_library("sysparam_hal") {
   if ("${product_name}" == "m40") {
     defines = [ "USE_MTK_EMMC" ]
   }
-  
+
   configs = [ ":syspara_config" ]
   deps = [
     "//base/startup/init_lite/services/param:param_client",
