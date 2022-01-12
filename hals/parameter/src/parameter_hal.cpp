@@ -32,7 +32,11 @@ static const char OHOS_SOFTWARE_MODEL[] = {"default"};
 static const char OHOS_HARDWARE_MODEL[] = {"default"};
 static const char OHOS_HARDWARE_PROFILE[] = {"default"};
 static const char DEF_OHOS_SERIAL[] = {"1234567890"};
+#ifdef USE_MTK_EMMC
+static const char SN_FILE[] = {"/proc/bootdevice/cid"};
+#else
 static const char SN_FILE[] = {"/sys/block/mmcblk0/device/cid"};
+#endif
 static const char OHOS_ABI_LIST[] = {"default"};
 static const char OHOS_BOOTLOADER_VERSION[] = {"bootloader"};
 static const int OHOS_FIRST_API_LEVEL = 1;
