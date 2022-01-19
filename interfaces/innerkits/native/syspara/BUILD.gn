@@ -60,7 +60,7 @@ ohos_shared_library("syspara") {
   part_name = "startup_l2"
   install_images = [
     "system",
-    "updater"
+    "updater",
   ]
 }
 
