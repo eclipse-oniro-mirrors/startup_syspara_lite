@@ -40,4 +40,8 @@ ohos_shared_library("sysparam_hal") {
   ]
   subsystem_name = "startup"
   part_name = "startup_l2"
+  install_images = [
+    "system",
+    "updater",
+  ]
 }
