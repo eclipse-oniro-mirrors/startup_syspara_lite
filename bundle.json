@@ -15,6 +15,7 @@
         "name": "startup_l2",
         "subsystem": "startup",
         "adapted_system_type": [
+            "small",
             "standard"
         ],
         "rom": "",
@@ -31,6 +32,8 @@
         },
         "build": {
             "sub_component": [
+                "//base/startup/syspara_lite/frameworks/parameter",
+                "//base/startup/syspara_lite/frameworks/token",
                 "//base/startup/syspara_lite:syspara_group"
             ],
             "inner_kits": [
@@ -52,6 +55,9 @@
                     },
                     "name": "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara_watchagent"
                 }
+            ], 
+            "test": [
+                "//base/startup/syspara_lite/frameworks/unittest/parameter:unittest"
             ]
         }
     }
