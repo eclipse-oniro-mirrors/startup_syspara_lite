@@ -275,7 +275,7 @@ static int GetSha256Value(const char *input, char *udid, int udidSize)
     mbedtls_sha256_finish_ret(&context, hash);
 
     for (size_t i = 0; i < HASH_LENGTH; i++) {
-        char value = hash[i];
+        unsigned char value = hash[i];
         memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
         sprintf_s(buf, sizeof(buf), "%02X", value);
         if (strcat_s(udid, udidSize, buf) != 0) {
