@@ -125,6 +125,9 @@ const char *GetBuildTime(void);
 int GetFirstApiVersion(void);
 int GetDevUdid(char *udid, int size);
 
+const char *AclGetSerial(void);
+int AclGetDevUdid(char *udid, int size);
+
 /**
  * @brief Obtains a system parameter matching the specified <b>key</b>.
  *
