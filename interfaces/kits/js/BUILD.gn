@@ -25,6 +25,7 @@ ohos_shared_library("deviceinfo") {
   sources = [ "src/native_deviceinfo_js.cpp" ]
 
   deps = [
+    "//base/startup/init_lite/interfaces/innerkits:libbeget_proxy",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//foundation/ace/napi:ace_napi",
   ]

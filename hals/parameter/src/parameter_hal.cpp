@@ -17,6 +17,7 @@
 
 #include <cstring>
 #include <fstream>
+#include <openssl/sha.h>
 #include <securec.h>
 
 #include "parameters.h"
@@ -46,6 +47,9 @@ static const char OHOS_BUILD_TYPE[] = {"default"};
 static const char OHOS_BUILD_USER[] = {"default"};
 static const char OHOS_BUILD_HOST[] = {"default"};
 static const char OHOS_BUILD_TIME[] = {"default"};
+static const int DEV_BUF_LENGTH = 3;
+static const int DEV_BUF_MAX_LENGTH = 1024;
+static const int DEV_UUID_LENGTH = 65;
 
 static bool IsValidValue(const char *value, unsigned int len)
 {
@@ -280,4 +284,61 @@ int HalGetParameterValue(unsigned int handle, char *value, unsigned int len)
         return EC_INVALID;
     }
     return strcpy_s(value, len, data.c_str());
+}
+
+static int HalGetSha256Value(const char *input, char *udid, int udidSize)
+{
+    if (input == nullptr || udid == nullptr) {
+        return EC_FAILURE;
+    }
+    char buf[DEV_BUF_LENGTH] = { 0 };
+    unsigned char hash[SHA256_DIGEST_LENGTH] = { 0 };
+    SHA256_CTX sha256;
+    if ((SHA256_Init(&sha256) == 0) || (SHA256_Update(&sha256, input, strlen(input)) == 0) ||
+        (SHA256_Final(hash, &sha256) == 0)) {
+        return EC_FAILURE;
+    }
+
+    for (size_t i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+        unsigned char value = hash[i];
+        (void)memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
+        (void)sprintf_s(buf, sizeof(buf), "%02X", value);
+        if (strcat_s(udid, udidSize, buf) != 0) {
+            return EC_FAILURE;
+        }
+    }
+    return EC_SUCCESS;
+}
+
+int HalGetDevUdid(char *udid, int size)
+{
+    if (size < DEV_UUID_LENGTH) {
+        return EC_INVALID;
+    }
+
+    const char *manufacture = HalGetManufacture();
+    const char *model = HalGetHardwareModel();
+    const char *sn = HalGetSerial();
+    if (manufacture == nullptr || model == nullptr || sn == nullptr) {
+        return EC_INVALID;
+    }
+    int tmpSize = strlen(manufacture) + strlen(model) + strlen(sn) + 1;
+    if (tmpSize <= 0 || tmpSize > DEV_BUF_MAX_LENGTH) {
+        return EC_INVALID;
+    }
+    char *tmp = (char *)malloc(tmpSize);
+    if (tmp == nullptr) {
+        return EC_SYSTEM_ERR;
+    }
+
+    (void)memset_s(tmp, tmpSize, 0, tmpSize);
+    if ((strcat_s(tmp, tmpSize, manufacture) != 0) || (strcat_s(tmp, tmpSize, model) != 0) ||
+        (strcat_s(tmp, tmpSize, sn) != 0)) {
+        free(tmp);
+        return EC_SYSTEM_ERR;
+    }
+
+    int ret = HalGetSha256Value(tmp, udid, size);
+    free(tmp);
+    return ret;
 }

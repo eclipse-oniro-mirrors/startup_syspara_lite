@@ -53,7 +53,6 @@ ohos_shared_library("syspara") {
   deps = [
     "//base/startup/init_lite/services/param:param_client",
     "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
-    "//third_party/openssl:libcrypto_static",
     "//utils/native/base:utils",
   ]
   subsystem_name = "startup"

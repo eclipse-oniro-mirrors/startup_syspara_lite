@@ -40,6 +40,8 @@ const char *HalGetBuildType();
 const char *HalGetBuildUser();
 const char *HalGetBuildHost();
 const char *HalGetBuildTime();
+
+int HalGetDevUdid(char *udid, int size);
 int HalGetFirstApiVersion();
 int HalGetParameter(const char *key, const char *def, char *value, unsigned int len);
 int HalSetParameter(const char *key, const char *value);

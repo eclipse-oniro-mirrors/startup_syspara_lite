@@ -107,7 +107,7 @@ static napi_value GetHardwareProfile(napi_env env, napi_callback_info info)
 static napi_value GetSerial(napi_env env, napi_callback_info info)
 {
     napi_value napiValue = nullptr;
-    const char *serialNumber = GetSerial();
+    const char *serialNumber = AclGetSerial();
 
     NAPI_CALL(env, napi_create_string_utf8(env, serialNumber, strlen(serialNumber), &napiValue));
     return napiValue;
@@ -288,7 +288,7 @@ static napi_value GetDevUdid(napi_env env, napi_callback_info info)
 {
     napi_value napiValue = nullptr;
     char localDeviceId[UDID_LEN] = {0};
-    GetDevUdid(localDeviceId, UDID_LEN);
+    AclGetDevUdid(localDeviceId, UDID_LEN);
 
     NAPI_CALL(env, napi_create_string_utf8(env, localDeviceId, strlen(localDeviceId), &napiValue));
     return napiValue;
