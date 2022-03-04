@@ -41,6 +41,14 @@ printf("GetBrand =%s\n", value3);
 free(value3);
 ```
 
+修改系统版本号
+
+```
+系统版本号参数定义在startup_init_lite仓库的/services/etc/param/ohos.para文件
+const.product.software.version参数的值即为展示的系统版本号
+等同于之前修改宏OHOS_DISPLAY_VERSION[]的值
+```
+
 ## 相关仓<a name="section641143415335"></a>
 
 [启动恢复子系统](https://gitee.com/openharmony/docs/blob/master/zh-cn/readme/%E5%90%AF%E5%8A%A8%E6%81%A2%E5%A4%8D%E5%AD%90%E7%B3%BB%E7%BB%9F.md)
