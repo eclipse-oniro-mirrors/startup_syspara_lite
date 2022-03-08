@@ -294,7 +294,7 @@ unsigned int HalFindParameter(const char *key)
     unsigned int handle = 0;
     int ret = SystemFindParameter(key, &handle);
     if (ret != 0) {
-        return (unsigned int)(-1);
+        return static_cast<unsigned int>(-1);
     }
     return handle;
 }
