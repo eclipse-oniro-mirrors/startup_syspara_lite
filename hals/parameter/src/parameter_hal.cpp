@@ -23,6 +23,7 @@
 #include "parameters.h"
 #include "sysparam_errno.h"
 #include "string_ex.h"
+#include "sys_param.h"
 
 static const char *g_emptyStr = "";
 
@@ -254,7 +255,13 @@ unsigned int HalFindParameter(const char *key)
     if (key == nullptr) {
         return EC_INVALID;
     }
-    return OHOS::system::FindParameter(key);
+
+    unsigned int handle = 0;
+    int ret = SystemFindParameter(key, &handle);
+    if (ret != 0) {
+        return static_cast<unsigned int>(-1);
+    }
+    return handle;
 }
 
 unsigned int HalGetParameterCommitId(unsigned int handle)
