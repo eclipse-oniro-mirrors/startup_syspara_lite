@@ -25,11 +25,6 @@
 #define OS_FULL_NAME_LEN 128
 #define VERSION_ID_MAX_LEN 256
 
-static const char OHOS_OS_NAME[] = { "OpenHarmony" };
-static const int OHOS_SDK_API_LEVEL = 8;
-static const char OHOS_BUILD_ROOT_HASH[] = { "default" };
-static const char OHOS_SECURITY_PATCH_TAG[] = { "2020-09-01" };
-static const char OHOS_RELEASE_TYPE[] = { "Canary1" };
 static const int DEV_UUID_LENGTH = 65;
 
 static const char EMPTY_STR[] = { "" };
@@ -111,7 +106,7 @@ const char *GetSerial(void)
 
 const char *GetSecurityPatchTag(void)
 {
-    return OHOS_SECURITY_PATCH_TAG;
+    return HalGetSecurityPatchTag();
 }
 
 const char *GetAbiList(void)
@@ -124,6 +119,11 @@ const char *GetBootloaderVersion(void)
     return HalGetBootloaderVersion();
 }
 
+static const char *GetOSName(void)
+{
+    return HalGetOSName();
+}
+
 static const char *BuildOSFullName(void)
 {
     const char release[] = "Release";
@@ -132,10 +132,10 @@ static const char *BuildOSFullName(void)
     int length;
     if (strncmp(releaseType, release, sizeof(release) - 1) == 0) {
         length = sprintf_s(value, OS_FULL_NAME_LEN, "%s-%d.%d.%d.%d",
-            OHOS_OS_NAME, GetMajorVersion(), GetSeniorVersion(), GetFeatureVersion(), GetBuildVersion());
+            GetOSName(), GetMajorVersion(), GetSeniorVersion(), GetFeatureVersion(), GetBuildVersion());
     } else {
         length = sprintf_s(value, OS_FULL_NAME_LEN, "%s-%d.%d.%d.%d(%s)",
-            OHOS_OS_NAME, GetMajorVersion(), GetSeniorVersion(), GetFeatureVersion(), GetBuildVersion(), releaseType);
+            GetOSName(), GetMajorVersion(), GetSeniorVersion(), GetFeatureVersion(), GetBuildVersion(), releaseType);
     }
     if (length < 0) {
         return EMPTY_STR;
@@ -159,7 +159,7 @@ const char *GetOSFullName(void)
 
 int GetSdkApiVersion(void)
 {
-    return OHOS_SDK_API_LEVEL;
+    return atoi(HalGetSdkApiVersion());
 }
 
 int GetFirstApiVersion(void)
@@ -176,14 +176,17 @@ const char *GetIncrementalVersion(void)
 {
     return HalGetIncrementalVersion();
 }
-
+static int GetSdkApiLevel(void)
+{
+    return atoi(HalGetSdkApiLevel());
+}
 static const char *BuildVersionId(void)
 {
     char value[VERSION_ID_MAX_LEN];
     int len = sprintf_s(value, VERSION_ID_MAX_LEN, "%s/%s/%s/%s/%s/%s/%s/%d/%s/%s",
         GetDeviceType(), GetManufacture(), GetBrand(), GetProductSeries(),
         GetOSFullName(), GetProductModel(), GetSoftwareModel(),
-        OHOS_SDK_API_LEVEL, GetIncrementalVersion(), GetBuildType());
+        GetSdkApiLevel(), GetIncrementalVersion(), GetBuildType());
     if (len < 0) {
         return EMPTY_STR;
     }
@@ -226,12 +229,12 @@ const char *GetBuildTime(void)
 
 const char *GetBuildRootHash(void)
 {
-    return OHOS_BUILD_ROOT_HASH;
+    return HalGetBuildRootHash();
 }
 
 const char *GetOsReleaseType(void)
 {
-    return OHOS_RELEASE_TYPE;
+    return HalGetOsReleaseType();
 }
 
 int GetDevUdid(char *udid, int size)
