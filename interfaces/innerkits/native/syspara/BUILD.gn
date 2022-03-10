@@ -75,7 +75,6 @@ ohos_shared_library("syspara_watchagent") {
   if (paramapi_feature_watcher) {
     deps = [
       "//base/startup/init_lite/services/param/watcher:param_watcheragent",
-      "//third_party/openssl:libcrypto_static",
       "//utils/native/base:utils",
     ]
   } else {
