@@ -23,30 +23,16 @@
 #include "parameters.h"
 #include "sysparam_errno.h"
 #include "string_ex.h"
+#include "sys_param.h"
 
 static const char *g_emptyStr = "";
 
-static const char OHOS_MANUFACTURE[] = {"default"};
-static const char OHOS_BRAND[] = {"default"};
-static const char OHOS_PRODUCT_SERIES[] = {"default"};
-static const char OHOS_SOFTWARE_MODEL[] = {"default"};
-static const char OHOS_HARDWARE_MODEL[] = {"default"};
-static const char OHOS_HARDWARE_PROFILE[] = {"default"};
 static const char DEF_OHOS_SERIAL[] = {"1234567890"};
 #ifdef USE_MTK_EMMC
 static const char SN_FILE[] = {"/proc/bootdevice/cid"};
 #else
 static const char SN_FILE[] = {"/sys/block/mmcblk0/device/cid"};
 #endif
-static const char OHOS_ABI_LIST[] = {"default"};
-static const char OHOS_BOOTLOADER_VERSION[] = {"bootloader"};
-static const int OHOS_FIRST_API_LEVEL = 1;
-static const char OHOS_DISPLAY_VERSION[] = {"OpenHarmony 3.1.5.3"};
-static const char OHOS_INCREMENTAL_VERSION[] = {"default"};
-static const char OHOS_BUILD_TYPE[] = {"default"};
-static const char OHOS_BUILD_USER[] = {"default"};
-static const char OHOS_BUILD_HOST[] = {"default"};
-static const char OHOS_BUILD_TIME[] = {"default"};
 static const int DEV_BUF_LENGTH = 3;
 static const int DEV_BUF_MAX_LENGTH = 1024;
 static const int DEV_UUID_LENGTH = 65;
@@ -139,12 +125,14 @@ const char *HalGetProductModel()
 
 const char *HalGetManufacture()
 {
-    return OHOS_MANUFACTURE;
+    static const char *productManufacture = nullptr;
+    return GetProperty("const.product.manufacturer", &productManufacture);
 }
 
 const char *HalGetBrand()
 {
-    return OHOS_BRAND;
+    static const char *productBrand = nullptr;
+    return GetProperty("const.product.brand", &productBrand);
 }
 
 const char *HalGetMarketName()
@@ -155,22 +143,26 @@ const char *HalGetMarketName()
 
 const char *HalGetProductSeries()
 {
-    return OHOS_PRODUCT_SERIES;
+    static const char *productSeries = nullptr;
+    return GetProperty("const.build.product", &productSeries);
 }
 
 const char *HalGetSoftwareModel()
 {
-    return OHOS_SOFTWARE_MODEL;
+    static const char *softwareModel = nullptr;
+    return GetProperty("const.software.model", &softwareModel);
 }
 
 const char *HalGetHardwareModel()
 {
-    return OHOS_HARDWARE_MODEL;
+    static const char *hardwareModel = nullptr;
+    return GetProperty("const.product.hardwareversion", &hardwareModel);
 }
 
 const char *HalGetHardwareProfile()
 {
-    return OHOS_HARDWARE_PROFILE;
+    static const char *hardwareProfile = nullptr;
+    return GetProperty("const.product.hardwareprofile", &hardwareProfile);
 }
 
 const char *HalGetSerial()
@@ -198,47 +190,91 @@ const char *HalGetSerial()
 
 const char *HalGetAbiList()
 {
-    return OHOS_ABI_LIST;
+    static const char *productAbiList = nullptr;
+    return GetProperty("const.product.cpu.abilist", &productAbiList);
 }
 
 const char *HalGetBootloaderVersion()
 {
-    return OHOS_BOOTLOADER_VERSION;
+    static const char *productBootloader = nullptr;
+    return GetProperty("const.product.bootloader.version", &productBootloader);
+}
+
+const char *HalGetSecurityPatchTag()
+{
+    static const char *securityPatchTag = nullptr;
+    return GetProperty("const.ohos.version.security_patch", &securityPatchTag);
 }
 
 int HalGetFirstApiVersion()
 {
-    return OHOS_FIRST_API_LEVEL;
+    static const char *firstApiVersion = nullptr;
+    return atoi(GetProperty("const.product.firstapiversion", &firstApiVersion));
 }
 
 const char *HalGetDisplayVersion()
 {
-    return OHOS_DISPLAY_VERSION;
+    static const char *displayVersion = nullptr;
+    return GetProperty("const.product.software.version", &displayVersion);
 }
 
 const char *HalGetIncrementalVersion()
 {
-    return OHOS_INCREMENTAL_VERSION;
+    static const char *incrementalVersion = nullptr;
+    return GetProperty("const.product.incremental.version", &incrementalVersion);
+}
+
+const char *HalGetOsReleaseType()
+{
+    static const char *osReleaseType = nullptr;
+    return GetProperty("const.ohos.releasetype", &osReleaseType);
+}
+
+const char *HalGetSdkApiVersion()
+{
+    static const char *sdkApiVersion = nullptr;
+    return GetProperty("const.ohos.apiversion", &sdkApiVersion);
+}
+const char *HalGetBuildRootHash()
+{
+    static const char *buildRootHash = nullptr;
+    return GetProperty("const.ohos.buildroothash", &buildRootHash);
+}
+
+const char *HalGetSdkApiLevel()
+{
+    static const char *sdkApiLevel = nullptr;
+    return GetProperty("const.ohos.sdkapilevel", &sdkApiLevel);
+}
+
+const char *HalGetOSName()
+{
+    static const char *osName = nullptr;
+    return GetProperty("const.ohos.name", &osName);
 }
 
 const char *HalGetBuildType()
 {
-    return OHOS_BUILD_TYPE;
+    static const char *buildType = nullptr;
+    return GetProperty("const.product.build.type", &buildType);
 }
 
 const char *HalGetBuildUser()
 {
-    return OHOS_BUILD_USER;
+    static const char *buildUser = nullptr;
+    return GetProperty("const.product.build.user", &buildUser);
 }
 
 const char *HalGetBuildHost()
 {
-    return OHOS_BUILD_HOST;
+    static const char *buildHost = nullptr;
+    return GetProperty("const.product.build.host", &buildHost);
 }
 
 const char *HalGetBuildTime()
 {
-    return OHOS_BUILD_TIME;
+    static const char *buildTime = nullptr;
+    return GetProperty("const.product.build.date", &buildTime);
 }
 
 int HalWaitParameter(const char *key, const char *value, int timeout)
@@ -254,7 +290,13 @@ unsigned int HalFindParameter(const char *key)
     if (key == nullptr) {
         return EC_INVALID;
     }
-    return OHOS::system::FindParameter(key);
+
+    unsigned int handle = 0;
+    int ret = SystemFindParameter(key, &handle);
+    if (ret != 0) {
+        return static_cast<unsigned int>(-1);
+    }
+    return handle;
 }
 
 unsigned int HalGetParameterCommitId(unsigned int handle)
