@@ -117,6 +117,7 @@ int SetSysParam(const char* key, const char* value)
     }
 
     int ret = write(fd, value, strlen(value));
+    fsync(fd);
     close(fd);
     fd = -1;
     return (ret < 0) ? EC_FAILURE : EC_SUCCESS;
