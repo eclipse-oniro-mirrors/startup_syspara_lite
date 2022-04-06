@@ -349,7 +349,7 @@ int GetDevUdid(char *udid, int size)
     }
 
     const char *manufacture = GetManufacture();
-    const char *model = GetHardwareModel();
+    const char *model = GetProductModel();
     const char *sn = GetSerial();
     if (manufacture == NULL || model == NULL || sn == NULL) {
         return EC_FAILURE;
