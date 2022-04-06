@@ -359,7 +359,7 @@ int HalGetDevUdid(char *udid, int size)
     }
 
     const char *manufacture = HalGetManufacture();
-    const char *model = HalGetHardwareModel();
+    const char *model = HalGetProductModel();
     const char *sn = HalGetSerial();
     if (manufacture == nullptr || model == nullptr || sn == nullptr) {
         return EC_INVALID;
