@@ -97,6 +97,8 @@ int WaitParameter(const char *key, const char *value, int timeout);
 typedef void (*ParameterChgPtr)(const char *key, const char *value, void *context);
 int WatchParameter(const char *keyprefix, ParameterChgPtr callback, void *context);
 
+long long GetSystemCommitId(void);
+
 const char *GetSecurityPatchTag(void);
 const char *GetOSFullName(void);
 const char *GetVersionId(void);
