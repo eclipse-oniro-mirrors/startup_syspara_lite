@@ -15,9 +15,6 @@ import("//build/ohos.gni")
 
 ohos_shared_library("deviceinfo") {
   include_dirs = [
-    "//third_party/node/src",
-    "//foundation/ace/napi/native_engine",
-    "//foundation/ace/napi/interfaces/kits",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/include",
     "//base/startup/syspara_lite/hals/parameter/include",
   ]
@@ -27,8 +24,8 @@ ohos_shared_library("deviceinfo") {
   deps = [
     "//base/startup/init_lite/interfaces/innerkits:libbeget_proxy",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//foundation/ace/napi:ace_napi",
   ]
+  external_deps = [ "napi:ace_napi" ]
   relative_install_dir = "module"
   subsystem_name = "startup"
   part_name = "startup_l2"
@@ -37,11 +34,7 @@ ohos_shared_library("deviceinfo") {
 ohos_shared_library("systemparameter") {
   include_dirs = [
     "src",
-    "//third_party/node/src",
-    "//foundation/ace/napi/native_engine",
-    "//foundation/ace/napi/interfaces/kits",
     "//base/startup/startup/interfaces/innerkits/native/syspara/include",
-    "//base/hiviewdfx/interfaces/native/innerkits/include",
     "//base/startup/syspara_lite/hals/parameter/include",
   ]
 
@@ -54,10 +47,12 @@ ohos_shared_library("systemparameter") {
     "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara_watchagent",
-    "//foundation/ace/napi:ace_napi",
   ]
 
-  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
+  external_deps = [
+    "hiviewdfx_hilog_native:libhilog",
+    "napi:ace_napi",
+  ]
   relative_install_dir = "module"
   subsystem_name = "startup"
   part_name = "startup_l2"
