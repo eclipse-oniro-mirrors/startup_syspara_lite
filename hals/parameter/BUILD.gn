@@ -37,7 +37,7 @@ ohos_shared_library("sysparam_hal") {
     "//base/startup/init_lite/services/param:param_client",
     "//third_party/openssl:libcrypto_shared",
   ]
-  external_deps = [ "utils:utils_base" ]
+  external_deps = [ "utils_base:utils" ]
   subsystem_name = "startup"
   part_name = "startup_l2"
   install_images = [
