@@ -17,7 +17,6 @@ config("syspara_config") {
   visibility = [ ":*" ]
   include_dirs = [
     "include",
-    "//utils/native/base/include",
     "//base/startup/init_lite/services/include/param",
     "//base/startup/syspara_lite/adapter/native/syspara/include",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/include",
@@ -37,8 +36,8 @@ ohos_shared_library("sysparam_hal") {
   deps = [
     "//base/startup/init_lite/services/param:param_client",
     "//third_party/openssl:libcrypto_shared",
-    "//utils/native/base:utils",
   ]
+  external_deps = [ "utils:utils_base" ]
   subsystem_name = "startup"
   part_name = "startup_l2"
   install_images = [
