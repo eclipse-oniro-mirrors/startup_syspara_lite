@@ -32,9 +32,7 @@ ohos_shared_library("deviceinfo") {
 }
 
 ohos_shared_library("systemparameter") {
-  include_dirs = [
-    "src",
-  ]
+  include_dirs = [ "src" ]
 
   sources = [
     "src/native_parameters_js.cpp",
@@ -54,4 +52,3 @@ ohos_shared_library("systemparameter") {
   subsystem_name = "startup"
   part_name = "startup_l2"
 }
-
