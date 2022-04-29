@@ -51,7 +51,7 @@ ohos_shared_library("syspara") {
   configs = [ ":syspara_config" ]
   public_configs = [ ":syspara_public_config" ]
   deps = [
-    "//base/startup/init_lite/services/param:param_client",
+    "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
     "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
     "//utils/native/base:utils",
   ]
@@ -74,7 +74,7 @@ ohos_shared_library("syspara_watchagent") {
   public_configs = [ ":syspara_public_config" ]
   if (paramapi_feature_watcher) {
     deps = [
-      "//base/startup/init_lite/services/param/watcher:param_watcheragent",
+      "//base/startup/init_lite/interfaces/innerkits:libbeget_proxy",
       "//utils/native/base:utils",
     ]
   } else {

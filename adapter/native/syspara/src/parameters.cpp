@@ -20,7 +20,7 @@
 #include <vector>
 
 #include "parameters_abstractor.h"
-#include "sys_param.h"
+#include "init_param.h"
 
 namespace OHOS {
 namespace system {

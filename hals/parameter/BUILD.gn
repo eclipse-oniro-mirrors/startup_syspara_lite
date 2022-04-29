@@ -34,7 +34,7 @@ ohos_shared_library("sysparam_hal") {
 
   configs = [ ":syspara_config" ]
   deps = [
-    "//base/startup/init_lite/services/param:param_client",
+    "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
     "//third_party/openssl:libcrypto_shared",
   ]
   external_deps = [ "utils_base:utils" ]

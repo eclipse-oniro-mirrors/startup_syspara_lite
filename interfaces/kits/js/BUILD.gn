@@ -23,7 +23,7 @@ ohos_shared_library("deviceinfo") {
 
   deps = [
     "//base/startup/init_lite/interfaces/innerkits:libbeget_proxy",
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
+    "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
   ]
   external_deps = [ "napi:ace_napi" ]
   relative_install_dir = "module"
@@ -34,8 +34,6 @@ ohos_shared_library("deviceinfo") {
 ohos_shared_library("systemparameter") {
   include_dirs = [
     "src",
-    "//base/startup/startup/interfaces/innerkits/native/syspara/include",
-    "//base/startup/syspara_lite/hals/parameter/include",
   ]
 
   sources = [
@@ -44,9 +42,8 @@ ohos_shared_library("systemparameter") {
   ]
 
   deps = [
-    "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara_watchagent",
+    "//base/startup/init_lite/interfaces/innerkits:libbeget_proxy",
+    "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
   ]
 
   external_deps = [
@@ -57,3 +54,4 @@ ohos_shared_library("systemparameter") {
   subsystem_name = "startup"
   part_name = "startup_l2"
 }
+
