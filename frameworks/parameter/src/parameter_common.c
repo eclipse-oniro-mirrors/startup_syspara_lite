@@ -27,7 +27,7 @@ static char g_roBuildOs[] = {"OpenHarmony"};
 static char g_roBuildVerShow[] = {"OpenHarmony_release-1.1.2"};
 static char g_roSdkApiLevel[] = {"3"};
 static char g_roFirstApiLevel[] = {"1"};
-static const char OHOS_SECURITY_PATCH_TAG[] = {"2022-03-01"};
+static const char OHOS_SECURITY_PATCH_TAG[] = {"2022-05-01"};
 
 static boolean IsValidValue(const char* value, unsigned int len)
 {
