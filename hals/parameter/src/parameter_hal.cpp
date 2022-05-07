@@ -23,7 +23,7 @@
 #include "parameters.h"
 #include "sysparam_errno.h"
 #include "string_ex.h"
-#include "sys_param.h"
+#include "init_param.h"
 
 static const char *g_emptyStr = "";
 

@@ -14,7 +14,7 @@
  */
 
 #include "parameter.h"
-#include "sys_param.h"
+#include "init_param.h"
 #include "sysparam_errno.h"
 
 int WatchParameter(const char *keyprefix, ParameterChgPtr callback, void *context)
