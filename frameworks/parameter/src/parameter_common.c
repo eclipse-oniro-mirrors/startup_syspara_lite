@@ -38,9 +38,9 @@
 #define OHOS_PATCH_VERSION_FILE "/patch/pversion"
 
 static const char OHOS_OS_NAME[] = { "OpenHarmony" };
-static const int OHOS_SDK_API_VERSION = 6;
-static const char OHOS_SECURITY_PATCH_TAG[] = {"2021-09-01"};
-static const char OHOS_RELEASE_TYPE[] = { "Beta" };
+static const int OHOS_SDK_API_VERSION = 8;
+static const char OHOS_SECURITY_PATCH_TAG[] = {"2022-05-01"};
+static const char OHOS_RELEASE_TYPE[] = { "Release" };
 
 static const int MAJOR_VERSION = 1;
 static const int SENIOR_VERSION = 0;
