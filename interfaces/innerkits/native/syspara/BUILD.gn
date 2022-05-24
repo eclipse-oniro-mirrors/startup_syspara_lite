@@ -42,17 +42,10 @@ ohos_shared_library("syspara") {
     "//base/startup/init_lite/services/include/param",
     "//base/startup/syspara_lite/adapter/native/syspara/include",
   ]
-  sources = [
-    "//base/startup/syspara_lite/adapter/native/syspara/src/parameters.cpp",
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/src/param_wrapper.cpp",
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/src/parameter.c",
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/src/sysversion.c",
-  ]
   configs = [ ":syspara_config" ]
   public_configs = [ ":syspara_public_config" ]
   deps = [
-    "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
-    "//base/startup/syspara_lite/hals/parameter:sysparam_hal",
+    "//base/startup/init_lite/interfaces/innerkits:libbegetutil_static",
     "//utils/native/base:utils",
   ]
   subsystem_name = "startup"
