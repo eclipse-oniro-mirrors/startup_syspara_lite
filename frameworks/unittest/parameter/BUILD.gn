@@ -32,7 +32,10 @@ if (ohos_build_type == "debug" && ohos_kernel_type == "liteos_a") {
 
     sources = [ "parameter_test.cpp" ]
 
-    deps = [ "//base/startup/syspara_lite/frameworks/parameter:parameter" ]
+    deps = [
+      "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
+      "//third_party/bounds_checking_function:libsec_shared",
+    ]
   }
 }
 
