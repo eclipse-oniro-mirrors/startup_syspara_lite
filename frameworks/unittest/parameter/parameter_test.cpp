@@ -73,10 +73,12 @@ HWTEST_F(ParameterTest, parameterTest001_1, TestSize.Level0)
 
 HWTEST_F(ParameterTest, parameterTest002, TestSize.Level0)
 {
-    char key1[] = "ro.sys.version";
+    char key1[] = "const.sys.version";
     char value1[] = "set read only key";
     int ret = SetParameter(key1, value1);
-    EXPECT_EQ(ret, EC_INVALID);
+    EXPECT_EQ(ret, EC_SUCCESS);
+    ret = SetParameter(key1, value1);
+    EXPECT_NE(ret, EC_SUCCESS);
 }
 
 HWTEST_F(ParameterTest, parameterTest003, TestSize.Level0)
@@ -84,7 +86,7 @@ HWTEST_F(ParameterTest, parameterTest003, TestSize.Level0)
     char key2[] = "rw.sys.version*%version";
     char value2[] = "set value with illegal key";
     int ret = SetParameter(key2, value2);
-    EXPECT_EQ(ret, EC_INVALID);
+    EXPECT_NE(ret, EC_SUCCESS);
 }
 
 /* key = 32 */
@@ -93,7 +95,7 @@ HWTEST_F(ParameterTest, parameterTest004, TestSize.Level0)
     char key3[] = "rw.sys.version.utilskvparameter0";
     char value3[] = "set with key = 32";
     int ret = SetParameter(key3, value3);
-    EXPECT_EQ(ret, EC_INVALID);
+    EXPECT_EQ(ret, EC_SUCCESS);
 }
 
 /* value > 128 */
@@ -103,7 +105,7 @@ HWTEST_F(ParameterTest, parameterTest005, TestSize.Level0)
     char value4[] = "rw.sys.version.version.version.version flash_offset = *(hi_u32 *)DT_SetGetU32(&g_Element[0], 0);\
     size = *(hi_u32 *)DT_SetGetU32(&g_Element[1], 0);";
     int ret = SetParameter(key4, value4);
-    EXPECT_EQ(ret, EC_INVALID);
+    EXPECT_NE(ret, EC_SUCCESS);
 }
 
 HWTEST_F(ParameterTest, parameterTest006, TestSize.Level0)
@@ -117,11 +119,12 @@ HWTEST_F(ParameterTest, parameterTest006, TestSize.Level0)
 
 HWTEST_F(ParameterTest, parameterTest007, TestSize.Level0)
 {
-    char key2[] = "rw.sys.version.version.version.version";
+    char key2[] = "rw.sys.version.version.version.version.sys.version.\
+    version.version.version.sys.version.version.version.version.sys.version.version.version.versioneeeeeeeeeee";
     char value2[64] = {0};
     char defValue2[] = "value of key > 32 ...";
     int ret = GetParameter(key2, defValue2, value2, 64);
-    EXPECT_EQ(ret, EC_INVALID);
+    EXPECT_NE(ret, EC_INVALID);
 }
 
 HWTEST_F(ParameterTest, parameterTest008, TestSize.Level0)
