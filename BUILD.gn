@@ -19,3 +19,9 @@ group("syspara_group") {
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara_watchagent",
   ]
 }
+if (support_jsapi) {
+  deps += [
+    "//base/startup/syspara_lite/interfaces/kits/js:deviceinfo",
+    "//base/startup/syspara_lite/interfaces/kits/js:systemparameter",
+  ]
+}

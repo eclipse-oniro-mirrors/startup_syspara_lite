@@ -11,9 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//base/startup/init_lite/begetd.gni")
 import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/ndk/ndk.gni")
-import("//base/startup/init_lite/begetd.gni")
 
 lite_component("parameter") {
   features = [ "//base/startup/syspara_lite/frameworks/parameter/src:sysparam" ]
@@ -28,7 +28,8 @@ ndk_lib("parameter_notes") {
     head_files = [ "//base/startup/syspara_lite/interfaces/kits" ]
   } else {
     deps = [ "//base/startup/init_lite/interfaces/innerkits:libbegetutil" ]
-    head_files = [ "//base/startup/init_lite/interfaces/innerkits/include/syspara" ]
+    head_files =
+        [ "//base/startup/init_lite/interfaces/innerkits/include/syspara" ]
   }
 }
 
