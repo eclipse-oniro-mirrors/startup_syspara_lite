@@ -13,6 +13,7 @@
 
 import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/ndk/ndk.gni")
+import("//base/startup/init_lite/begetd.gni")
 
 lite_component("parameter") {
   features = [ "//base/startup/syspara_lite/frameworks/parameter/src:sysparam" ]
@@ -22,8 +23,13 @@ ndk_lib("parameter_notes") {
   if (ohos_kernel_type != "liteos_m") {
     lib_extension = ".so"
   }
-  deps = [ "//base/startup/syspara_lite/frameworks/parameter/src:sysparam" ]
-  head_files = [ "//base/startup/syspara_lite/interfaces/kits" ]
+  if (enable_ohos_startup_init_feature_begetctl_liteos == false) {
+    deps = [ "//base/startup/syspara_lite/frameworks/parameter/src:sysparam" ]
+    head_files = [ "//base/startup/syspara_lite/interfaces/kits" ]
+  } else {
+    deps = [ "//base/startup/init_lite/interfaces/innerkits:libbegetutil" ]
+    head_files = [ "//base/startup/init_lite/interfaces/innerkits/include/syspara" ]
+  }
 }
 
 if (ohos_build_type == "debug" && ohos_kernel_type == "liteos_a") {
