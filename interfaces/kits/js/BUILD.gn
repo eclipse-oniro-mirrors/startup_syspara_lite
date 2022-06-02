@@ -13,7 +13,7 @@
 
 import("//build/ohos.gni")
 
-ohos_shared_library("deviceinfo") {
+ohos_shared_library("deviceinfo1") {
   include_dirs = [
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/include",
     "//base/startup/syspara_lite/hals/parameter/include",
@@ -31,7 +31,7 @@ ohos_shared_library("deviceinfo") {
   part_name = "startup_l2"
 }
 
-ohos_shared_library("systemparameter") {
+ohos_shared_library("systemparameter1") {
   include_dirs = [ "src" ]
 
   sources = [
