@@ -73,7 +73,7 @@ HWTEST_F(ParameterTest, parameterTest001_1, TestSize.Level0)
 
 HWTEST_F(ParameterTest, parameterTest002, TestSize.Level0)
 {
-    char key1[] = "ro.sys.version";
+    char key1[] = "test.const.sys.version";
     char value1[] = "set read only key";
     int ret = SetParameter(key1, value1);
     EXPECT_EQ(ret, EC_INVALID);

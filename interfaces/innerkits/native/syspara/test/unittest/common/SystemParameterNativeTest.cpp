@@ -76,7 +76,7 @@ HWTEST_F(SystemParameterNativeTest, parameterTest003, TestSize.Level0)
     char key2[] = "rw.sys.version*%version";
     char value2[] = "set value with illegal key";
     int ret = SetParameter(key2, value2);
-    EXPECT_EQ(ret, EC_FAILURE);
+    EXPECT_EQ(ret, EC_INVALID);
 }
 
 /* key = 32 */
@@ -95,7 +95,7 @@ HWTEST_F(SystemParameterNativeTest, parameterTest005, TestSize.Level0)
     char value4[] = "rw.sys.version.version.version.version flash_offset = *(hi_u32 *)DT_SetGetU32(&g_Element[0], 0)a\
     size = *(hi_u32 *)DT_SetGetU32(&g_Element[1], 0)a";
     int ret = SetParameter(key4, value4);
-    EXPECT_EQ(ret, EC_FAILURE);
+    EXPECT_EQ(ret, EC_INVALID);
 }
 
 HWTEST_F(SystemParameterNativeTest, parameterTest006, TestSize.Level0)
@@ -131,7 +131,7 @@ HWTEST_F(SystemParameterNativeTest, parameterTest009, TestSize.Level0)
     char value5[] = "rw.sys.version.version.version.version     \
     flash_offset = *(hi_u32 *)DT_SetGetU32(&g_Element[0], 0)";
     int ret = SetParameter(key5, value5);
-    EXPECT_EQ(ret, EC_FAILURE);
+    EXPECT_EQ(ret, EC_INVALID);
     char valueGet[2] = {0};
     char defValue3[] = "value of key > 32 ...";
     ret = GetParameter(key5, defValue3, valueGet, 2);
