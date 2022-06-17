@@ -227,7 +227,7 @@ static void AddWatcherCallback(ParamWatcherPtr watcher, napi_ref callbackRef)
 
 static void DelWatcherCallback(ParamWatcherPtr watcher, uint32_t next)
 {
-    HiLog::Debug(LABEL, "JSApp watcher key %{public}s delete callack %{public}u", watcher->keyPrefix, next);
+    HiLog::Debug(LABEL, "JSApp watcher key %{public}s delete callback %{public}u", watcher->keyPrefix, next);
     std::lock_guard<std::mutex> lock(watcher->mutex);
     watcher->callbackReferences.erase(next);
 }
