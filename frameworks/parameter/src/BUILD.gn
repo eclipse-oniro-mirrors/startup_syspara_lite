@@ -10,7 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import("//base/startup/init_lite/begetd.gni")
+import("//base/startup/init/begetd.gni")
 import("../config.gni")
 
 if (ohos_kernel_type == "liteos_m") {
@@ -49,14 +49,14 @@ if (ohos_kernel_type == "liteos_m") {
         "DATA_PATH=\"${config_ohos_startup_syspara_lite_data_path}\"",
       ]
     } else {
-      deps = [ "//base/startup/init_lite/interfaces/innerkits:libbegetutil" ]
+      deps = [ "//base/startup/init/interfaces/innerkits:libbegetutil" ]
     }
   }
 } else {
   shared_library("sysparam") {
     cflags = [ "-Wall" ]
     public_deps = [
-      "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
+      "//base/startup/init/interfaces/innerkits:libbegetutil",
       "//third_party/bounds_checking_function:libsec_shared",
     ]
   }

@@ -22,8 +22,8 @@ ohos_shared_library("deviceinfo1") {
   sources = [ "src/native_deviceinfo_js.cpp" ]
 
   deps = [
-    "//base/startup/init_lite/interfaces/innerkits:libbeget_proxy",
-    "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
+    "//base/startup/init/interfaces/innerkits:libbeget_proxy",
+    "//base/startup/init/interfaces/innerkits:libbegetutil",
   ]
   external_deps = [ "napi:ace_napi" ]
   relative_install_dir = "module"
@@ -40,8 +40,8 @@ ohos_shared_library("systemparameter1") {
   ]
 
   deps = [
-    "//base/startup/init_lite/interfaces/innerkits:libbeget_proxy",
-    "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
+    "//base/startup/init/interfaces/innerkits:libbeget_proxy",
+    "//base/startup/init/interfaces/innerkits:libbegetutil",
   ]
 
   external_deps = [

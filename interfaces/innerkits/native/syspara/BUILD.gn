@@ -39,13 +39,13 @@ config("syspara_public_config") {
 ohos_shared_library("syspara") {
   include_dirs = [
     "include",
-    "//base/startup/init_lite/services/include/param",
+    "//base/startup/init/services/include/param",
     "//base/startup/syspara_lite/adapter/native/syspara/include",
   ]
   configs = [ ":syspara_config" ]
   public_configs = [ ":syspara_public_config" ]
   deps = [
-    "//base/startup/init_lite/interfaces/innerkits:libbegetutil_static",
+    "//base/startup/init/interfaces/innerkits:libbegetutil_static",
     "//utils/native/base:utils",
   ]
   subsystem_name = "startup"
@@ -59,7 +59,7 @@ ohos_shared_library("syspara") {
 ohos_shared_library("syspara_watchagent") {
   include_dirs = [
     "include",
-    "//base/startup/init_lite/services/include/param",
+    "//base/startup/init/services/include/param",
     "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/include",
   ]
   sources = [ "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/src/param_watchagent.cpp" ]
@@ -67,7 +67,7 @@ ohos_shared_library("syspara_watchagent") {
   public_configs = [ ":syspara_public_config" ]
   if (paramapi_feature_watcher) {
     deps = [
-      "//base/startup/init_lite/interfaces/innerkits:libbeget_proxy",
+      "//base/startup/init/interfaces/innerkits:libbeget_proxy",
       "//utils/native/base:utils",
     ]
   } else {

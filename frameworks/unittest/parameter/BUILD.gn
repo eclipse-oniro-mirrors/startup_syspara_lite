@@ -33,7 +33,7 @@ if (ohos_build_type == "debug" && ohos_kernel_type == "liteos_a") {
     sources = [ "parameter_test.cpp" ]
 
     deps = [
-      "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
+      "//base/startup/init/interfaces/innerkits:libbegetutil",
       "//third_party/bounds_checking_function:libsec_shared",
     ]
   }
