@@ -193,7 +193,7 @@ const char *GetOSFullName(void)
 
 static const char *BuildDisplayVersion(void)
 {
-    int len;
+    ssize_t len;
     char patchValue[OHOS_PATCH_VERSION_LEN] = {0};
     char displayValue[OHOS_DISPLAY_VERSION_LEN] = {0};
     int fd = open(OHOS_PATCH_VERSION_FILE, O_RDONLY);
@@ -201,7 +201,7 @@ static const char *BuildDisplayVersion(void)
         return NULL;
     }
     len = read(fd, patchValue, OHOS_PATCH_VERSION_LEN);
-    if (len < strlen("version=")) {
+    if (len < (ssize_t)strlen("version=")) {
         close(fd);
         return NULL;
     }
