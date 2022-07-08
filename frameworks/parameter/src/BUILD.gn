@@ -54,7 +54,6 @@ if (ohos_kernel_type == "liteos_m") {
   }
 } else {
   shared_library("sysparam") {
-    cflags = [ "-Wall" ]
     public_deps = [
       "//base/startup/init_lite/interfaces/innerkits:libbegetutil",
       "//third_party/bounds_checking_function:libsec_shared",
