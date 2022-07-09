@@ -23,12 +23,16 @@ config("syspara_config") {
   ]
 }
 
+declare_args() {
+  startup_l2_use_mtk_emmc = false
+}
+
 ohos_shared_library("sysparam_hal") {
   sources = [
     "//base/startup/syspara_lite/adapter/native/syspara/src/parameters.cpp",
     "src/parameter_hal.cpp",
   ]
-  if ("${product_name}" == "m40") {
+  if (startup_l2_use_mtk_emmc) {
     defines = [ "USE_MTK_EMMC" ]
   }
 
