@@ -21,7 +21,7 @@ config("sysparam_simulator_public_config") {
 }
 
 config("sysparam_simulator_config") {
-  cflags += [
+  cflags = [
     "-Wno-error",
     "-D_INC_STDIO_S",
     "-D_INC_STDLIB_S",
