@@ -22,7 +22,7 @@
         "deps": {
             "components": [
                 "init",
-                "utils_base"
+                "c_utils"
             ],
             "third_party": [
                 "bounds_checking_function",
