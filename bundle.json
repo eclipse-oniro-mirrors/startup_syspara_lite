@@ -31,27 +31,8 @@
         },
         "build": {
             "sub_component": [
-                "//base/startup/syspara_lite:syspara_group"
             ],
             "inner_kits": [
-                {
-                    "header": {
-                        "header_base": "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/include/",
-                        "header_files": [
-                            "parameter.h"
-                        ]
-                    },
-                    "name": "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara"
-                },
-                {
-                    "header": {
-                        "header_base": "//base/startup/syspara_lite/interfaces/innerkits/native/syspara/include/",
-                        "header_files": [
-                            "parameter.h"
-                        ]
-                    },
-                    "name": "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara_watchagent"
-                }
             ]
         }
     }

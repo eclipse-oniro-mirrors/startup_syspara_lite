@@ -14,8 +14,4 @@
 import("//build/ohos.gni")
 
 group("syspara_group") {
-  deps = [
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara",
-    "//base/startup/syspara_lite/interfaces/innerkits/native/syspara:syspara_watchagent",
-  ]
 }
