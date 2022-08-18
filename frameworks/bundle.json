@@ -28,12 +28,8 @@
             ]
         },
         "build": {
-            "sub_component": [
-                "//base/startup/syspara_lite/frameworks/parameter"
-            ],
-            "test": [
-                "//base/startup/syspara_lite/frameworks/unittest/parameter:unittest"
-            ]
+            "sub_component": [],
+            "test": []
         }
     }
 }
