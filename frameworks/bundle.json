@@ -28,9 +28,7 @@
             ]
         },
         "build": {
-            "sub_component": [
-                "//base/startup/syspara_lite/frameworks/parameter"
-            ],
+            "sub_component": [],
             "test": [
                 "//base/startup/syspara_lite/frameworks/unittest/parameter:unittest"
             ]
