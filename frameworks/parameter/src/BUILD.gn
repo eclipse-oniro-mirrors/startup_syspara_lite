@@ -18,7 +18,7 @@ if (ohos_kernel_type == "liteos_m") {
     if (enable_ohos_startup_init_feature_begetctl_liteos == false) {
       include_dirs = [
         "//base/startup/syspara_lite/interfaces/kits",
-        "//utils/native/lite/include",
+        "//commonlibrary/utils_lite/include",
         "//base/startup/syspara_lite/frameworks/parameter/src",
         "//base/startup/syspara_lite/hals",
         "//third_party/mbedtls/include",

@@ -27,7 +27,7 @@ if (ohos_build_type == "debug" && ohos_kernel_type == "liteos_a") {
 
     include_dirs = [
       "//base/startup/syspara_lite/interfaces/kits",
-      "//utils/native/lite/include",
+      "//commonlibrary/utils_lite/include",
     ]
 
     sources = [ "parameter_test.cpp" ]

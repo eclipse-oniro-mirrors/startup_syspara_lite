@@ -19,7 +19,7 @@ if (ohos_kernel_type == "liteos_a" || ohos_kernel_type == "linux") {
   shared_library("token_shared") {
     include_dirs = [
       "//base/startup/syspara_lite/interfaces/kits",
-      "//utils/native/lite/include",
+      "//commonlibrary/utils_lite/include",
       "//base/startup/syspara_lite/hals",
     ]
 
@@ -38,7 +38,7 @@ if (ohos_kernel_type == "liteos_m") {
 
     include_dirs = [
       "//base/startup/syspara_lite/interfaces/kits",
-      "//utils/native/lite/include",
+      "//commonlibrary/utils_lite/include",
       "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite",
       "//base/startup/syspara_lite/hals",
     ]
