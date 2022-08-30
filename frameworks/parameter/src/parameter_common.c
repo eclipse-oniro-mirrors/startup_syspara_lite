@@ -217,7 +217,7 @@ static const char *BuildDisplayVersion(void)
                 patchValue + strlen("version="));
         } else {
             char tempValue[versionLen];
-            memset_s(tempValue, versionLen, 0, versionLen);
+            (void)memset_s(tempValue, versionLen, 0, versionLen);
             if (strncpy_s(tempValue, versionLen, versionValue, versionLen - 1) != 0) {
                 return NULL;
             }
@@ -333,7 +333,7 @@ static int GetSha256Value(const unsigned char *input, char *udid, int udidSize)
 
     for (size_t i = 0; i < HASH_LENGTH; i++) {
         unsigned char value = hash[i];
-        memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
+        (void)memset_s(buf, DEV_BUF_LENGTH, 0, DEV_BUF_LENGTH);
         sprintf_s(buf, sizeof(buf), "%02X", value);
         if (strcat_s(udid, udidSize, buf) != 0) {
             return EC_FAILURE;
@@ -363,7 +363,7 @@ int GetDevUdid(char *udid, int size)
         return EC_FAILURE;
     }
 
-    memset_s(tmp, tmpSize, 0, tmpSize);
+    (void)memset_s(tmp, tmpSize, 0, tmpSize);
     if ((strcat_s(tmp, tmpSize, manufacture) != 0) ||
         (strcat_s(tmp, tmpSize, model) != 0) ||
         (strcat_s(tmp, tmpSize, sn) != 0)) {
