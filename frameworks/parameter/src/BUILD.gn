@@ -13,7 +13,7 @@
 import("//base/startup/init/begetd.gni")
 import("../config.gni")
 
-if (ohos_kernel_type == "liteos_m") {
+if (ohos_kernel_type == "liteos_m" || ohos_kernel_type == "uniproton") {
   static_library("sysparam") {
     if (enable_ohos_startup_init_feature_begetctl_liteos == false) {
       include_dirs = [
