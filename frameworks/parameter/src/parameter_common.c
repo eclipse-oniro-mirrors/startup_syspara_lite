@@ -327,9 +327,9 @@ static int GetSha256Value(const unsigned char *input, char *udid, int udidSize)
 
     mbedtls_sha256_context context;
     mbedtls_sha256_init(&context);
-    mbedtls_sha256_starts_ret(&context, 0);
-    mbedtls_sha256_update_ret(&context, input, strlen((const char *)input));
-    mbedtls_sha256_finish_ret(&context, hash);
+    mbedtls_sha256_starts(&context, 0);
+    mbedtls_sha256_update(&context, input, strlen((const char *)input));
+    mbedtls_sha256_finish(&context, hash);
 
     for (size_t i = 0; i < HASH_LENGTH; i++) {
         unsigned char value = hash[i];
