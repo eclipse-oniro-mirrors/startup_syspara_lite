@@ -15,6 +15,10 @@ import("//base/startup/init/begetd.gni")
 import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/ndk/ndk.gni")
 
+lite_component("parameter") {
+  features = [ "//base/startup/syspara_lite/frameworks/parameter/src:sysparam" ]
+}
+
 ndk_lib("parameter_notes") {
   if (ohos_kernel_type != "liteos_m" && ohos_kernel_type != "uniproton") {
     lib_extension = ".so"
