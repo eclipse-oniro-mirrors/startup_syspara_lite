@@ -45,7 +45,7 @@ static const char OHOS_RELEASE_TYPE[] = { "Release" };
 static const int MAJOR_VERSION = 3;
 static const int SENIOR_VERSION = 1;
 static const int FEATURE_VERSION = 9;
-static const int BUILD_VERSION = 5;
+static const int BUILD_VERSION = 6;
 
 static const char EMPTY_STR[] = { "" };
 
