@@ -25,6 +25,18 @@ base/startup/syspara_lite/    # 系统属性组件
 -   同时支持轻量系统设备（参考内存≥128KB），如Hi3861V100以及小型系统设备（参考内存≥1MB），如Hi3516DV300、Hi3518EV300。
 -   系统属性各字段由OEM厂商负责定义，当前方案仅提供框架及默认值。具体值需产品方按需进行调整。
 
+> **注意事项:**
+>
+> startup_l2:syspara依赖已经合并至init仓下，替换方式如下：
+> 1. 在本地相关仓目录下，执行grep -rn startup_l2:syspara，找出所有添加了startup_l2:syspara依赖的Build.gn文件
+> 1. 将Build.gn文件中的startup_l2:syspara一行删除，同时将//base/startup/syspara_lite/interfaces/inerkits/native/syspara/include一行删除
+> 1. 在external_deps中添加依赖init:libbegetutil
+>
+> startup_l2:syspara_watchagent依赖已经合并至init仓下，替换方式如下：
+> 1. 在本地相关仓目录下，执行grep -rn startup_l2:syspara_watchagent，找出所有添加了startup_l2:syspara_watchagent依赖的Build.gn文件
+> 1. 将Build.gn文件中的startup_l2:syspara_watchagent一行删除，同时将//base/startup/syspara_lite/interfaces/inerkits/native/syspara/include一行删除
+> 1. 在external_deps中添加依赖init:libbeget_proxy
+
 ## 使用说明<a name="section1464106163817"></a>
 
 获取系统属性
@@ -60,4 +72,3 @@ const.product.software.version参数的值即为展示的系统版本号
 [startup\_bootstrap\_lite](https://gitee.com/openharmony/startup_bootstrap_lite/blob/master/README_zh.md)
 
 [startup\_init\_lite](https://gitee.com/openharmony/startup_init_lite/blob/master/README_zh.md)
-
