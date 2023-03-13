@@ -27,7 +27,7 @@ static int g_seniorVersion = 1;
 /* *
  * Feature(F) version number.
  */
-static int g_featureVersion = 12;
+static int g_featureVersion = 13;
 
 /* *
  * Build(B) version number.
