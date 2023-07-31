@@ -30,7 +30,7 @@
 static const char OHOS_OS_NAME[] = {"OpenHarmony"};
 static const int OHOS_SDK_API_LEVEL = 6;
 static const char OHOS_BUILD_ROOT_HASH[] = {"****"};
-static const char OHOS_SECURITY_PATCH_TAG[] = {"2023/07/01"};
+static const char OHOS_SECURITY_PATCH_TAG[] = {"2023/08/01"};
 static const char OHOS_RELEASE_TYPE[] = {"LTS"};
 static const int DEV_BUF_LENGTH = 3;
 static const int DEV_BUF_MAX_LENGTH = 1024;
